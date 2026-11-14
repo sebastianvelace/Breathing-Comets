@@ -20,10 +20,10 @@ All results below describe observed verification. No research scripts have been 
 | 4 | Scientific core | Partial | d707949 + subsequent fixes | Fast suite 133 passed; all 7 current network tests passed; Ruff passed | Legacy QR2 layout independently verified; golden 3I physical-model acceptance remains pending. |
 | 5 | Five target precomputation | Partial | cfe29d7 | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
 | 6 | Story Explorer | Done | 21ca8f1 + a2c5bb4 | 28 Vitest; check 0 errors/warnings; build; 3 local and 3 public E2E passed | Arbitrary pixel spectrum belongs to step 7. |
-| 7 | Live API | Partial | Working tree | Three local stellar comparisons pass; real click >50 points; network suite passes | Cold stack 4.398 s; JPL identification unavailable; Fly verification pending. |
-| 8 | Lab and Aladin | Pending | — | Not run | — |
-| 9 | Small-Body Lab | Pending | — | Not run | — |
-| 10 | Landing | Delegated by user | — | See docs/landing-agent-prompt.md | Separate landing agent owns homepage, landing components/messages/media/tests; coordinator owns integration and deployment. |
+| 7 | Live API | Partial | 2f79833 | Three local stellar comparisons pass; real click >50 points; network suite passes | Cold stack 4.398 s; JPL identification unavailable; Fly verification pending. |
+| 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
+| 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
+| 10 | Landing | Partial | Integration commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | 3I packet, 3I hero and gas-map ink-in pending; Lighthouse LCP not measured (proxy 0.8–0.9 s). |
 | 11 | Comets, method, about and Spanish | Pending | — | Not run | — |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
@@ -175,3 +175,36 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Step 7 final fast suite before handoff: `1 failed, 157 passed, 9 deselected, 1 warning in 3.45s`, sole known R Dra acceptance. Frontend `29 passed`; svelte-check 0 errors/0 warnings. Added variance propagation for Diff λ (independent-reference linear coefficients and selected median statistics); targeted core/API/Horizons tests `38 passed, 5 deselected, 1 warning in 2.81s`.
 - Final local integration repeat: `4 passed (21.5s)` including the actual live click; feature-label, dark-theme and locale refinements were subsequently checked and will be verified again in deployment.
 - User assigned the landing to a separate agent and requested a prompt. Created docs/landing-agent-prompt.md with explicit ownership and no Git/deployment mutations. Configured independent Paraglide message paths for landing EN/ES after verifying that the existing plugin supports pathPattern arrays. Coordinator will not edit homepage/landing-owned paths while that work proceeds. Defined the future 3I landing-packet interface in that prompt; the scientific packet remains coordinator responsibility.
+
+## Step 7 deployment
+
+- Deployed 2f79833 to Fly image deployment-01M7DGJWPHVZMF02KQ5YX8AG7E; single existing machine healthy. Public custom-domain health HTTP 200 with 809,593 index rows. Calibration readiness was initially null before acquisition, reported honestly.
+- Repeated all three stellar measurements against https://api.breathingcomets.org using scripts/validate-api-spectra.py. All six ratios pass: Ks/W2 1.001441426387029/1.0160269484141913; 1.0251600774764664/1.0107559193440254; 1.0160327655232988/0.9817009937637687. Valid points 208/208/200, rejected exposures 9/7/7. Response evidence now records the deployed API and elapsed times 17.804/26.596/13.320 seconds.
+- Public response-cache-cold Barnard stack probe (default fov 0.25, max_frames 80) returned HTTP 200: first_byte=5.177167, total=6.562423. Performance acceptance remains failing; no further optimization loop before step 8.
+- Pushed 7f28b96 and 2f79833 together. Post-push checks: sole exact sebasvelace identity; prohibited-message count 0; sole remote main branch at 2f79833.
+- Step 8 investigation: inspected the installed Aladin 3.8.2 implementation and live DR1 HiPS properties. newImageSurvey successCallback runs only after the layer is added; calling setFrequency before that is ineffective. No public destroy method was found. Plan to isolate the lazily imported Aladin viewer in a same-origin iframe, whose document lifetime releases its render loop when Lab closes, rather than inventing a cleanup API. Keep its real logo/link visible.
+
+## Step 8 in progress
+
+- Added a same-origin, client-only Aladin document and explicit origin/source-checked messages. The existing library is dynamically imported only inside Lab's iframe; removing that document releases its render loop. No unsupported destroy method is called.
+- Read live HiPS properties into hips.json; channel labels remain sourced from channels.json. The required frequency encoding uses the published spectral bounds and actual channel count. setFrequency runs after successCallback confirms that the layer is added.
+- Added Lab controls, layer tree, pixel/flag/variance inspector, canonical full-FITS link, 2MASS opacity, and spectral cube channel selection. Gaia in the photographic plate remains propagated per frame; the HiPS reference catalog is explicitly labelled at its catalog epoch.
+- Fixed a progressive-loading mismatch: the renderer clamped requested frame indices to uploaded textures but the Gaia annotation could still use a later, not-yet-uploaded epoch. Both annotation and displayed metadata now follow the actually available frame.
+- Initial Lab type check: 2 errors (showCube prop not declared) and 4 warnings (helper named state conflicted with the Svelte rune). Renamed helper and declared the prop; verification in progress.
+- Step 7 deployed integration completed: `4 passed (24.3s)` on breathingcomets.org, including an actual live click returning at least 50 points.
+
+- Second Lab type check: `svelte-check found 1 error and 0 warnings in 1 file`: `ModeSwitch.svelte: Cannot find name showCube`. The first scripted edit changed the type but missed the multiline destructuring declaration. Applied the explicit destructuring fix. After two failed checks, step 8 remains partial and work proceeds to step 9; the next integration build must still verify this fix before publication.
+
+## Step 9 implementation and source blocker
+
+- Built the uncertainty-attached catalog, D versus H plot with explicitly assumed albedo curves, selectable retained photometry, all 50 out-of-sample ratios and a log diameter comparison using the five absolute references available in the retained validation pairs. The page visibly states 5/50; no missing diameters are fabricated.
+- IRSA TAP attempt 1, targeted 50-object query: `httpx.HTTPStatusError: 502 Proxy Error`. Attempt 2, documented REQUEST=doQuery NEO catalog query, 50-second bound: `httpx.ReadTimeout: The read operation timed out`. After two failures the full absolute comparison remains partial; continue step 11 after integration checks.
+- Full Svelte check now passes: `svelte-check found 0 errors and 0 warnings`, including the explicit step 8 prop correction and landing changes.
+
+## Integration verification (2026-11-14, after steps 8–10 landed in the working tree)
+
+- Web: `npm run check` 0 errors / 0 warnings (1742 files); `npm run build` passed; Vitest `39 passed (39)`.
+- Python: `1 failed, 157 passed, 9 deselected`; sole failure is the known `test_r_dra_samples_full_baseline` (unchanged assertion).
+- Full local E2E against the default build: `17 passed, 2 failed`. Both failures (`lab.spec.ts` pixel click, `spectrum.spec.ts`) were `canvas` never appearing. Console showed `blocked by CORS policy ... api.breathingcomets.org/v1/gaia` from `http://127.0.0.1:4191`: `services/api/fly.toml` sets `SPX_ALLOWED_ORIGINS` to prod + `localhost:5173` only, overriding the code default that includes `127.0.0.1:4183`. Not a product defect.
+- Rebuilt with `VITE_API_BASE=http://127.0.0.1:8000` and reran: `3 passed (22.1s)` (Lab frame 85 + Aladin attribution, Lab pixel click ≥ 50 points, free-sky click ≥ 50 points).
+- Decision pending: add `http://127.0.0.1:4183` to the `fly.toml` allowlist (would make the public-API E2E runnable locally) — not changed.

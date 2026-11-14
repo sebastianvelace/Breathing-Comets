@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "replayed": true,
+  "replayed": false,
   "comparisons": [
     {
       "designation": "J100141.19+013730.4",
@@ -9,19 +9,19 @@
       "bands": {
         "Ks": {
           "n": 12,
-          "median_mjy": 18.37198185916147,
+          "median_mjy": 18.371981859161465,
           "catalog_mjy": 18.345538116436188,
-          "ratio": 1.0014414263870293
+          "ratio": 1.001441426387029
         },
         "W2": {
           "n": 53,
-          "median_mjy": 4.667701840029543,
+          "median_mjy": 4.667701840029546,
           "catalog_mjy": 4.594072871113179,
-          "ratio": 1.0160269484141908
+          "ratio": 1.0160269484141913
         }
       },
-      "seconds": null,
-      "api": "http://127.0.0.1:8000"
+      "seconds": 17.804264805999992,
+      "api": "https://api.breathingcomets.org"
     },
     {
       "designation": "J100203.40+031558.5",
@@ -36,13 +36,13 @@
         },
         "W2": {
           "n": 59,
-          "median_mjy": 14.074862896753565,
+          "median_mjy": 14.074862896753562,
           "catalog_mjy": 13.925085797061731,
-          "ratio": 1.0107559193440256
+          "ratio": 1.0107559193440254
         }
       },
-      "seconds": null,
-      "api": "http://127.0.0.1:8000"
+      "seconds": 26.59639396499915,
+      "api": "https://api.breathingcomets.org"
     },
     {
       "designation": "J100226.29+020658.4",
@@ -57,13 +57,13 @@
         },
         "W2": {
           "n": 52,
-          "median_mjy": 7.004499527253886,
+          "median_mjy": 7.004499527253878,
           "catalog_mjy": 7.135064109896789,
-          "ratio": 0.9817009937637698
+          "ratio": 0.9817009937637687
         }
       },
-      "seconds": null,
-      "api": "http://127.0.0.1:8000"
+      "seconds": 13.320169738999539,
+      "api": "https://api.breathingcomets.org"
     }
   ]
 }
