@@ -1,0 +1,20 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"$CLAUDE_PROJECT_DIR\"/scripts/git-identity.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "disableClaudeAiConnectors": true
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Elimina líneas de atribución automática del mensaje del commit.
+grep -viE '^[[:space:]]*(Co-Authored-By:.*(claude|anthropic)|Claude-Session:|.*Generated with \[Claude Code\])' "$1" > "$1.tmp" || true
+mv "$1.tmp" "$1"

@@ -1,0 +1,14 @@
+#!/bin/sh
+# Rechaza ramas claude/*, autores distintos y mensajes con atribución automática.
+expected="sebastianvelace@gmail.com"
+zero=0000000000000000000000000000000000000000
+while read lref lsha rref rsha; do
+  case "$rref" in refs/heads/claude/*) echo "push rechazado: rama $rref"; exit 1;; esac
+  [ "$lsha" = "$zero" ] && continue
+  if [ "$rsha" = "$zero" ]; then range="$lsha --not --remotes"; else range="$rsha..$lsha"; fi
+  bad=$(git log --format='%ae%n%ce' $range | grep -vxF -e "$expected" -e "noreply@github.com" | sort -u)
+  [ -n "$bad" ] && { echo "push rechazado: identidad no permitida: $bad"; exit 1; }
+  if git log --format=%B $range | grep -qiE '^(Co-Authored-By:.*(claude|anthropic)|Claude-Session:)'; then
+    echo "push rechazado: hay líneas de atribución en los mensajes"; exit 1; fi
+done
+exit 0
