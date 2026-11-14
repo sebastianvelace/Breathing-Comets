@@ -26,7 +26,7 @@
   "landing_hero_alt_barnard": "SPHEREx plate of the field around Barnard's Star, one frame per survey visit, north up",
   "landing_hero_alt_3i": "SPHEREx plate of interstellar comet 3I/ATLAS",
   "landing_hero_plate_barnard": "Barnard's Star · one real frame per visit, common stretch",
-  "landing_hero_plate_3i": "3I/ATLAS · SPHEREx frames",
+  "landing_hero_plate_3i": "3I/ATLAS · real SPHEREx frames centred on the comet, common stretch, no continuum subtracted",
   "landing_hero_standin": "Stand-in plate: this is Barnard's Star, not 3I/ATLAS. The 3I/ATLAS plate is not published yet.",
   "landing_hero_visit": "visit {n} / {total}",
   "landing_s1_title": "Pluto was found by blinking two plates.",

@@ -109,7 +109,8 @@ async def tracked_rows(ra, dec, detector, t0, t1, track):
         return await describe_rows(ra, dec, detector, t0, t1)
     if t0 is None or t1 is None or t1-t0 > 45:
         raise ScienceError("TRACK_INTERVAL_REQUIRED", "horizons", "Moving targets require an interval of at most 45 days", 400, 0)
-    samples = np.linspace(t0, t1, max(2, int(np.ceil((t1-t0)*24))+1))
+    # A 3.5 degree detector field is much wider than the comet's motion in six hours.
+    samples = np.linspace(t0, t1, max(2, int(np.ceil((t1-t0)*4))+1))
     positions = await asyncio.to_thread(ephem.horizons_positions, track, samples)
     candidates = {}
     for r, d in positions:

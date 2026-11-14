@@ -11,6 +11,7 @@
   import TargetsSection from "#lib/components/landing/TargetsSection.svelte";
   import LandingFooter from "#lib/components/landing/LandingFooter.svelte";
   import {
+    bundledComet,
     landingMedia,
     loadCometPacket,
     type CometState,
@@ -19,10 +20,11 @@
   const ORIGIN = "https://breathingcomets.org";
   const locale = getLocale();
 
-  let comet = $state<CometState>({ status: "idle" });
+  let comet = $state<CometState>(bundledComet);
 
   // The 3I packet is optional and never blocks first paint: request it once the page has loaded.
   $effect(() => {
+    if (bundledComet.status === "ready") return;
     let cancelled = false;
     const run = () => {
       comet = { status: "loading" };
@@ -45,7 +47,10 @@
     { id: "validation", n: "§5", label: () => m.landing_nav_validation() },
     { id: "targets", n: "§6", label: () => m.landing_nav_targets() },
   ];
-  const poster = landingMedia.plates.barnard.epochs[0];
+  const poster =
+    bundledComet.status === "ready" && bundledComet.packet.plates.epochs[0]
+      ? { src: bundledComet.packet.plates.epochs[0].image }
+      : landingMedia.plates.barnard.epochs[0];
 </script>
 
 <svelte:head>

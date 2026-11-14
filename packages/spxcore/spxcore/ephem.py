@@ -35,11 +35,23 @@ def match_horizons_rows(request_jd, response_jd, tolerance=1e-5):
     return indices
 
 
+# Horizons receives the epoch list in the URI; beyond ~100 JD values it is truncated and the
+# query fails. Requests are therefore split into bounded chunks and concatenated in order.
+HORIZONS_CHUNK = 40
+
+
 def horizons_positions(designation, mjd):
+    jd = Time(np.atleast_1d(mjd), format="mjd", scale="utc").jd
+    if len(jd) <= HORIZONS_CHUNK:
+        return _horizons_chunk(designation, jd)
+    parts = [_horizons_chunk(designation, jd[i:i + HORIZONS_CHUNK]) for i in range(0, len(jd), HORIZONS_CHUNK)]
+    return np.concatenate(parts)
+
+
+def _horizons_chunk(designation, jd):
     from astroquery.jplhorizons import Horizons
     from requests.exceptions import RequestException
 
-    jd = Time(np.atleast_1d(mjd), format="mjd", scale="utc").jd
     query = Horizons(id=designation, location="500@-163182", epochs=jd.tolist())
     query.TIMEOUT = 8
     # The pinned client parser recognizes only CAL_FORMAT=BOTH. Keep the required

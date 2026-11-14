@@ -2,27 +2,6 @@ import { test, expect, type Page } from "@playwright/test";
 
 const SLUGS = ["barnard", "eps-indi-b", "wise-0855", "rw-aur", "r-dra"];
 
-// Test-only contract fixture for the pending 3I packet. Images reuse existing
-// landing plates purely so the browser has something to decode; values are fake.
-const fixture = {
-  target: "3I/ATLAS",
-  plates: {
-    poster: "/media/landing/barnard-d4-poster.webp",
-    epochs: [
-      { image: "/media/landing/barnard-d4-visit0.webp", mjd: 60900.5, lambda_um: 4.3, obs_id: "TEST_A", credit: "test" },
-      { image: "/media/landing/barnard-d4-visit6.webp", mjd: 61000.5, lambda_um: 4.4, obs_id: "TEST_B", credit: "test" },
-    ],
-  },
-  measurements: [
-    { label: "Q(TEST)", value: 2.5e26, lo: 2e26, hi: 3e26, unit: "s⁻¹", caveat: "TEST CAVEAT", source: "TEST SOURCE" },
-  ],
-  validation: [
-    { species: "TEST-IN", measured: 2, published_lo: 1, published_hi: 3, unit: "s⁻¹", caveat: "c", source: "s" },
-    { species: "TEST-OUT", measured: 9, published_lo: 1, published_hi: 3, unit: "s⁻¹", caveat: "c", source: "s" },
-  ],
-  credits: ["TEST CREDIT"],
-};
-
 async function noHorizontalScroll(page: Page) {
   const { sw, cw } = await page.evaluate(() => ({
     sw: document.documentElement.scrollWidth,
@@ -82,35 +61,6 @@ test("internal links and anchors resolve", async ({ page, request }) => {
       expect((await request.get(href)).status(), href).toBe(200);
     }
   }
-});
-
-test("3I packet missing: honest pending state, Barnard stand-in labelled", async ({ page }) => {
-  await page.route("**/data/comets/3i-atlas/landing.json", (route) =>
-    route.fulfill({ status: 404, body: "" }),
-  );
-  await page.goto("/");
-  await expect(page.getByTestId("comet-panel")).toHaveAttribute("data-status", "missing");
-  await expect(page.getByTestId("comet-panel").locator("img")).toHaveCount(0);
-  await expect(page.getByText("Stand-in plate: this is Barnard's Star, not 3I/ATLAS.", { exact: false })).toBeVisible();
-  await expect(page.getByTestId("comet-validation")).toContainText("PENDING");
-});
-
-test("3I packet present: comet sections fill in automatically", async ({ page }) => {
-  await page.route("**/data/comets/3i-atlas/landing.json", (route) =>
-    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(fixture) }),
-  );
-  await page.goto("/");
-  const panel = page.getByTestId("comet-panel");
-  await expect(panel).toHaveAttribute("data-status", "ready");
-  await expect(panel).toContainText("2.50 × 10²⁶");
-  await expect(panel).toContainText("TEST CAVEAT");
-  const table = page.getByTestId("comet-validation");
-  await expect(table.getByRole("row", { name: /TEST-IN/ })).toContainText("within range");
-  await expect(table.getByRole("row", { name: /TEST-OUT/ })).toContainText("outside range");
-  await expect(page.getByTestId("hero-plate").locator("img").first()).toHaveAttribute(
-    "alt",
-    "SPHEREx plate of interstellar comet 3I/ATLAS",
-  );
 });
 
 test("hero loop plays, pauses, and respects reduced motion", async ({ page, browser }) => {
@@ -188,4 +138,29 @@ test.describe("mobile", () => {
       await noHorizontalScroll(page);
     }
   });
+});
+
+test("published 3I packet fills hero, §4 and §5 with real plates and caveats", async ({ page }) => {
+  await page.goto("/");
+  const panel = page.getByTestId("comet-panel");
+  await expect(panel).toHaveAttribute("data-status", "ready");
+  await expect(panel).toContainText("1.17 × 10²⁷");
+  await expect(panel).toContainText("Statistical error");
+  await expect(panel.locator("img")).toHaveAttribute("src", /3i-d5-2025-08-poster\.webp$/);
+  await expect(page.getByTestId("hero-plate").locator("img").first()).toHaveAttribute(
+    "alt",
+    "SPHEREx plate of interstellar comet 3I/ATLAS",
+  );
+  await expect(page.getByTestId("hero-plate")).toHaveAttribute("data-frames", "12");
+  await expect(page.getByText("Stand-in plate", { exact: false })).toHaveCount(0);
+  const table = page.getByTestId("comet-validation");
+  await expect(table.getByRole("row", { name: /3I\/ATLAS · CO₂/ })).toContainText("within range");
+});
+
+test("Spanish landing shows the Spanish 3I caveats", async ({ page }) => {
+  await page.goto("/es");
+  const panel = page.getByTestId("comet-panel");
+  await expect(panel).toHaveAttribute("data-status", "ready");
+  await expect(panel).toContainText("Error estadístico");
+  expect(await panel.innerText()).not.toMatch(/\d,\d/);
 });

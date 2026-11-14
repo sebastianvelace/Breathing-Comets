@@ -41,10 +41,15 @@
   const is3I = $derived(
     comet.status === "ready" && comet.packet.plates.epochs.length > 0,
   );
+  const packetPlates = $derived(
+    comet.status === "ready" && comet.packet.plates.epochs.length > 0 ? comet.packet.plates : null,
+  );
   const frames = $derived<HeroFrame[]>(
     comet.status === "ready" && comet.packet.plates.epochs.length > 0
       ? comet.packet.plates.epochs.map((e) => ({
           src: e.image,
+          width: e.width,
+          height: e.height,
           date: mjdDate(e.mjd),
           lam: e.lambda_um,
           obs: e.obs_id,
@@ -142,9 +147,9 @@
 
   <div class="plate-col" bind:this={figure}>
     <Plate
-      arcsecPerPx={is3I ? undefined : barnard.grid.pixel_arcsec}
-      viewPx={barnard.grid.nx}
-      compass={!is3I}
+      arcsecPerPx={packetPlates ? packetPlates.pixel_arcsec : barnard.grid.pixel_arcsec}
+      viewPx={packetPlates ? (packetPlates.nx ?? 1) : barnard.grid.nx}
+      compass={packetPlates ? packetPlates.north_up === true : true}
       {credit}
     >
       <div class="frames" data-testid="hero-plate" data-frame={index} data-frames={frames.length}>
@@ -181,7 +186,7 @@
           {is3I ? m.landing_hero_plate_3i() : m.landing_hero_plate_barnard()}
         </span>
         <span class="meta" aria-live="off">
-          SPHEREx{current.det ? ` D${current.det}` : ""} · {fmtLam(current.lam)} µm ·
+          SPHEREx{current.det ? ` D${current.det}` : is3I ? " D5" : ""} · {fmtLam(current.lam)} µm ·
           {current.date} · obs {current.obs}
         </span>
         {#if !is3I}

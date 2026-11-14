@@ -1,0 +1,183 @@
+{
+ "target": "3I/ATLAS",
+ "plates": {
+  "poster": "/media/landing/3i-d5-2025-08-poster.webp",
+  "pixel_arcsec": 6.15,
+  "nx": 31,
+  "north_up": true,
+  "epochs": [
+   {
+    "image": "/media/landing/3i-d5-2025-08-k0.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60888.673984673,
+    "lambda_um": 4.140803813934326,
+    "obs_id": "2025W31_2A_0219_1",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k1.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60888.67547693,
+    "lambda_um": 4.176822662353516,
+    "obs_id": "2025W31_2A_0219_2",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k2.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60888.676969175,
+    "lambda_um": 4.212862968444824,
+    "obs_id": "2025W31_2A_0219_3",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k3.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60895.535922497,
+    "lambda_um": 4.163806915283203,
+    "obs_id": "2025W32_2D_0189_2",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k4.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60895.538906999,
+    "lambda_um": 4.236149311065674,
+    "obs_id": "2025W32_2D_0189_4",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k5.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60895.606182821,
+    "lambda_um": 4.345931529998779,
+    "obs_id": "2025W32_2D_0201_2",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k8.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60898.11469877,
+    "lambda_um": 3.8770697116851807,
+    "obs_id": "2025W33_1B_0020_1",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k9.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60898.117683273,
+    "lambda_um": 3.9447014331817627,
+    "obs_id": "2025W33_1B_0020_3",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k10.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60898.251097972,
+    "lambda_um": 4.011917591094971,
+    "obs_id": "2025W33_1B_0049_1",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k11.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60898.255574742,
+    "lambda_um": 4.11758279800415,
+    "obs_id": "2025W33_1B_0049_4",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k12.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60900.155623747,
+    "lambda_um": 4.3380632400512695,
+    "obs_id": "2025W33_1B_0399_2",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   },
+   {
+    "image": "/media/landing/3i-d5-2025-08-k13.webp",
+    "width": 31,
+    "height": 31,
+    "mjd": 60900.158608273,
+    "lambda_um": 4.412283897399902,
+    "obs_id": "2025W33_1B_0399_4",
+    "credit": "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)"
+   }
+  ]
+ },
+ "measurements": [
+  {
+   "label": "Q(CO₂), August 2025",
+   "label_es": "Q(CO₂), agosto de 2025",
+   "value": 1.17e+27,
+   "lo": 8.6e+26,
+   "hi": 1.38e+27,
+   "unit": "s⁻¹",
+   "caveat": "Statistical error ±3.0e+25; χ²ᵣ 27.5. The 16–84% range comes from the research notes and Q scales with the assumed outflow speed (about −40% for 0.50 instead of 0.85 r_h^−0.5 km/s).",
+   "caveat_es": "Error estadístico ±3.0e+25; χ²ᵣ 27.5. El intervalo 16–84% sale de las notas de investigación y Q es proporcional a la velocidad de salida supuesta (cerca de −40% con 0.50 en lugar de 0.85 r_h^−0.5 km/s).",
+   "source": "Research fit of the CO₂ ν₃ band (research/11_band_physical.py), reproduced 2026-11-14"
+  },
+  {
+   "label": "Q(CO₂), December 2025",
+   "label_es": "Q(CO₂), diciembre de 2025",
+   "value": 3.41915115579024e+27,
+   "lo": 2.7807758489160794e+27,
+   "hi": 4.175121566700826e+27,
+   "unit": "s⁻¹",
+   "caveat": "Band present (S/N 41.1) but the model fits poorly (χ²ᵣ 185): Q is not trusted at its quoted precision.",
+   "caveat_es": "Hay banda (S/N 41.1) pero el modelo ajusta mal (χ²ᵣ 185): Q no es fiable con la precisión indicada.",
+   "source": "Comet census (co2_census_physical.csv)"
+  }
+ ],
+ "validation": [
+  {
+   "species": "3I/ATLAS · CO₂ · 2025-08",
+   "measured": 1.17e+27,
+   "published_lo": 9.4e+26,
+   "published_hi": 1.6e+27,
+   "unit": "s⁻¹",
+   "caveat": "χ²ᵣ 27.5. Consistent with the published range; not an independent confirmation.",
+   "caveat_es": "χ²ᵣ 27.5. Consistente con el intervalo publicado; no es una confirmación independiente.",
+   "source": "Lisse et al. 2025, RNAAS, arXiv:2508.15469 (0.94e27, preliminary); Lisse et al. 2026, ApJL 1000, L52, arXiv:2512.07318 (1.6e27 +/- 0.16e27)"
+  },
+  {
+   "species": "29P/Schwassmann-Wachmann · CO · 2025-12",
+   "measured": 4.504395602346236e+28,
+   "published_lo": 2.9e+28,
+   "published_hi": 5.6e+28,
+   "unit": "s⁻¹",
+   "caveat": "χ²ᵣ 127.3. Consistent with the published range; not an independent confirmation.",
+   "caveat_es": "χ²ᵣ 127.3. Consistente con el intervalo publicado; no es una confirmación independiente.",
+   "source": "Bockelee-Morvan et al. 2022 (IRAM, 2.9-5.6e28); quiescent 1.8e28 (Festou et al. 2001)"
+  }
+ ],
+ "credits": [
+  "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)",
+  "Ephemeris: NASA/JPL Horizons (SPHEREx observer)"
+ ],
+ "generated": "2026-11-14T18:21Z",
+ "stack": {
+  "file": "D5-2025-08.spxf.gz",
+  "stretch": {
+   "lo": 0.14398940838873386,
+   "hi": 3.5969718778133464,
+   "map": "asinh(20x)/asinh(20)"
+  },
+  "poster": {
+   "obs_id": "2025W32_2D_0189_4",
+   "lambda_um": 4.236149311065674,
+   "mjd": 60895.538906999
+  }
+ }
+}

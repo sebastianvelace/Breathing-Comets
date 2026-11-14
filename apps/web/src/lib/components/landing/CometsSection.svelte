@@ -1,7 +1,10 @@
 <script lang="ts">
   import { m } from "#lib/paraglide/messages.js";
   import Plate from "./Plate.svelte";
-  import { fmtLam, fmtSciUnicode, type CometState } from "./landing.js";
+  import { getLocale } from "#lib/paraglide/runtime.js";
+  import { fmtLam, fmtSciUnicode, localized, type CometState } from "./landing.js";
+
+  const locale = getLocale();
 
   let { comet }: { comet: CometState } = $props();
 
@@ -25,7 +28,12 @@
   <div class="figure" data-testid="comet-panel" data-status={comet.status}>
     {#if comet.status === "ready"}
       {@const packet = comet.packet}
-      <Plate viewPx={1} compass={false} credit={packet.credits.join(" · ")}>
+      <Plate
+        arcsecPerPx={packet.plates.pixel_arcsec}
+        viewPx={packet.plates.nx ?? 1}
+        compass={packet.plates.north_up === true}
+        credit={packet.credits.join(" · ")}
+      >
         <img
           src={packet.plates.poster}
           alt={m.landing_s4_alt({ target: packet.target })}
@@ -43,14 +51,14 @@
       </Plate>
       {#if lead}
         <div class="figure-number">
-          <p class="label">{lead.label}</p>
+          <p class="label">{localized(lead.label, lead.label_es, locale)}</p>
           <p class="big mono-num">
             {fmtSciUnicode(lead.value)} <span class="unit">{lead.unit}</span>
           </p>
           <p class="range mono">
             {m.landing_range({ lo: fmtSciUnicode(lead.lo), hi: fmtSciUnicode(lead.hi) })}
           </p>
-          <p class="caveat">{lead.caveat}</p>
+          <p class="caveat">{localized(lead.caveat, lead.caveat_es, locale)}</p>
           <p class="source mono">{lead.source}</p>
         </div>
       {/if}
@@ -58,12 +66,12 @@
         <dl class="more">
           {#each rest as item (item.label)}
             <div>
-              <dt>{item.label}</dt>
+              <dt>{localized(item.label, item.label_es, locale)}</dt>
               <dd class="mono">
                 {fmtSciUnicode(item.value)} {item.unit}
                 ({m.landing_range({ lo: fmtSciUnicode(item.lo), hi: fmtSciUnicode(item.hi) })})
               </dd>
-              <dd class="caveat">{item.caveat}</dd>
+              <dd class="caveat">{localized(item.caveat, item.caveat_es, locale)}</dd>
               <dd class="source mono">{item.source}</dd>
             </div>
           {/each}

@@ -1,4 +1,5 @@
 import media from "../../../../static/media/landing/landing-media.json";
+import cometJson from "../../../../static/data/comets/3i-atlas/landing.json";
 import type { Grid } from "#lib/data/types.js";
 import { propagate, worldToPixel } from "#lib/data/coordinates.js";
 
@@ -102,8 +103,14 @@ export type CometPacket = {
   target: string;
   plates: {
     poster: string;
+    /** Optional: enables the scale bar and the N/E mark; omitted plates show neither. */
+    pixel_arcsec?: number;
+    nx?: number;
+    north_up?: boolean;
     epochs: {
       image: string;
+      width?: number;
+      height?: number;
       mjd: number;
       lambda_um: number;
       obs_id: string;
@@ -112,6 +119,8 @@ export type CometPacket = {
   };
   measurements: {
     label: string;
+    label_es?: string;
+    caveat_es?: string;
     value: number;
     lo: number;
     hi: number;
@@ -120,6 +129,7 @@ export type CometPacket = {
     source: string;
   }[];
   validation: {
+    caveat_es?: string;
     species: string;
     measured: number;
     published_lo: number;
@@ -218,3 +228,17 @@ export function loadCometPacket(fetcher: typeof fetch = fetch) {
 export function resetCometPacket() {
   pending = null;
 }
+
+/** Spanish text when the packet provides it, English otherwise. */
+export const localized = (en: string, es: string | undefined, locale: string) =>
+  locale === "es" && es ? es : en;
+
+/**
+ * The published 3I/ATLAS packet, validated at build time so the prerendered page starts with
+ * it. If the file ever stops matching the contract, the page falls back to the pending state
+ * and to the deferred fetch above.
+ */
+export const bundledComet: CometState = (() => {
+  const packet = parseCometPacket(cometJson);
+  return packet ? { status: "ready", packet } : { status: "idle" };
+})();

@@ -1,0 +1,11 @@
+{
+  "target": "3I/ATLAS (C/2025 N1)",
+  "track": "2025 N1",
+  "observer": "SPHEREx spacecraft (Horizons 500@-163182), epochs sampled every 6 h, chunks of 40 epochs",
+  "generated": "2026-11-14",
+  "requests": {
+    "D5-2025-08.spxf.gz": "GET /v1/stack?ra=106.028636&dec=19.303682&fov=0.05&det=5&t0=60886&t1=60903&max_frames=80&track=2025%20N1",
+    "D5-2025-12.spxf.gz": "GET /v1/stack?ra=106.028636&dec=19.303682&fov=0.05&det=5&t0=61010&t1=61040&max_frames=80&track=2025%20N1"
+  },
+  "note": "Real SPHEREx L2 cutouts centred on the Horizons position of the comet in each exposure. Grid 31x31 px at 6.15 arcsec/px, north up. No continuum subtraction, no gas map."
+}

@@ -9,7 +9,10 @@
     rule,
     validation as photometry,
   } from "../../../../static/data/calibration.json";
-  import { fmtSciUnicode, type CometState } from "./landing.js";
+  import { getLocale } from "#lib/paraglide/runtime.js";
+  import { fmtSciUnicode, localized, type CometState } from "./landing.js";
+
+  const locale = getLocale();
 
   let { comet }: { comet: CometState } = $props();
 
@@ -57,7 +60,7 @@
               </td>
             </tr>
             <tr class="sub">
-              <td colspan="4"><span class="caveat">{row.caveat}</span> <span class="mono src">{row.source}</span></td>
+              <td colspan="4"><span class="caveat">{localized(row.caveat, row.caveat_es, locale)}</span> <span class="mono src">{row.source}</span></td>
             </tr>
           {/each}
         {:else}

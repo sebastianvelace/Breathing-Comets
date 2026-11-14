@@ -170,3 +170,52 @@ describe("landing messages", () => {
     for (const k of keys(es)) expect(es[k], k).not.toMatch(/\d,\d/);
   });
 });
+
+describe("published 3I/ATLAS packet", () => {
+  const packet = JSON.parse(
+    readFileSync(new URL("data/comets/3i-atlas/landing.json", STATIC), "utf8"),
+  );
+  const atlas = JSON.parse(readFileSync(new URL("data/comets/index.json", STATIC), "utf8"));
+
+  it("satisfies the strict contract and its images exist", () => {
+    expect(parseCometPacket(packet)).not.toBeNull();
+    expect(existsSync(new URL(`.${packet.plates.poster}`, STATIC))).toBe(true);
+    expect(packet.plates.epochs.length).toBeGreaterThanOrEqual(10);
+    for (const e of packet.plates.epochs) {
+      expect(existsSync(new URL(`.${e.image}`, STATIC)), e.image).toBe(true);
+      expect(e.width).toBe(packet.plates.nx);
+    }
+  });
+
+  it("frames come from the stored tracked stack with its stretch", () => {
+    const header = stackHeader(`data/comets/3i-atlas/${packet.stack.file}`);
+    expect(header.target.track).toBe("2025 N1");
+    expect(packet.stack.stretch.lo).toBe(header.stretch_hint.lo);
+    expect(packet.stack.stretch.hi).toBe(header.stretch_hint.hi);
+    const byObs = new Map<string, { mjd: number; lam_um: number }>(
+      header.frames.map((f: { obs_id: string; mjd: number; lam_um: number }) => [f.obs_id, f]),
+    );
+    for (const e of packet.plates.epochs) {
+      const f = byObs.get(e.obs_id)!;
+      expect(f, e.obs_id).toBeDefined();
+      expect(e.mjd).toBe(f.mjd);
+      expect(e.lambda_um).toBe(f.lam_um);
+    }
+    expect(packet.plates.pixel_arcsec).toBe(header.grid.pixel_arcsec);
+  });
+
+  it("measurements and validation equal the atlas, each with a caveat", () => {
+    const aug = atlas.validation.find((v: { id: string }) => v.id === "3i-atlas_co2_2025-08");
+    expect(packet.measurements[0].value).toBe(aug.measured);
+    expect(packet.measurements[0].lo).toBe(aug.measured_lo);
+    const dec = atlas.comets.find((c: { slug: string }) => c.slug === "3i-atlas");
+    expect(packet.measurements[1].value).toBe(dec.co2.q50);
+    expect(packet.measurements[1].caveat).toContain("fits poorly");
+    for (const m of packet.measurements) {
+      expect(m.caveat.length).toBeGreaterThan(20);
+      expect(m.caveat_es.length).toBeGreaterThan(20);
+      expect(m.caveat_es).not.toMatch(/\d,\d/);
+    }
+    expect(packet.validation.length).toBe(atlas.validation.length);
+  });
+});
