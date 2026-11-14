@@ -1,0 +1,9 @@
+{
+  "target": "29P/Schwassmann-Wachmann",
+  "track": "90000393",
+  "track_note": "Horizons rejects the designations 29P, 29P;, DES=29P; and the full name with 'no ephemeris' (ambiguous record set); the numeric SPK id 90000393 returns a position (173.1519, -2.738 at MJD 61025.2).",
+  "observer": "SPHEREx spacecraft (Horizons 500@-163182), epochs sampled every 6 h, chunks of 40 epochs",
+  "generated": "2026-11-14",
+  "requests": {"D5-2025-12.spxf.gz": "GET /v1/stack?ra=173.1519&dec=-2.738&fov=0.05&det=5&t0=61020&t1=61031&max_frames=80&track=90000393"},
+  "note": "34 real tracked D5 frames, 16-21 December 2025, 31x31 px at 6.15 arcsec/px, north up. 200 in 15.8 s, 113,564 B."
+}

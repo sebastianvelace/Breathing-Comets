@@ -187,3 +187,8 @@
   Content-Type: application/octet-stream
   ! Content-Encoding
   Cache-Control: public, max-age=3600
+
+/data/comets/29p-schwassmann-wachmann/D5-2025-12.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600

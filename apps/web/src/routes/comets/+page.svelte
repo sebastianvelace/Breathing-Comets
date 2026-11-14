@@ -19,6 +19,7 @@
   };
   const sig = (v: number | null | undefined, d = 2) => (v === null || v === undefined ? "—" : v.toFixed(d));
   const other = getLocale() === "en" ? "es" : "en";
+  const detailSlugs = ["3i-atlas", "29p-schwassmann-wachmann"];
   const co2Count = (s: string) => (cometAtlas.counts as Record<string, number>)[s];
 </script>
 
@@ -90,6 +91,7 @@
           {#each rows as c (c.slug)}
             <tr id="comet-{c.slug}" class:chosen={selected === c.slug} data-testid="comet-row" data-slug={c.slug} data-status={c.co2.status}>
               <td><button onclick={() => pick(c.slug)} aria-pressed={selected === c.slug}>{c.name}</button>
+                {#if detailSlugs.includes(c.slug)}<a class="badge" href={localizeHref(`/comets/${c.slug}`)} data-testid="detail-link">{m.comets_open_detail()}</a>{/if}
                 {#if c.flags.includes("far_unreliable")}<span class="badge">{m.comets_flag_far()}</span>{/if}</td>
               <td class="r">{sig(c.r_au)}</td><td class="r">{sig(c.delta_au)}</td>
               <td class="r" data-testid="q">{fmtSciUnicode(c.co2.q16)} · <b>{fmtSciUnicode(c.co2.q50)}</b> · {fmtSciUnicode(c.co2.q84)}</td>

@@ -1,0 +1,4 @@
+Copied unchanged from the research census (data/derived/census_spectra/).
+*.skysub.csv.txt: D5 sky-subtracted exposures, columns f{2,3,5,8}_jy are apertures of 2/3/5/8 px (Jy). The census uses 3 px.
+*.D6.csv.txt: D6 spectra used for the CO census, flux `f` in Jy, 1-sigma `e`.
+3I_aug2025_D5_skysub.csv: D5 sky-subtracted spectrum of the August 2025 3I epoch used by research/11_band_physical.py (same columns as *.skysub.csv.txt).
