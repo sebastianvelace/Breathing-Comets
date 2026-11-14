@@ -24,7 +24,7 @@ All results below describe observed verification. No research scripts have been 
 | 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
 | 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
 | 10 | Landing | Partial (3I packet delivered) | Integration commit + 3I commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | Gas-map/ink-in animation not built (no continuum-subtracted maps exist); Lighthouse LCP not measured (proxy 0.8–0.9 s before the 3I packet was bundled). |
-| 11 | Comets, method, about and Spanish | Partial | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
+| 11 | Comets, method, about and Spanish | Partial (atlas + 3I/29P pages) | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
 | 14 | Freeze | Pending | — | Not run | — |
@@ -232,3 +232,31 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - The packet is bundled at build time (validated; fallback to the deferred fetch and pending state if invalid) so the prerendered page starts with 3I and the `preload` targets the right frame. Initial JS rose from 70.4 to **80.8 KB gz** (budget 90).
 - Headline figure is August Q(CO₂) 1.17e27 (χ²ᵣ 27.5); December 3.42e27 carries its "fits poorly, χ²ᵣ 185" caveat. The H₂O comparison stays withheld.
 - Verification: `npm run check` 0/0; Vitest 42 passed (3 new packet tests: contract, stack/obs_id/stretch match, atlas equality); full local E2E against the local API `26 passed (44.4s)`; pytest `1 failed (known R Dra), 166 passed`.
+
+## Detail pages, landing redesign and progress (2026-11-14)
+
+- `/comets/3i-atlas` and `/comets/29p-schwassmann-wachmann` (EN/ES): real tracked frames ordered by wavelength with sweep animation, D5 and D6 spectra (census filters, Jy → mJy), diagnostics, comparisons with published values and provenance. 29P stack: 34 frames, 16–21 Dec 2025 (`track=90000393`). Tests: 6 pytest (`test_comet_pages.py`) and 5 E2E (`comet-detail.spec.ts`).
+- Landing redesign: dark plate hero with word-by-word headline, scan line and pointer parallax; 102-channel ribbon from `channels.json` (bar height = resolving power R); alternating dark/paper bands; sticky masthead with section tracking and scroll progress; CSS scroll-driven reveals; sticky figures; card micro-interactions. All animation is disabled under `prefers-reduced-motion`.
+- Verification: `npm run check` 0/0; Vitest 43 passed; full local E2E (built against the local API) 31 passed; initial JS 88.5 KB gz.
+- All findings, deviations from BUILD 10.4 and their justifications: `docs/FINDINGS.md`.
+
+### Estimated completion (judgement, weights by effort)
+
+| Step | Weight | Done | Note |
+|---|---|---|---|
+| 1 Repository | 2 | 100% | |
+| 2 Deployed skeletons | 3 | 100% | |
+| 3 Static data | 3 | 100% | |
+| 4 Core | 10 | 90% | golden 3I model test and R Dra baseline pending |
+| 5 Five targets | 8 | 90% | R Dra baseline fails |
+| 6 Story Explorer | 12 | 100% | |
+| 7 Live API | 10 | 80% | cold stack 5.2 s; Horizons fix not deployed; JPL identification |
+| 8 Lab + Aladin | 8 | 90% | |
+| 9 Small-Body Lab | 8 | 80% | absolute references 5/50 |
+| 10 Landing | 8 | 85% | redesign done; Lighthouse and gas-map animation pending |
+| 11 Comets / method / about / ES | 8 | 55% | atlas and two pages done; `/method` and about missing |
+| 12 Final tests and budgets | 6 | 40% | Lighthouse, a11y audit, E2E 5–7 partly |
+| 13 Submission | 8 | 10% | video, summary, Use of AI not produced |
+| 14 Freeze | 2 | 0% | |
+
+Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only the product steps 1–12.

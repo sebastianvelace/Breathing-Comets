@@ -40,7 +40,9 @@ def test_frames_exist_ordered_by_wavelength_and_match_stack(slug):
 
 def test_spectra_follow_census_filters_and_convert_jy_to_mjy():
     p = packet("29p-schwassmann-wachmann")
-    rows = [r for r in csv.DictReader(open(SPECTRA / "29P_Schwassmann-Wachmann.skysub.csv.txt"))
+    with open(SPECTRA / "29P_Schwassmann-Wachmann.skysub.csv.txt", newline="", encoding="utf-8") as handle:
+        all_rows = list(csv.DictReader(handle))
+    rows = [r for r in all_rows
             if r["det"] == "D5" and float(r["e3_jy"]) > 0 and float(r["f3_jy"]) != 0
             and math.isfinite(float(r["f3_jy"])) and 3.85 <= float(r["lam_um"]) <= 4.42]
     exported = p["spectrum"]["by_epoch"]["2025-12"]["d5"]

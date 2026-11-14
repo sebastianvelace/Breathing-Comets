@@ -219,3 +219,16 @@ describe("published 3I/ATLAS packet", () => {
     expect(packet.validation.length).toBe(atlas.validation.length);
   });
 });
+
+describe("derived channel table for the ribbon", () => {
+  it("equals the source channels", () => {
+    const src = JSON.parse(readFileSync(new URL("data/channels.json", STATIC), "utf8")).channels;
+    const lite = JSON.parse(readFileSync(new URL("../src/lib/data/channels-lite.json", import.meta.url), "utf8"));
+    expect(lite.rows.length).toBe(src.length);
+    lite.rows.forEach(([frame, lam, R]: number[], i: number) => {
+      expect(frame).toBe(src[i].frame);
+      expect(lam).toBeCloseTo(src[i].wavelength_um, 3);
+      expect(R).toBe(Math.round(src[i].R));
+    });
+  });
+});

@@ -70,6 +70,7 @@
   }
   .sky {
     position: relative;
+    overflow: hidden;
     line-height: 0;
   }
   .sky :global(img),

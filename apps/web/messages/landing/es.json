@@ -113,5 +113,12 @@
   "landing_footer_links": "Para seguir",
   "landing_footer_explorer": "Explorador",
   "landing_footer_method": "Cómo verificamos (§5)",
-  "landing_footer_code": "Código fuente"
+  "landing_footer_code": "Código fuente",
+  "landing_ribbon_title": "{n} colores de luz infrarroja",
+  "landing_ribbon_caption": "Cada exposición de SPHEREx ve el cielo a través de una franja de filtros: de {lo} a {hi} µm, repartida en canales. Las barras más altas resuelven colores más finos.",
+  "landing_ribbon_alt": "Los {n} canales espectrales de SPHEREx de {lo} a {hi} micrómetros, con las bandas de agua, metano, dióxido de carbono y monóxido de carbono marcadas",
+  "landing_ribbon_readout": "canal {n} · {lam} µm · poder de resolución R ≈ {r}",
+  "landing_ribbon_hint": "Pasa el cursor sobre una barra para leer su canal.",
+  "landing_ribbon_foot": "Altura de la barra: poder de resolución R. Barras discontinuas: cuadros que el cubo de todo el cielo de DR1 deja en blanco (dicroico).",
+  "landing_hero_scroll": "Baja a los colores"
 }

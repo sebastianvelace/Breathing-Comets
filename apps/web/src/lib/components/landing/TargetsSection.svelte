@@ -121,9 +121,35 @@
     /* Contains the absolutely positioned sr-only text inside the scroll rail. */
     position: relative;
     scroll-snap-align: start;
+    transition: transform 400ms var(--ease);
     min-width: 0;
     display: flex;
     flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+  }
+  .card :global(.sky img) {
+    transition: transform 900ms var(--ease);
+  }
+  .card:hover :global(.sky img) {
+    transform: scale(1.07);
+  }
+  .card h3 {
+    transition: color 250ms var(--ease);
+  }
+  .card:hover h3 {
+    color: var(--co2);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card :global(.sky img) {
+      transition: none;
+    }
+    .card:hover,
+    .card:hover :global(.sky img) {
+      transform: none;
+    }
   }
   .obs {
     display: block;
