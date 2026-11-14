@@ -103,5 +103,13 @@
   "note_r_dra_amp_label": "Peak-to-peak range ({v0}–{v1}%)",
   "note_r_dra_amp_value": "{v0} mag ({v1} µm) → {v2} mag ({v3} µm)",
   "note_r_dra_amp_ref": "Mira",
-  "note_r_dra_caveat": "only {v0} cycles observed: consistent with the catalogued period, not an independent measurement ({v1}–{v2} µm gives {v3} d, {v4}–{v5})"
+  "note_r_dra_caveat": "only {v0} cycles observed: consistent with the catalogued period, not an independent measurement ({v1}–{v2} µm gives {v3} d, {v4}–{v5})",
+  "spectrum_count": "{count} measured points · {rejected} unavailable exposures",
+  "selected_field": "Selected sky position",
+  "free_caveat": "Each spectral point is a forced ePSF measurement; unavailable exposures are reported separately.",
+  "moving_interval": "Moving targets require an observing interval. Open their comet page to follow the spacecraft ephemeris.",
+  "resolve_unavailable": "Object not resolved — check the name or coordinates.",
+  "resolving": "Resolving sky position…",
+  "mode": "Mode",
+  "explorer_description": "Compare real SPHEREx survey images across dates and infrared wavelengths."
 }

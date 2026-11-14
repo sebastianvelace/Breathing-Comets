@@ -1,5 +1,6 @@
 """FITS physical HDU layout and row reads, including RICE_1 flags."""
 
+import asyncio
 import io
 
 import httpx
@@ -135,7 +136,7 @@ async def read_flag_rows_dr1(key, hdu, y0, y1):
 async def read_rows(key, layout, y0, y1, names=("IMAGE", "FLAGS")):
     hdus = {h["name"]: h for h in layout}
     result = {}
-    raw_names, starts, ends = [], [], []
+    raw_names, starts, ends, compressed = [], [], [], []
     for name in names:
         hdu, h = hdus[name], hdus[name]["header"]
         width = h.get("ZNAXIS1", h.get("NAXIS1"))
@@ -143,15 +144,20 @@ async def read_rows(key, layout, y0, y1, names=("IMAGE", "FLAGS")):
         if not 0 <= y0 < y1 <= height:
             raise ValueError("Row range outside detector")
         if h.get("ZIMAGE", False):
-            result[name] = await read_flag_rows_dr1(key, hdu, y0, y1)
+            compressed.append((name, hdu))
         else:
             row_bytes = width * abs(h["BITPIX"]) // 8
             start = hdu["dat_loc"] + y0 * row_bytes
             raw_names.append(name)
             starts.append(start)
             ends.append(start + (y1 - y0) * row_bytes)
+    jobs = [read_flag_rows_dr1(key, hdu, y0, y1) for _, hdu in compressed]
     if starts:
-        buffers = await s3.get_ranges(key, starts, ends)
+        jobs.append(s3.get_ranges(key, starts, ends))
+    values = await asyncio.gather(*jobs)
+    result.update({name: value for (name, _), value in zip(compressed, values)})
+    if starts:
+        buffers = values[-1]
         for name, buf in zip(raw_names, buffers):
             h = hdus[name]["header"]
             dtype = f">{'f' if h['BITPIX'] < 0 else 'i'}{abs(h['BITPIX']) // 8}"

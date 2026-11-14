@@ -256,3 +256,15 @@ def test_lam_poly(det, tolerance):
         assert np.isfinite(frame["flux"]).any()
         assert meta["lam_poly_max_error_um"] < tolerance
     asyncio.run(check())
+
+
+def test_diff_propagates_independent_reference_variance():
+    from spxcore.sky import difference_stack
+    grid = {"nx": 2, "ny": 2, "crpix": [1, 1]}
+    metadata = [{"mjd": 61000+3*i, "visit": i, "lam_um": 4.5, "bw_um": .1, "lam_poly": [4.5, 0, 0, 0, 0, 0]} for i in range(4)]
+    frames = [{"flux": np.full((2, 2), 2., np.float32), "var": np.full((2, 2), 4., np.float32), "flags": np.zeros((2, 2), np.uint16)} for _ in metadata]
+    info, difference = difference_stack(metadata, frames, grid)
+    assert all(item["diff_available"] for item in info)
+    for frame in difference:
+        np.testing.assert_allclose(frame["flux"], 0)
+        np.testing.assert_allclose(frame["var"], 4+4/3, rtol=1e-6)

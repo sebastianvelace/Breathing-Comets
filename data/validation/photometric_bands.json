@@ -1,0 +1,35 @@
+{
+  "source": "2MASS and AllWISE Vega photometric reference",
+  "bands": {
+    "J": {
+      "lo_um": 1.11,
+      "hi_um": 1.36,
+      "zero_jy": 1594.0,
+      "magnitude_column": "j_m_2mass"
+    },
+    "H": {
+      "lo_um": 1.5,
+      "hi_um": 1.79,
+      "zero_jy": 1024.0,
+      "magnitude_column": "h_m_2mass"
+    },
+    "Ks": {
+      "lo_um": 2.0,
+      "hi_um": 2.31,
+      "zero_jy": 666.7,
+      "magnitude_column": "k_m_2mass"
+    },
+    "W1": {
+      "lo_um": 3.0,
+      "hi_um": 3.9,
+      "zero_jy": 309.54,
+      "magnitude_column": "w1mpro"
+    },
+    "W2": {
+      "lo_um": 4.1,
+      "hi_um": 5.0,
+      "zero_jy": 171.79,
+      "magnitude_column": "w2mpro"
+    }
+  }
+}

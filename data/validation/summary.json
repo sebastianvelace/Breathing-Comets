@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "replayed": true,
+  "comparisons": [
+    {
+      "designation": "J100141.19+013730.4",
+      "points": 208,
+      "rejected": 9,
+      "bands": {
+        "Ks": {
+          "n": 12,
+          "median_mjy": 18.37198185916147,
+          "catalog_mjy": 18.345538116436188,
+          "ratio": 1.0014414263870293
+        },
+        "W2": {
+          "n": 53,
+          "median_mjy": 4.667701840029543,
+          "catalog_mjy": 4.594072871113179,
+          "ratio": 1.0160269484141908
+        }
+      },
+      "seconds": null,
+      "api": "http://127.0.0.1:8000"
+    },
+    {
+      "designation": "J100203.40+031558.5",
+      "points": 208,
+      "rejected": 7,
+      "bands": {
+        "Ks": {
+          "n": 14,
+          "median_mjy": 54.591137083573344,
+          "catalog_mjy": 53.251329507441284,
+          "ratio": 1.0251600774764664
+        },
+        "W2": {
+          "n": 59,
+          "median_mjy": 14.074862896753565,
+          "catalog_mjy": 13.925085797061731,
+          "ratio": 1.0107559193440256
+        }
+      },
+      "seconds": null,
+      "api": "http://127.0.0.1:8000"
+    },
+    {
+      "designation": "J100226.29+020658.4",
+      "points": 200,
+      "rejected": 7,
+      "bands": {
+        "Ks": {
+          "n": 14,
+          "median_mjy": 29.514686096426104,
+          "catalog_mjy": 29.048951075140597,
+          "ratio": 1.0160327655232988
+        },
+        "W2": {
+          "n": 52,
+          "median_mjy": 7.004499527253886,
+          "catalog_mjy": 7.135064109896789,
+          "ratio": 0.9817009937637698
+        }
+      },
+      "seconds": null,
+      "api": "http://127.0.0.1:8000"
+    }
+  ]
+}

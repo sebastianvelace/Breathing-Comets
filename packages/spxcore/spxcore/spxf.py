@@ -5,6 +5,29 @@ import numpy as np
 
 MAGIC = b"SPXF"
 
+
+def stack_header(target, grid, metadata, frames, detector, kind="stack", include_var=False):
+    """Describe actual frames and a single fixed stretch for the entire stack."""
+    from datetime import UTC, datetime
+
+    from .calib import SWCS
+
+    samples = np.concatenate([f["flux"].ravel() for f in frames])
+    samples = samples[np.isfinite(samples)]
+    if not len(samples):
+        raise ValueError("Stack contains no finite sky data")
+    low, high = np.percentile(samples, [0.5, 99.5])
+    visits = []
+    for visit in sorted({m["visit"] for m in metadata}):
+        dates = [m["mjd"] for m in metadata if m["visit"] == visit]
+        visits.append({"visit": visit, "mjd_min": min(dates), "mjd_max": max(dates), "n": len(dates)})
+    return {"spxf": 1, "kind": kind, "target": target, "grid": grid, "units": "MJy/sr",
+            "has_var": include_var, "det": detector,
+            "stretch_hint": {"p_lo": 0.5, "p_hi": 99.5, "lo": float(low), "hi": float(high)},
+            "data_version": {"releases": ["dr1", "qr3"], "l2": "l2b-v27", "spectral_wcs": SWCS},
+            "frames": [{**m, "k": i} for i, m in enumerate(metadata)], "visits": visits,
+            "provenance": {"generator": "spxcore 0.1.0", "created": datetime.now(UTC).isoformat()}}
+
 def _shuffle(a: np.ndarray) -> bytes:
     b = np.ascontiguousarray(a, dtype="<f4").view(np.uint8).reshape(-1, 4)
     return b.T.copy().tobytes()

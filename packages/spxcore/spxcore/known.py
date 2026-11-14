@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import re
+import xml.etree.ElementTree as ET
 from functools import lru_cache
 
 import httpx
@@ -12,6 +13,7 @@ from astropy import units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
 
+from . import ephem
 from .config import STATIC_DIR
 from .ephem import propagate
 
@@ -83,16 +85,24 @@ async def resolve(query):
             return _resolved_target(target, warning=target["slug"] == "wise-0855")
     if coordinates is not None:
         return {"ra": coordinates[0], "dec": coordinates[1], "name": query, "kind": "fixed", "source": "coordinates"}
+    if re.match(r"^\d+[PI]\b|^[CPDAXI]/\d{4}\s?[A-Z]", query, re.IGNORECASE):
+        return await resolve_moving(query)
     escaped = query.replace("'", "''")
     adql = ("SELECT b.main_id,b.ra,b.dec,b.pmra,b.pmdec,b.plx_value FROM basic b "
             f"JOIN ident i ON i.oidref=b.oid WHERE i.id='{escaped}'")
-    async with httpx.AsyncClient(timeout=8) as client:
-        response = await client.get("https://simbad.harvard.edu/simbad/sim-tap/sync", params={
-            "REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": adql})
-        response.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=8) as client:
+            response = await client.get("https://simbad.harvard.edu/simbad/sim-tap/sync", params={
+                "REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": adql})
+            response.raise_for_status()
+    except httpx.HTTPError:
+        return await resolve_sesame(query)
     rows = list(csv.DictReader(io.StringIO(response.text)))
     if not rows:
-        raise ValueError("Object not resolved")
+        try:
+            return await resolve_sesame(query)
+        except ValueError:
+            return await resolve_moving(query)
     row = rows[0]
     ra, dec = float(row["ra"]), float(row["dec"])
     pmra, pmdec = _nullable_number(row.get("pmra")), _nullable_number(row.get("pmdec"))
@@ -104,6 +114,36 @@ async def resolve(query):
     return {"ra": float(now_ra), "dec": float(now_dec), "name": row["main_id"], "kind": "fixed", "source": "SIMBAD",
             "pm": {"ra0": ra, "dec0": dec, "pmra_masyr": pmra, "pmdec_masyr": pmdec,
                    "plx_mas": parallax, "ref_epoch_jyear": 2000.0}}
+
+
+async def resolve_sesame(query):
+    from urllib.parse import quote
+
+    async with httpx.AsyncClient(timeout=8, follow_redirects=True) as client:
+        response = await client.get("https://cds.unistra.fr/cgi-bin/nph-sesame/-oxp/SNV?"+quote(query, safe=""))
+        response.raise_for_status()
+    root = ET.fromstring(response.text)
+    resolver = next((r for r in root.iter("Resolver") if r.findtext("jradeg") and r.findtext("jdedeg")), None)
+    if resolver is None:
+        raise ValueError("Object not resolved")
+    ra, dec = float(resolver.findtext("jradeg")), float(resolver.findtext("jdedeg"))
+    return {"ra": ra, "dec": dec, "name": query, "kind": "fixed", "source": "Sesame",
+            "epoch_warning": "Proper motion unavailable; Sesame ICRS catalog position at epoch J2000"}
+
+
+async def resolve_moving(query):
+    import asyncio
+
+    async with httpx.AsyncClient(timeout=8) as client:
+        response = await client.get("https://ssd-api.jpl.nasa.gov/sbdb.api", params={"sstr": query})
+        response.raise_for_status()
+    data = response.json()
+    obj = data.get("object")
+    if not obj or "des" not in obj:
+        raise ValueError("Moving object is unresolved or ambiguous")
+    position = await asyncio.to_thread(ephem.horizons_positions, obj["des"], [Time.now().mjd])
+    return {"ra": float(position[0, 0]), "dec": float(position[0, 1]), "name": obj.get("fullname", obj["des"]),
+            "kind": "moving", "source": "JPL SBDB / Horizons", "track": obj["des"], "observer": "SPHEREx"}
 
 
 async def gaia(ra, dec, radius=0.25, gmax=19):

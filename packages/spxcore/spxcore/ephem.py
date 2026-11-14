@@ -1,11 +1,18 @@
 """Catalog space motion, time-matched Horizons positions and spherical interpolation."""
 
+import csv
+import io
+
 import numpy as np
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from astropy.time import Time
 
 from .index import unit_vectors
+
+
+class EphemerisUnavailable(RuntimeError):
+    pass
 
 
 def propagate(ra, dec, pmra, pmdec, ref_epoch, mjd, parallax=None):
@@ -30,13 +37,39 @@ def match_horizons_rows(request_jd, response_jd, tolerance=1e-5):
 
 def horizons_positions(designation, mjd):
     from astroquery.jplhorizons import Horizons
+    from requests.exceptions import RequestException
 
     jd = Time(np.atleast_1d(mjd), format="mjd", scale="utc").jd
     query = Horizons(id=designation, location="500@-163182", epochs=jd.tolist())
     query.TIMEOUT = 8
-    table = query.ephemerides(quantities="1", extra_precision=True, optional_settings={"CAL_FORMAT": "JD"})
-    rows = match_horizons_rows(jd, table["datetime_jd"])
-    return np.column_stack([np.asarray(table["RA"])[rows], np.asarray(table["DEC"])[rows]])
+    # The pinned client parser recognizes only CAL_FORMAT=BOTH. Keep the required
+    # JD format and parse the documented CSV response from its raw async method.
+    try:
+        response = query.ephemerides_async(quantities="1", extra_precision=True, optional_settings={"CAL_FORMAT": "JD"})
+        response.raise_for_status()
+    except RequestException as exc:
+        raise EphemerisUnavailable("Horizons is unavailable; retry later") from exc
+    return parse_horizons_positions(response.text, jd)
+
+
+def parse_horizons_positions(text, request_jd):
+    if "$$SOE" not in text or "$$EOE" not in text:
+        raise ValueError("Horizons returned no ephemeris for this target and observer")
+    heading = next((line for line in text.splitlines() if line.startswith("Date") and "JDUT" in line), None)
+    if heading is None:
+        raise ValueError("Horizons JD header is missing")
+    names = [name.strip() for name in next(csv.reader([heading]))]
+    ri = next(i for i, name in enumerate(names) if name.startswith("R.A."))
+    di = next(i for i, name in enumerate(names) if name.startswith("DEC"))
+    body = text.split("$$SOE", 1)[1].split("$$EOE", 1)[0]
+    data = [row for row in csv.reader(io.StringIO(body)) if row and row[0].strip()]
+    if not data:
+        raise ValueError("Horizons returned no epochs")
+    jd = np.array([float(row[0]) for row in data])
+    position = np.array([[float(row[ri]), float(row[di])] for row in data])
+    if not np.isfinite(position).all() or np.any(np.abs(position[:, 1]) > 90):
+        raise ValueError("Horizons returned invalid coordinates")
+    return position[match_horizons_rows(request_jd, jd)]
 
 
 def interpolate_positions(sample_mjd, ra, dec, mjd):

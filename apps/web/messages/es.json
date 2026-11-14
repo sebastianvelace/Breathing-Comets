@@ -103,5 +103,13 @@
   "note_r_dra_amp_label": "Rango entre extremos ({v0}–{v1}%)",
   "note_r_dra_amp_value": "{v0} mag ({v1} µm) → {v2} mag ({v3} µm)",
   "note_r_dra_amp_ref": "Mira",
-  "note_r_dra_caveat": "solo se observaron {v0} ciclos: compatible con el período del catálogo, no es una medición independiente ({v1}–{v2} µm da {v3} d, {v4}–{v5})"
+  "note_r_dra_caveat": "solo se observaron {v0} ciclos: compatible con el período del catálogo, no es una medición independiente ({v1}–{v2} µm da {v3} d, {v4}–{v5})",
+  "spectrum_count": "{count} puntos medidos · {rejected} exposiciones no disponibles",
+  "selected_field": "Posición del cielo seleccionada",
+  "free_caveat": "Cada punto espectral es una medición con ePSF forzada; las exposiciones no disponibles se informan por separado.",
+  "moving_interval": "Los objetos en movimiento requieren un intervalo de observación. Abre su ficha para seguir las efemérides de la nave.",
+  "resolve_unavailable": "Objeto no resuelto — revisa el nombre o las coordenadas.",
+  "resolving": "Resolviendo la posición…",
+  "mode": "Modo",
+  "explorer_description": "Compara imágenes reales del sondeo SPHEREx entre fechas y longitudes de onda infrarrojas."
 }

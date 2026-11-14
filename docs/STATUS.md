@@ -19,11 +19,11 @@ All results below describe observed verification. No research scripts have been 
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Partial | d707949 + subsequent fixes | Fast suite 133 passed; all 7 current network tests passed; Ruff passed | Legacy QR2 layout independently verified; golden 3I physical-model acceptance remains pending. |
 | 5 | Five target precomputation | Partial | cfe29d7 | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
-| 6 | Story Explorer | In progress | Working tree | 28 Vitest tests pass; type check 0 errors/warnings; build passes; three Story E2E passed | Production deployment verification pending. |
-| 7 | Live API | Pending | — | Not run | — |
+| 6 | Story Explorer | Done | 21ca8f1 + a2c5bb4 | 28 Vitest; check 0 errors/warnings; build; 3 local and 3 public E2E passed | Arbitrary pixel spectrum belongs to step 7. |
+| 7 | Live API | Partial | Working tree | Three local stellar comparisons pass; real click >50 points; network suite passes | Cold stack 4.398 s; JPL identification unavailable; Fly verification pending. |
 | 8 | Lab and Aladin | Pending | — | Not run | — |
 | 9 | Small-Body Lab | Pending | — | Not run | — |
-| 10 | Landing | Pending | — | Not run | — |
+| 10 | Landing | Delegated by user | — | See docs/landing-agent-prompt.md | Separate landing agent owns homepage, landing components/messages/media/tests; coordinator owns integration and deployment. |
 | 11 | Comets, method, about and Spanish | Pending | — | Not run | — |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
@@ -149,3 +149,29 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Repeated stale-preview failure confirmed that reusing the manual preview across builds was unsafe. E2E now owns a separate port 4183 with reuseExistingServer false. Fresh final run: `3 passed (4.0s)`. Final type check: 0 errors, 0 warnings.
 
 - Production verification attempt 1 ran while Pages was still compiling Python and served the previous skeleton: 3 failed. After 21ca8f1 deployed, attempt 2: 1 passed, 2 failed on direct URLs. Live HTTP proved /explore rewrite to /200.html returned 308 Location /200, so client navigation worked but direct/shared links did not. Corrected rewrite targets to extensionless canonical /200; acceptance remains unchanged.
+
+- Production after a2c5bb4: `3 passed (9.5s)` on https://breathingcomets.org. Manual browser confirmed all 24 Barnard frames and the Gaia overlay on the public domain. The earlier permanent redirect remained cached in the existing browser tab; a fresh URL/context confirmed the corrected route.
+- Step 7 first cold-stack probe (local actual S3 data, D4, 24 frames, fov 0.05): `status=200 first_byte=8.435993 total=8.436298`, failing the four-second bound. No cache-hit substitution was used.
+
+## Step 7 current evidence
+
+- Implemented the full route surface, exact JSON error envelopes, version headers, shared 30 requests/minute/IP limit, canonical S3 redirects, full-resolution exposure metadata, parameter-keyed stack/Diff caches, NDJSON forced-ePSF spectra, and cached/background JPL identifications. Moving-object and Sesame resolution follow-up still in progress.
+- Fast API contracts: `12 passed, 1 warning in 1.41s` (approved HTTPX/Starlette combination emits an upstream deprecation warning; no unapproved replacement dependency installed). A first restricted TestClient run stalled and was terminated; unrestricted verification passed.
+- Three actual stellar spectra requested from the local API: 208/208/200 valid points, with 9/7/7 explicitly rejected exposures retained in the evidence files. Median comparisons use the reference Ks 2.00–2.31 µm and W2 4.10–5.00 µm windows and their reference Vega zero points. Replaying the captured API responses with scripts/validate-api-spectra.py passes all six ±5% checks.
+- J100141.19+013730.4: Ks 1.0014414263870293; W2 1.0160269484141908.
+- J100203.40+031558.5: Ks 1.0251600774764664; W2 1.0107559193440256.
+- J100226.29+020658.4: Ks 1.0160327655232988; W2 0.9817009937637698.
+- These are local API measurements, not yet proof of the deployed Fly API. Recorded first-byte stack failure remains open. Optimizing independent raw/FLAGS reads to run concurrently and distinguishing permanent geometric rejection from transient upstream failure in metadata caching; network regression suite running.
+
+- Concurrent raw/FLAGS network regression suite: `8 passed, 156 deselected, 1 warning in 33.84s`. Subsequent fast API/core/reference: `47 passed, 8 deselected, 1 warning in 2.86s`.
+- Second cold-stack probe, fresh API process and a different validation star, D4/24 frames/fov 0.05: `status=200 first_byte=4.397537 total=4.397810`. Still above four seconds. After two failures, this acceptance remains open and work continues.
+- Local actual click integration plus Story regressions: `4 passed (17.2s)`. This proves the live Story click path; the requested Lab-context E2E is still to be completed with step 8.
+- Live 3I resolution exposed a pinned astroquery parser incompatibility: with required CAL_FORMAT=JD, it searches only for a calendar-format header and raises `Query failed with error message: 2461359.200525472, , , 106.029347905, 19.303506284,`. The core now uses the supported raw response method and parses named CSV columns, retaining spacecraft observer and JD matching tolerance. Stored the real response as a regression fixture; live JD test passes.
+- Sesame endpoint currently redirects to its IDIA mirror; enabled redirect following and verified actual XML coordinate tags against its response. Missing proper motion remains explicitly unknown.
+- First background SB Identification lookup hit its 25-second ReadTimeout; endpoint returned pending in 0.009671 s without delaying images. A source failure is now distinct from a pending lookup. Second attempt remains under observation; no objects are invented or inferred from failure.
+
+- Second SB Identification background attempt also reached ReadTimeout at the 25-second bound; retain source-unavailable behavior and continue after two failures. No empty successful catalog is cached.
+- Fixed JD parser verified through local /resolve?q=3I: returns kind moving, actual spacecraft position, track designation and JPL source. No fallback calendar date format was introduced.
+- Step 7 final fast suite before handoff: `1 failed, 157 passed, 9 deselected, 1 warning in 3.45s`, sole known R Dra acceptance. Frontend `29 passed`; svelte-check 0 errors/0 warnings. Added variance propagation for Diff λ (independent-reference linear coefficients and selected median statistics); targeted core/API/Horizons tests `38 passed, 5 deselected, 1 warning in 2.81s`.
+- Final local integration repeat: `4 passed (21.5s)` including the actual live click; feature-label, dark-theme and locale refinements were subsequently checked and will be verified again in deployment.
+- User assigned the landing to a separate agent and requested a prompt. Created docs/landing-agent-prompt.md with explicit ownership and no Git/deployment mutations. Configured independent Paraglide message paths for landing EN/ES after verifying that the existing plugin supports pathPattern arrays. Coordinator will not edit homepage/landing-owned paths while that work proceeds. Defined the future 3I landing-packet interface in that prompt; the scientific packet remains coordinator responsibility.

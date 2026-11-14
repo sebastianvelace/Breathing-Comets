@@ -67,7 +67,7 @@ async def async_cutout_psf(collection, obs_id, det, ra, dec, half=12, cache_dir=
                "var": rows["VARIANCE"][:, x0:x1].astype(np.float32),
                "psf": psf, "osamp": osamp, "zone": zone, "x": x-x0, "y": y-y0, "x_full": x, "y_full": y,
                "lam_um": float(lam), "bw_um": float(bw), "omega_sr": calib.omega_from_header(header),
-               "mjd": float(header["MJD-AVG"]), "s3_key": key}
+               "mjd": float(header["MJD-AVG"]), "s3_key": key, "wcs": wcs, "x0": x0, "y0": y0}
     for tag, rr, dd in (("s", ra_start, dec_start), ("e", ra_end, dec_end)):
         if rr is not None:
             xx, yy = (float(v) for v in wcs.world_to_pixel_values(rr, dd))

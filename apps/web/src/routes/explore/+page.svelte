@@ -1,2 +1,5 @@
-<script lang="ts">import Explorer from '#lib/components/Explorer.svelte';</script>
-<Explorer/>
+<script lang="ts">
+  import Explorer from "#lib/components/Explorer.svelte";
+</script>
+
+<Explorer />

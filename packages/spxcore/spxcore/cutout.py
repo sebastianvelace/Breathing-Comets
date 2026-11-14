@@ -50,7 +50,7 @@ async def describe_exposure(exposure, ra, dec):
     lam, bw = calib.sample_maps(maps, x, y)
     if not np.isfinite(lam) or not np.isfinite(bw):
         raise ValueError("Missing spectral calibration at source position")
-    return {**exposure, "mjd": float(header["MJD-AVG"]), "lam_um": float(lam), "bw_um": float(bw), "edge": False}
+    return {**exposure, "collection": key.split("/", 1)[0], "mjd": float(header["MJD-AVG"]), "lam_um": float(lam), "bw_um": float(bw), "edge": False}
 
 
 async def make_frame(exposure, ra, dec, fov=0.25, include_var=False):
@@ -60,7 +60,7 @@ async def make_frame(exposure, ra, dec, fov=0.25, include_var=False):
     if cache.exists():
         with np.load(cache, allow_pickle=False) as z:
             grid = json.loads(str(z["grid"]))
-            meta = {**json.loads(str(z["meta"])), "visit": exposure["visit"]}
+            meta = {**json.loads(str(z["meta"])), "visit": exposure["visit"], "collection": key.split("/", 1)[0]}
             frame = {name: z[name].copy() for name in ("flux", "flags", "var") if name in z}
         if meta.get("cache_schema") != 2:
             layout = await fitsio.read_hdu_layout(key)
@@ -118,7 +118,7 @@ async def _make_frame(exposure, ra, dec, fov, include_var, key):
     lam[geometry_missing] = np.nan
     poly, max_error = calib.fit_lambda_polynomial(lam, grid["crpix"])
     center_lam, center_bw = calib.sample_maps(maps, cx, cy)
-    meta = {**exposure, "mjd": float(header["MJD-AVG"]),
+    meta = {**exposure, "collection": key.split("/", 1)[0], "mjd": float(header["MJD-AVG"]),
             "date": Time(header["MJD-AVG"], format="mjd", scale="utc").isot+"Z",
             "lam_um": float(center_lam), "bw_um": float(center_bw),
             "lam_poly": poly, "lam_poly_max_error_um": max_error,

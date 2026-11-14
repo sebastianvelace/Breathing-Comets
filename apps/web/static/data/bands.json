@@ -1,0 +1,54 @@
+{
+  "source": "Provided spectral feature definitions",
+  "bands": [
+    {
+      "label": "H I Paβ",
+      "center_um": 1.282,
+      "lo_um": 1.272,
+      "hi_um": 1.292,
+      "color": "--ink-2"
+    },
+    {
+      "label": "H I Paα",
+      "center_um": 1.875,
+      "lo_um": 1.865,
+      "hi_um": 1.885,
+      "color": "--ink-2"
+    },
+    {
+      "label": "H I Brα",
+      "center_um": 4.052,
+      "lo_um": 4.042,
+      "hi_um": 4.061999999999999,
+      "color": "--ink-2"
+    },
+    {
+      "label": "H₂O",
+      "center_um": 2.7,
+      "lo_um": 2.55,
+      "hi_um": 2.85,
+      "color": "--h2o"
+    },
+    {
+      "label": "CH₄",
+      "center_um": 3.31,
+      "lo_um": 3.2,
+      "hi_um": 3.45,
+      "color": "--graphite"
+    },
+    {
+      "label": "CO₂ ν₃",
+      "center_um": 4.26,
+      "lo_um": 4.21,
+      "hi_um": 4.31,
+      "color": "--co2"
+    },
+    {
+      "label": "CO (1–0)",
+      "center_um": 4.67,
+      "lo_um": 4.55,
+      "hi_um": 4.8,
+      "color": "--co"
+    }
+  ]
+}
