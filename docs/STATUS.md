@@ -14,8 +14,8 @@ All results below describe observed verification. No research scripts have been 
 
 | Step | Deliverable | Status | Commit | Verification | Open issues |
 |---|---|---|---|---|---|
-| 1 | Repository and templates | Partial | Existing remote commit baa2d91 | Identity correct; remote has only main; templates prepared locally | User approved retaining published bootstrap baa2d91 and adding templates in the next commit; history will not be rewritten. |
-| 2 | Deployed skeletons | Pending | — | Not run | — |
+| 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
+| 2 | Deployed skeletons | Partial | Step 2 commit | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Web type check blocked by unapproved @types/node; Pages and custom DNS require Cloudflare sign-in. |
 | 3 | Static data | Pending | — | Not run | — |
 | 4 | Scientific core | Pending | — | Not run | — |
 | 5 | Five target precomputation | Pending | — | Not run | — |
@@ -42,3 +42,18 @@ All results below describe observed verification. No research scripts have been 
 ## Approved bootstrap exception
 
 The user explicitly approved retaining published bootstrap commit `baa2d91` and continuing with required templates in the next commit. No history rewrite is authorized or needed.
+
+## Step 2 attempts
+
+- Local API smoke check: HTTP 200; `ok: true`, `index_rows: 0`, `index_built: false`, `collections: []`, `swcs: null`.
+- Fly app accessible; volume `spx_cache` created in iad, size 5 GB. IPv4 and IPv6 allocated.
+- First deployment failed before building: `Error: failed to fetch an image or build from source: dockerfile '/home/sebasvelace/Breathing-Comets/services/api/services/api/Dockerfile' not found`. Retry uses explicit root build context and absolute Dockerfile path.
+- Cloudflare dashboard requires sign-in; no Cloudflare credentials are available in the current environment. Pages, DNS and custom-domain certificate verification remain pending.
+
+- First web type check failed with `svelte-check found 6 errors and 0 warnings in 3 files`: generated Paraglide modules were missing before Vite compilation. Check/prepare scripts now explicitly run the installed Paraglide compiler first, with the same locale strategy as Vite. No checks were removed or relaxed.
+
+- Second web type check failed with `svelte-check found 1 error and 0 warnings in 1 file`: `src/lib/paraglide/server.js:105:50 Error: Cannot find name 'async_hooks'. Do you need to install type definitions for node? Try npm i --save-dev @types/node and then add node to the types field in your tsconfig.` The generated server module needs Node type declarations. `@types/node` is outside the approved dependency list; not installed. Type checks remain failing; no exclusion, stub declaration or relaxed assertion was added. Continue with the next independent step as instructed.
+
+- Second Fly deployment succeeded: one app machine `847222a27700d8`, image `deployment-01M7D6NVJMD9KWJD2SGT5CWWSN`. Public `https://breathing-comets-api.fly.dev/v1/health` returned HTTP 200 and `{ "ok": true, "index_rows": 0, "index_built": false, "collections": [], "swcs": null }`; data-version header present.
+- `npm run build` passed and wrote the static site to `apps/web/build`. This does not resolve the failing type check.
+- The custom-domain certificate was created; DNS setup is pending: A api → 66.241.125.132 and AAAA api → 2a09:8280:1::1fc:6fed:0, DNS only.
