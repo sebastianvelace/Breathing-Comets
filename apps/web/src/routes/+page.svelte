@@ -11,6 +11,7 @@
   import ValidationSection from "#lib/components/landing/ValidationSection.svelte";
   import TargetsSection from "#lib/components/landing/TargetsSection.svelte";
   import LandingFooter from "#lib/components/landing/LandingFooter.svelte";
+  import ClosingCta from "#lib/components/landing/ClosingCta.svelte";
   import {
     bundledComet,
     landingMedia,
@@ -55,6 +56,22 @@
     return () => observer.disconnect();
   });
 
+  // A persistent call to action appears once the hero (and its buttons) has scrolled away.
+  let pastHero = $state(false);
+  $effect(() => {
+    const hero = document.querySelector("section.hero");
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        pastHero = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      },
+      { threshold: 0 },
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  });
+  const exploreHref = `${localizeHref("/explore")}?target=barnard&ui=story`;
+
   const sections = [
     { id: "blink", n: "§1", label: () => m.landing_nav_blink() },
     { id: "diff", n: "§2", label: () => m.landing_nav_diff() },
@@ -94,6 +111,9 @@
         {/each}
       </ul>
     </nav>
+    <a class="nav-cta" class:show={pastHero} href={exploreHref} tabindex={pastHero ? 0 : -1} aria-hidden={pastHero ? undefined : "true"} data-testid="nav-cta"
+      >{m.landing_nav_cta()}<span aria-hidden="true"> →</span></a
+    >
     <div class="lang" role="group" aria-label={m.landing_lang_label()}>
       <a
         href={localizeHref(page.url.pathname, { locale: "en" })}
@@ -121,6 +141,7 @@
     <div class="on-plate"><CometsSection {comet} /></div>
     <ValidationSection {comet} />
     <div class="tone"><TargetsSection /></div>
+    <div class="on-plate"><ClosingCta /></div>
   </main>
 
   <div class="on-plate"><LandingFooter /></div>
@@ -175,7 +196,7 @@
     border-bottom: 1px solid #26241f;
   }
   header.masthead.on-plate {
-    background: color-mix(in srgb, #0b0b0a 78%, transparent);
+    background: color-mix(in srgb, #0b0b0a 93%, transparent);
     backdrop-filter: blur(14px) saturate(1.2);
   }
   .masthead .brand {
@@ -235,6 +256,37 @@
     color: var(--graphite);
     margin-right: 4px;
   }
+  .nav-cta {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    background: var(--co2);
+    color: #17160f;
+    border: 1px solid var(--co2);
+    opacity: 0;
+    translate: 0 -6px;
+    visibility: hidden;
+    transition:
+      opacity 300ms var(--ease),
+      translate 300ms var(--ease),
+      visibility 0s linear 300ms,
+      background 200ms var(--ease);
+  }
+  .nav-cta.show {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .nav-cta:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
   .lang {
     display: flex;
     gap: 2px;
@@ -260,6 +312,20 @@
     }
     .masthead {
       justify-content: space-between;
+      gap: 12px;
+    }
+    .nav-cta {
+      margin-left: auto;
+    }
+  }
+  @media (max-width: 520px) {
+    .nav-cta {
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+    .masthead .brand {
+      letter-spacing: 0.12em;
+      font-size: 12px;
     }
   }
 

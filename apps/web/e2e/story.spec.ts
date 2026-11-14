@@ -4,7 +4,7 @@ test("landing opens real Barnard frames and Gaia moves by epoch", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("link", { name: "Open the sky" }).click();
+  await page.getByTestId("open-sky").click();
   const timeline = page.getByTestId("timeline");
   await expect(timeline).toHaveAttribute("data-frame-count", "24");
   const cross = page.getByTestId("gaia-cross");

@@ -121,5 +121,13 @@
   "landing_ribbon_hint": "Pasa el cursor sobre una barra para leer su canal.",
   "landing_ribbon_foot": "Altura de la barra: poder de resolución R. Barras discontinuas: cuadros que el cubo de todo el cielo de DR1 deja en blanco (dicroico).",
   "landing_hero_scroll": "Baja a los colores",
-  "landing_footer_about": "Acerca de"
+  "landing_footer_about": "Acerca de",
+  "landing_close_title": "Ahora abre el cielo.",
+  "landing_close_body": "Cada placa de esta página es un dato real de SPHEREx. Elige un objetivo, recorre los colores y haz parpadear el cielo tú mismo.",
+  "landing_close_routes": "Cuatro maneras de entrar",
+  "landing_close_r_barnard": "La estrella más veloz: mírala moverse entre visitas.",
+  "landing_close_r_wise": "El objeto más frío conocido fuera del Sistema Solar.",
+  "landing_close_r_rwaur": "Una estrella joven que se atenúa y se aviva.",
+  "landing_close_r_3i": "Un cometa interestelar exhalando dióxido de carbono.",
+  "landing_nav_cta": "Abre el cielo"
 }

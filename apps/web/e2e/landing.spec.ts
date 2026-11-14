@@ -13,7 +13,7 @@ async function noHorizontalScroll(page: Page) {
 test("hero opens the Barnard story with real frames", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("The sky is breathing.");
-  const cta = page.getByRole("link", { name: "Open the sky" });
+  const cta = page.getByTestId("open-sky");
   await expect(cta).toHaveAttribute("href", "/explore?target=barnard&ui=story");
   await cta.click();
   await expect(page).toHaveURL(/\/explore\?target=barnard&ui=story$/);
@@ -110,7 +110,7 @@ test("blink, Diff λ slider and spectrum bands work from the keyboard", async ({
 
 test("visible focus ring on the primary action", async ({ page }) => {
   await page.goto("/");
-  const cta = page.getByRole("link", { name: "Open the sky" });
+  const cta = page.getByTestId("open-sky");
   await cta.focus();
   const outline = await cta.evaluate((el) => getComputedStyle(el).outlineStyle + " " + getComputedStyle(el).outlineWidth);
   expect(outline).toBe("solid 2px");
@@ -120,7 +120,7 @@ test("/es is Spanish with decimal points", async ({ page }) => {
   await page.goto("/es");
   await expect(page.locator("html")).toHaveAttribute("lang", "es");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("El cielo respira.");
-  await expect(page.getByRole("link", { name: "Abre el cielo" })).toHaveAttribute(
+  await expect(page.getByTestId("open-sky")).toHaveAttribute(
     "href",
     "/es/explore?target=barnard&ui=story",
   );
@@ -163,4 +163,36 @@ test("Spanish landing shows the Spanish 3I caveats", async ({ page }) => {
   await expect(panel).toHaveAttribute("data-status", "ready");
   await expect(panel).toContainText("Error estadístico");
   expect(await panel.innerText()).not.toMatch(/\d,\d/);
+});
+
+test("a persistent call to action follows the reader and a closing band ends the page", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  const navCta = page.getByTestId("nav-cta");
+  await expect(navCta).toBeHidden();
+  await page.locator("#targets").scrollIntoViewIfNeeded();
+  await expect(navCta).toBeVisible();
+  await expect(navCta).toHaveAttribute("href", "/explore?target=barnard&ui=story");
+
+  const close = page.locator("#start");
+  await close.scrollIntoViewIfNeeded();
+  await expect(close.getByRole("heading", { level: 2 })).toHaveText("Now open the sky.");
+  const routes = close.locator("ul a");
+  await expect(routes).toHaveCount(4);
+  await expect(routes.nth(0)).toHaveAttribute("href", "/explore?target=barnard&ui=story");
+  await expect(routes.nth(3)).toHaveAttribute("href", "/comets/3i-atlas");
+  await expect(page.getByTestId("close-open-sky")).toHaveAttribute("href", "/explore?target=barnard&ui=story");
+});
+
+test("persistent call to action fits on a phone without horizontal scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.locator("#targets").scrollIntoViewIfNeeded();
+  const navCta = page.getByTestId("nav-cta");
+  await expect(navCta).toBeVisible();
+  const box = await navCta.boundingBox();
+  const lang = await page.locator(".lang").boundingBox();
+  expect(box && lang && box.x + box.width <= lang.x).toBe(true);
+  await noHorizontalScroll(page);
 });

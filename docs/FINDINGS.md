@@ -107,3 +107,11 @@ Everything else (no emoji, no stock icons, no NASA logos, no generated imagery, 
 ## 12. One unexplained intermittent failure (2026-11-14)
 
 - After the `/about` deploy, a full production run gave `39 passed, 1 failed`: `story.spec.ts › shared URL restores the same observation in a fresh context`. The failure message was not captured. The test passed alone twice and in the next full run (`40 passed (1.5m)`). It presses `Home` then `ArrowRight` twelve times on the timeline right after the frame count appears, so a timing cause (progressive frame upload or late hydration, the families in sections 7 and 9) is plausible, **but this is not proven**. Not changed; if it recurs, capture the error before touching the test.
+
+## 13. Landing: call-to-action flow (2026-11-14)
+
+- **Weakness found (measured, not assumed):** the page is ~9 190 px tall at 1440 px wide and the only calls to action were the two hero buttons. After the hero a reader had no way to act without scrolling back, and the page ended on a text-only footer.
+- **Changes:** (1) a masthead button "Open the sky →" that fades in only after the hero has left the viewport (also on phones; at 375 px it fits between the brand and the language switch, checked by test); (2) a closing band `#start` ("Now open the sky.") with the same primary and secondary actions plus four entry routes (Barnard's Star, WISE 0855−0714, RW Aurigae, 3I/ATLAS) each with a one-line description taken from the existing field notes; (3) the masthead background is more opaque (93 %) because at 78 % it looked grey over the light bands.
+- **Side effect handled:** "Open the sky" now names three links, so the strict role selectors in `landing.spec.ts` and `story.spec.ts` were pointed at the existing `data-testid="open-sky"`.
+- **Preview artefact worth knowing:** a `vite preview` left running across a rebuild serves 404 for the new hashed chunks and the page never hydrates (the ribbon stayed at `scaleY(0.04)`). This looked like a ribbon bug and was not; restart the preview after every build.
+- Verified: svelte-check 0 errors / 0 warnings, Vitest 44 passed, local E2E landing + story 16 passed (3 new assertions), initial landing JS 72.7 KB gz. Not re-measured: Lighthouse LCP (still not installed).

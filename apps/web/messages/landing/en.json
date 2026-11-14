@@ -121,5 +121,13 @@
   "landing_ribbon_hint": "Hover a bar to read its channel.",
   "landing_ribbon_foot": "Bar height: resolving power R. Dashed bars: frames the DR1 all-sky cube leaves blank (dichroic).",
   "landing_hero_scroll": "Scroll to the colors",
-  "landing_footer_about": "About"
+  "landing_footer_about": "About",
+  "landing_close_title": "Now open the sky.",
+  "landing_close_body": "Every plate on this page is real SPHEREx data. Pick a target, move through the colors and blink the sky yourself.",
+  "landing_close_routes": "Four ways in",
+  "landing_close_r_barnard": "The fastest star: watch it move between visits.",
+  "landing_close_r_wise": "The coldest known object outside the Solar System.",
+  "landing_close_r_rwaur": "A young star that dims and brightens.",
+  "landing_close_r_3i": "An interstellar comet breathing out carbon dioxide.",
+  "landing_nav_cta": "Open the sky"
 }
