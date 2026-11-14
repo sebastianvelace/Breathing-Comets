@@ -208,3 +208,9 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Full local E2E against the default build: `17 passed, 2 failed`. Both failures (`lab.spec.ts` pixel click, `spectrum.spec.ts`) were `canvas` never appearing. Console showed `blocked by CORS policy ... api.breathingcomets.org/v1/gaia` from `http://127.0.0.1:4191`: `services/api/fly.toml` sets `SPX_ALLOWED_ORIGINS` to prod + `localhost:5173` only, overriding the code default that includes `127.0.0.1:4183`. Not a product defect.
 - Rebuilt with `VITE_API_BASE=http://127.0.0.1:8000` and reran: `3 passed (22.1s)` (Lab frame 85 + Aladin attribution, Lab pixel click ≥ 50 points, free-sky click ≥ 50 points).
 - Decision pending: add `http://127.0.0.1:4183` to the `fly.toml` allowlist (would make the public-API E2E runnable locally) — not changed.
+
+## Production verification after push 6337571
+
+- Pushed 2f79833..6337571 (four commits: Lab/Aladin, Small-Body Lab, landing, STATUS). Remote has only `refs/heads/main`; prohibited-attribution matches 0.
+- Pages deployed after about 8 polls of 20 s. HTTP 200 on `/`, `/es`, `/explore?target=barnard`, `/neo`, `/es/neo`, `/aladin` and a landing plate.
+- Full E2E against https://breathingcomets.org: `19 passed (1.4m)` (lab 2, landing 11, neo 2, spectrum 1, story 3). This also shows the public API allows the production origin.
