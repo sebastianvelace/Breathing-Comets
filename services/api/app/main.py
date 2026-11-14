@@ -3,9 +3,11 @@
 import os
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import JSONResponse
+from spxcore.known import resolve as resolve_object
 from starlette.requests import Request
 
 app = FastAPI(title="Breathing Comets API", version="0.1.0")
@@ -46,3 +48,12 @@ async def health():
         "collections": ["dr1", "qr3"] if index.is_file() else [],
         "swcs": None,
     }
+
+
+@app.get("/v1/resolve")
+async def resolve(q: str = Query(min_length=1, max_length=200)):
+    try:
+        return await resolve_object(q)
+    except ValueError as exc:
+        return JSONResponse(status_code=400, content={"error": {
+            "code": "RESOLVE_FAILED", "source": "resolver", "message": str(exc), "retry_after_s": 0}})

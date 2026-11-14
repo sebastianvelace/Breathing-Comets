@@ -27,3 +27,12 @@ dev = [
     "pytest==9.2.0",
     "ruff==0.17.3",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["packages/spxcore", "."]
+testpaths = ["tests"]
+addopts = "-m 'not network'"
+markers = [
+    "network: reads real public mission data",
+    "slow: acceptance checks with longer execution time",
+]

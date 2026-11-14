@@ -4,7 +4,7 @@ dev:
 	cd apps/web && npm run dev
 
 api:
-	uv run granian --interface asgi --host 127.0.0.1 --port 8000 services.api.app.main:app
+	PYTHONPATH=packages/spxcore uv run granian --interface asgi --host 127.0.0.1 --port 8000 services.api.app.main:app
 
 test:
 	uv run pytest

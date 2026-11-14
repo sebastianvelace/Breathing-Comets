@@ -17,7 +17,7 @@ All results below describe observed verification. No research scripts have been 
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
 | 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages and custom DNS setup in progress. |
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
-| 4 | Scientific core | Pending | — | Not run | — |
+| 4 | Scientific core | Partial | Scientific core implementation commit | Fast suite 131 passed; second network run 5 passed and 2 failed; Ruff passed | D5 calibration acquisition still times out. Legacy QR2 layout acceptance and golden 3I check remain to be completed. |
 | 5 | Five target precomputation | Pending | — | Not run | — |
 | 6 | Story Explorer | Pending | — | Not run | — |
 | 7 | Live API | Pending | — | Not run | — |
@@ -84,3 +84,17 @@ Next: obtain approval for the Node type declarations, restore a passing web type
 ## Approved Node type declarations
 
 The user approved `@types/node@24.19.2` as an additional development dependency. Installed exactly that version. `npm run check`: `svelte-check found 0 errors and 0 warnings`. Cloudflare account access is now authenticated and verified; no sign-in blocker remains.
+
+## Step 4 in progress
+
+- Implemented the eleven required core modules plus ePSF helpers and path configuration; added resolve endpoint integration. No research scripts executed.
+- Ported all reference assertions unchanged (AST comparison: 25 of 25). Independent Astropy reads use the approved HTTPX transport instead of fsspec HTTP, which otherwise requires an additional aiohttp package; removed an unused pandas import. No additional dependencies installed.
+- Fast suite: `131 passed, 7 deselected in 4.29s`.
+- First network suite: `3 failed, 4 passed, 131 deselected in 152.30s (0:02:32)`. Exact failures: `tests/test_core.py::test_lam_poly[5-0.001] - TimeoutError`; `tests/test_reference.py::test_epsf_row_read_equals_full_table - TimeoutError`; `tests/test_reference.py::test_epsf_row_detector3_uses_11x41_grid - TimeoutError`. All failed at calibration map download `data = bytes(await response.bytes_async())` within the 30-second acquisition bound. Switching calibration acquisition to concurrent byte ranges; calibration resolution and acceptance thresholds remain unchanged.
+- Verified real DR1 physical HDU layout: FLAGS RICE_1, EPSF 441 rows in D4; raw IMAGE and decompressed FLAGS row reads returned shape (3, 2040).
+- Pages GitHub connection is prepared for only sebastianvelace/Breathing-Comets. The install screen requests read/write administration, checks, code, deployments and pull requests. Installation has NOT been confirmed; action-time approval is required.
+
+- Second network suite: `2 failed, 5 passed, 131 deselected in 116.64s (0:01:56)`. Exact failures: `tests/test_core.py::test_lam_poly[5-0.001] - TimeoutError` and `tests/test_reference.py::test_epsf_row_read_equals_full_table - TimeoutError`, both on D5 calibration byte-range acquisition (4,194,304-byte ranges). D3 acquisition and EPSF grid comparison passed on the second run. No acceptance assertion or threshold was changed. After two unsuccessful suite runs, step 4 remains partial; further acquisition work is deferred to step 5 preparation as instructed.
+- Verified D3 and D5 calibration keys exist: S3 returns HTTP 206 for bytes 0–79 and confirms 33,312,960 bytes each; listing the v5 prefix returns all six detector maps. No replacement or invented calibration is used.
+- Most recent fast suite: `131 passed, 7 deselected in 3.28s`; Ruff: `All checks passed!`. This includes Python-to-TypeScript SPXF round trips with/without shuffle, gzip and variance, gnomonic coverage, visit sampling, proper motion, exact WISE coordinate resolution, and interpolation checks.
+- Still pending in step 4: independently verify a legacy QR2 layout and implement the slow golden 3I physical-model acceptance check when the comet model is available. Horizons integration has not yet been exercised live.

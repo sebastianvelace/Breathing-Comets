@@ -5,7 +5,11 @@
 .agents
 .aws
 .env*
-apps
+apps/web/node_modules
+apps/web/.svelte-kit
+apps/web/build
+apps/web/test-results
+apps/web/playwright-report
 docs
 **/__pycache__
 **/.pytest_cache
