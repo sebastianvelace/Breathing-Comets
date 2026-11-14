@@ -147,3 +147,5 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Final SPXF transport type check initially found the TypeScript 6 ArrayBufferLike/BufferSource mismatch. Narrowed the stream element type to the actual ArrayBuffer-backed bytes; no casts or disabled checks.
 
 - Repeated stale-preview failure confirmed that reusing the manual preview across builds was unsafe. E2E now owns a separate port 4183 with reuseExistingServer false. Fresh final run: `3 passed (4.0s)`. Final type check: 0 errors, 0 warnings.
+
+- Production verification attempt 1 ran while Pages was still compiling Python and served the previous skeleton: 3 failed. After 21ca8f1 deployed, attempt 2: 1 passed, 2 failed on direct URLs. Live HTTP proved /explore rewrite to /200.html returned 308 Location /200, so client navigation worked but direct/shared links did not. Corrected rewrite targets to extensionless canonical /200; acceptance remains unchanged.
