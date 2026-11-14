@@ -112,7 +112,7 @@
   "landing_footer_media": "Generadas el {date} con pipelines/landing_media.py a partir de los paquetes publicados de cada objetivo: mismo estirado por pila, norte arriba, saturación en blanco y píxeles sin remuestrear.",
   "landing_footer_links": "Para seguir",
   "landing_footer_explorer": "Explorador",
-  "landing_footer_method": "Cómo verificamos (§5)",
+  "landing_footer_method": "Método y verificaciones",
   "landing_footer_code": "Código fuente",
   "landing_ribbon_title": "{n} colores de luz infrarroja",
   "landing_ribbon_caption": "Cada exposición de SPHEREx ve el cielo a través de una franja de filtros: de {lo} a {hi} µm, repartida en canales. Las barras más altas resuelven colores más finos.",

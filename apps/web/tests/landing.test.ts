@@ -232,3 +232,15 @@ describe("derived channel table for the ribbon", () => {
     });
   });
 });
+
+describe("field-note message table", () => {
+  it("covers every note_ message in en.json and es.json", async () => {
+    const { noteMessages } = await import("../src/lib/data/noteMessages");
+    for (const loc of ["en", "es"]) {
+      const keys = Object.keys(
+        JSON.parse(readFileSync(new URL(`../messages/${loc}.json`, import.meta.url), "utf8")),
+      ).filter((k) => k.startsWith("note_"));
+      for (const k of keys) expect(noteMessages[k], `${loc}:${k}`).toBeTypeOf("function");
+    }
+  });
+});

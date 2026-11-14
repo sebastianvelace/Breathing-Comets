@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import { localizeHref } from "#lib/paraglide/runtime.js";
   import { noteText } from "#lib/data/notes.js";
   import * as barnard from "../../../../static/data/targets/barnard.json";

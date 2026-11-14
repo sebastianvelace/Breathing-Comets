@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
   import { landingMedia } from "./landing.js";
 
@@ -29,7 +29,7 @@
       <p class="h">{m.landing_footer_links()}</p>
       <ul>
         <li><a href="{localizeHref('/explore')}?target=rw-aur&ui=story">{m.landing_footer_explorer()}</a></li>
-        <li><a href="#validation">{m.landing_footer_method()}</a></li>
+        <li><a href={localizeHref("/method")}>{m.landing_footer_method()}</a></li>
         <li>
           <a href="https://github.com/sebastianvelace/Breathing-Comets" rel="external">{m.landing_footer_code()}</a>
         </li>

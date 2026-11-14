@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import {
     fields,
     n_stars,

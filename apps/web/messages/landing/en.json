@@ -112,7 +112,7 @@
   "landing_footer_media": "Rendered {date} by pipelines/landing_media.py from the published target packages: common stretch per stack, north up, saturation in white, pixels not resampled.",
   "landing_footer_links": "Go further",
   "landing_footer_explorer": "Explorer",
-  "landing_footer_method": "How we check (§5)",
+  "landing_footer_method": "Method and checks",
   "landing_footer_code": "Source code",
   "landing_ribbon_title": "{n} colors of infrared light",
   "landing_ribbon_caption": "Every SPHEREx exposure sees the sky through a strip of filters: {lo} to {hi} µm, split into channels. Taller bars resolve finer color.",

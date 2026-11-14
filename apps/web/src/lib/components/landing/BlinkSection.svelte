@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import Plate from "./Plate.svelte";
   import { fmtLam, gaiaPixel, isoDate, landingMedia } from "./landing.js";
 

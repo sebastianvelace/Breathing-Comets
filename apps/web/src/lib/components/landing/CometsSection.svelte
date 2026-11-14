@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import Plate from "./Plate.svelte";
   import { getLocale } from "#lib/paraglide/runtime.js";
   import { fmtLam, fmtSciUnicode, localized, type CometState } from "./landing.js";

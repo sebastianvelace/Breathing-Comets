@@ -24,7 +24,7 @@ All results below describe observed verification. No research scripts have been 
 | 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
 | 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
 | 10 | Landing | Partial (3I packet delivered) | Integration commit + 3I commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | Gas-map/ink-in animation not built (no continuum-subtracted maps exist); Lighthouse LCP not measured (proxy 0.8–0.9 s before the 3I packet was bundled). |
-| 11 | Comets, method, about and Spanish | Partial (atlas + 3I/29P pages) | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
+| 11 | Comets, method, about and Spanish | Partial (atlas, 3I/29P pages, /method) | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
 | 14 | Freeze | Pending | — | Not run | — |
@@ -260,3 +260,9 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 | 14 Freeze | 2 | 0% | |
 
 Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only the product steps 1–12.
+
+## /method (2026-11-14)
+
+- `/method` and `/es/method`: ten sections (data, observer, wavelength, Diff λ, photometry, comet gas, validation, nulls, limits, reproducibility) with data-driven tables and `build.json` (new). Tests: 3 pytest (`test_build_info.py`), 5 E2E (`method.spec.ts`), 1 Vitest (note table). Full local E2E 36 passed; Vitest 44 passed; check 0/0; pytest 175 passed + known R Dra.
+- Landing initial JS **75.1 KB gz** after removing the dynamic message lookup (see FINDINGS section 8).
+- Step 11 now lacks only the "about" page; step 11 estimate raised from 55% to about 80%, which moves the weighted total from 75% to about 77%.

@@ -144,7 +144,7 @@
     <p>{m.comets_method_text()}</p>
     <p class="mono">{cometAtlas.method.status_rule}</p>
     <p class="mono">{m.comets_sources({ sources: cometAtlas.method.sources.join(", ") })}</p>
-    <a href="/data/comets/index.json" download>{m.comets_download()}</a>
+    <a href="/data/comets/index.json" download>{m.comets_download()}</a> · <a href={localizeHref("/method")} data-testid="method-link">{m.method_title()}</a>
   </section>
 </main>
 <footer>{m.comets_credits()}</footer>

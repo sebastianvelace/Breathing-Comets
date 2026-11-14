@@ -1,0 +1,52 @@
+{
+ "generated": "2026-11-14T18:58Z",
+ "generator": "pipelines/build_info.py",
+ "git": {
+  "commit": "476f329936ef3a514183cee77dcda7511ab79ace",
+  "note": "commit that was HEAD when this file was generated; the file itself is committed afterwards"
+ },
+ "data_version": {
+  "releases": [
+   "dr1",
+   "qr3"
+  ],
+  "l2": "l2b-v27",
+  "s3_index": "spherex_s3_keys_compact.npz",
+  "spectral_wcs": "cal-swcs-v5-2026-191"
+ },
+ "exposure_index": {
+  "rows_d4_d6": 809593,
+  "file": "data/spherex_exposures_d456_dr1_qr3.parquet",
+  "s3_keys": 1630148
+ },
+ "channels": {
+  "n": 102,
+  "wavelength_um": [
+   0.753,
+   4.988
+  ]
+ },
+ "photometry": {
+  "rule": "flux = sampled-ePSF forced fit (R=4 px, free background), NO aperture correction; err^2 = sigma^2 + (0.03 F)^2; official photometry mask",
+  "n_stars": 41,
+  "fields": [
+   "cdfs",
+   "cosmos",
+   "nep"
+  ],
+  "ratio_mean": 0.994,
+  "ratio_min": 0.972,
+  "ratio_max": 1.011
+ },
+ "products": {
+  "targets": 5,
+  "stacks": 38,
+  "comets": 20,
+  "neo": {
+   "A": 11,
+   "B": 17,
+   "provisional": 6,
+   "pha_AB": 7
+  }
+ }
+}

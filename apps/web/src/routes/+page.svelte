@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
   import Hero from "#lib/components/landing/Hero.svelte";
   import SpectrumRibbon from "#lib/components/landing/SpectrumRibbon.svelte";

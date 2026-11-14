@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { m } from "#lib/paraglide/messages.js";
+  import * as m from "#lib/paraglide/messages.js";
   import lite from "#lib/data/channels-lite.json";
   import { bands } from "#lib/astro/bands.js";
 
