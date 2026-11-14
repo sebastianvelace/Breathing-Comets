@@ -4,8 +4,26 @@ export type Spxf = { header: any; frames: SpxfFrame[] };
 export async function fetchSpxf(url: string, gz: boolean, signal?: AbortSignal): Promise<Spxf> {
   const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`SPXF ${res.status} ${url}`);
-  const stream = gz ? res.body!.pipeThrough(new DecompressionStream('gzip')) : res.body!;
+  const stream = gz ? await decodedSpxfStream(res) : res.body!;
   return parseSpxf(await new Response(stream).arrayBuffer());
+}
+
+/** Browsers may already decode an HTTP Content-Encoding: gzip response. */
+export async function decodedSpxfStream(response: Response): Promise<ReadableStream<Uint8Array<ArrayBuffer>>> {
+  if (!response.body) throw new Error('Empty SPXF response');
+  const reader = response.body.getReader();
+  let first = new Uint8Array(0);
+  while (first.length < 2) {
+    const result = await reader.read();
+    if (result.done) throw new Error('Truncated SPXF response');
+    const joined = new Uint8Array(first.length + result.value.length); joined.set(first); joined.set(result.value, first.length); first = joined;
+  }
+  const stream = new ReadableStream<Uint8Array<ArrayBuffer>>({
+    start(controller) { controller.enqueue(first); },
+    async pull(controller) { const result = await reader.read(); if (result.done) controller.close(); else controller.enqueue(result.value); },
+    cancel(reason) { return reader.cancel(reason); }
+  });
+  return first[0] === 0x1f && first[1] === 0x8b ? stream.pipeThrough(new DecompressionStream('gzip')) : stream;
 }
 
 export function parseSpxf(buf: ArrayBuffer): Spxf {

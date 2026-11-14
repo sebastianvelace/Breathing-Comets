@@ -18,8 +18,8 @@ All results below describe observed verification. No research scripts have been 
 | 2 | Deployed skeletons | Done | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages build passed; apex active with SSL; API custom domain HTTP 200. www redirect enabled; HTTP 301 preserves path and query. |
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Partial | d707949 + subsequent fixes | Fast suite 133 passed; all 7 current network tests passed; Ruff passed | Legacy QR2 layout independently verified; golden 3I physical-model acceptance remains pending. |
-| 5 | Five target precomputation | Partial | In progress | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
-| 6 | Story Explorer | Pending | — | Not run | — |
+| 5 | Five target precomputation | Partial | cfe29d7 | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
+| 6 | Story Explorer | In progress | Working tree | 28 Vitest tests pass; type check 0 errors/warnings; build passes; three Story E2E passed | Production deployment verification pending. |
 | 7 | Live API | Pending | — | Not run | — |
 | 8 | Lab and Aladin | Pending | — | Not run | — |
 | 9 | Small-Body Lab | Pending | — | Not run | — |
@@ -130,3 +130,20 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Repeated R Dra baseline acceptance after endpoint and actual-lambda fixes still fails: `assert '2026-06-12' >= '2026-09-01'`. The local source D6 coverage ends in June, while another detector reaches September. The expected assertion remains unchanged. After two unsuccessful attempts, step 5 remains partial and work proceeds to step 6 under the requested rule.
 - Full latest suite: `1 failed, 143 passed, 8 deselected in 2.43s`; sole failure `tests/test_precomputed_targets.py::test_r_dra_samples_full_baseline`. Network suite most recently: `8 passed, 133 deselected in 44.95s`. Golden 3I acceptance still pending.
 - Apex and www Pages custom domains are Active with SSL. Enabled the www-only Single Redirect with query preservation. Live HTTPS probe returned HTTP 301 and `location: https://breathingcomets.org/es?target=barnard`.
+
+## Step 6 implementation and verification
+
+- Added progressive SPXF decoding in a Comlink Worker, R32F/R16UI WebGL2 texture arrays, fixed stack stretch, warm and divergent LUTs, saturation-before-NaN handling, pan/zoom and TAN SVG annotation alignment.
+- Added Epoch/Blink/Diff λ controls, time ruler, A/B dates, playback controls, real Gaia proper motion by frame, source field notes with adjacent caveats, English/Spanish Paraglide messages with scientific values supplied at runtime from source JSON, and explicitly labelled deblended reference spectra.
+- Added shareable URL state, embed route and exact binary delivery headers. The arbitrary-pixel spectrum remains step 7, visibly separate from a target reference.
+- First web check: 20 errors and 2 warnings (extensionless package imports, unsupported top-level uPlot font option, readonly URL input and two accessibility/style warnings). Corrected source imports/options and retained full checking. Second check: `svelte-check found 0 errors and 0 warnings`.
+- First build failed `ENOENT: no such file or directory, open '@fontsource-variable/newsreader/latin.css'`. Corrected the import to the installed standard font entrypoints. Second build passed.
+- Browser verification found double gzip decoding with Vite preview's Content-Encoding response. The reader now detects gzip magic bytes; both compressed and browser-decoded actual data pass regression tests. Reference parser remains unchanged.
+- Initial E2E could not bind a local listener under restriction; approved execution then found the installed Playwright browser absent. Downloaded its matching browser into /tmp without adding dependencies. A stale preview process failed after a build replaced its asset manifest (`ENOENT ... app.C31Q-d5W.js`); restarting preview resolved that environment issue.
+- First complete E2E run: 2 passed, 1 failed because test innerText was compared to default textContent. Comparing rendered text explicitly preserves the intended assertion. Latest run: `3 passed (3.9s)` (Barnard frames/Gaia motion, WISE deblended reference S/N, shared URL in a fresh context).
+- Vitest latest: `28 passed (28)` in 253 ms, including 20 TAN round trips, URL state, Barnard proper motion, real Python packet parsing and both gzip transport cases. Manual browser observed the actual Barnard plate, Gaia cross, Blink A/B and real Diff λ. Screenshot /tmp/breathing-comets-story-diff.jpg.
+- Post-push cfe29d7 checks: exact sole author/committer identity; prohibited commit-message matches 0; only refs/heads/main.
+
+- Final SPXF transport type check initially found the TypeScript 6 ArrayBufferLike/BufferSource mismatch. Narrowed the stream element type to the actual ArrayBuffer-backed bytes; no casts or disabled checks.
+
+- Repeated stale-preview failure confirmed that reusing the manual preview across builds was unsafe. E2E now owns a separate port 4183 with reuseExistingServer false. Fresh final run: `3 passed (4.0s)`. Final type check: 0 errors, 0 warnings.

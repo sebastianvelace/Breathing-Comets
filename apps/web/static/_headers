@@ -1,0 +1,179 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/data/targets/wise-0855/D3.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D5.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D6.diff.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D2.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D6.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D4.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/wise-0855/D1.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D3.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D5.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D2.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D6.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D4.diff.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D4.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/barnard/D1.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D3.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D5.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D6.diff.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D2.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D6.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D4.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/r-dra/D1.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D3.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D5.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D6.diff.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D2.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D6.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D4.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/rw-aur/D1.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D3.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D5.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D6.diff.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D2.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D6.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D4.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
+/data/targets/eps-indi-b/D1.spxf.gz
+  Content-Type: application/octet-stream
+  ! Content-Encoding
+  Cache-Control: public, max-age=3600
+
