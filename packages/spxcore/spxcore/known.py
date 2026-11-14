@@ -45,6 +45,13 @@ def _normalize(text):
     return re.sub(r"[^a-z0-9]", "", text.lower().replace("ε", "epsilon"))
 
 
+def _nullable_number(value):
+    if value is None or value == "":
+        return None
+    number = float(value)
+    return number if np.isfinite(number) else None
+
+
 def _resolved_target(target, warning=False):
     ra, dec = target["pos_2026_01_01"]
     result = {"ra": ra, "dec": dec, "name": target["name"], "kind": "fixed", "source": "local",
@@ -88,8 +95,11 @@ async def resolve(query):
         raise ValueError("Object not resolved")
     row = rows[0]
     ra, dec = float(row["ra"]), float(row["dec"])
-    pmra, pmdec = float(row.get("pmra") or 0), float(row.get("pmdec") or 0)
-    parallax = float(row.get("plx_value") or 0)
+    pmra, pmdec = _nullable_number(row.get("pmra")), _nullable_number(row.get("pmdec"))
+    parallax = _nullable_number(row.get("plx_value"))
+    if pmra is None or pmdec is None:
+        return {"ra": ra, "dec": dec, "name": row["main_id"], "kind": "fixed", "source": "SIMBAD",
+                "epoch_warning": "Proper motion unavailable; catalog position at epoch J2000"}
     now_ra, now_dec = propagate(ra, dec, pmra, pmdec, 2000.0, Time.now().mjd, parallax)
     return {"ra": float(now_ra), "dec": float(now_dec), "name": row["main_id"], "kind": "fixed", "source": "SIMBAD",
             "pm": {"ra0": ra, "dec0": dec, "pmra_masyr": pmra, "pmdec_masyr": pmdec,
@@ -109,6 +119,6 @@ async def gaia(ra, dec, radius=0.25, gmax=19):
     stars = []
     for row in csv.DictReader(io.StringIO(response.text)):
         stars.append({"source_id": row["source_id"], "ra": float(row["ra"]), "dec": float(row["dec"]),
-                      "pmra": float(row.get("pmra") or 0), "pmdec": float(row.get("pmdec") or 0),
-                      "parallax": float(row.get("parallax") or 0), "g": float(row["phot_g_mean_mag"]), "ref_epoch": 2016.0})
+                      "pmra": _nullable_number(row.get("pmra")), "pmdec": _nullable_number(row.get("pmdec")),
+                      "parallax": _nullable_number(row.get("parallax")), "g": float(row["phot_g_mean_mag"]), "ref_epoch": 2016.0})
     return stars

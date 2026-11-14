@@ -15,10 +15,10 @@ All results below describe observed verification. No research scripts have been 
 | Step | Deliverable | Status | Commit | Verification | Open issues |
 |---|---|---|---|---|---|
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
-| 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages and custom DNS setup in progress. |
+| 2 | Deployed skeletons | Done | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages build passed; apex active with SSL; API custom domain HTTP 200. www redirect enabled; HTTP 301 preserves path and query. |
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
-| 4 | Scientific core | Partial | Scientific core implementation commit | Fast suite 131 passed; second network run 5 passed and 2 failed; Ruff passed | D5 calibration acquisition still times out. Legacy QR2 layout acceptance and golden 3I check remain to be completed. |
-| 5 | Five target precomputation | Pending | — | Not run | — |
+| 4 | Scientific core | Partial | d707949 + subsequent fixes | Fast suite 133 passed; all 7 current network tests passed; Ruff passed | Legacy QR2 layout independently verified; golden 3I physical-model acceptance remains pending. |
+| 5 | Five target precomputation | Partial | In progress | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
 | 6 | Story Explorer | Pending | — | Not run | — |
 | 7 | Live API | Pending | — | Not run | — |
 | 8 | Lab and Aladin | Pending | — | Not run | — |
@@ -98,3 +98,35 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Verified D3 and D5 calibration keys exist: S3 returns HTTP 206 for bytes 0–79 and confirms 33,312,960 bytes each; listing the v5 prefix returns all six detector maps. No replacement or invented calibration is used.
 - Most recent fast suite: `131 passed, 7 deselected in 3.28s`; Ruff: `All checks passed!`. This includes Python-to-TypeScript SPXF round trips with/without shuffle, gzip and variance, gnomonic coverage, visit sampling, proper motion, exact WISE coordinate resolution, and interpolation checks.
 - Still pending in step 4: independently verify a legacy QR2 layout and implement the slow golden 3I physical-model acceptance check when the comet model is available. Horizons integration has not yet been exercised live.
+
+## Deployment follow-up
+
+- User completed GitHub installation in the browser. Cloudflare confirmed access to the selected product repository.
+- Created CNAME `api` → `breathing-comets-api.fly.dev` with proxy off (DNS only). Fly certificate is issued, verified and active. `https://api.breathingcomets.org/v1/health` returned `ok: true`, `index_rows: 809593`, `index_built: true`, collections dr1/qr3.
+- Deployed core commit d707949 as image `deployment-01M7D8WWTB6NXT3VJASY8ZT82J`. Public WISE coordinate resolve returned the expected 2026 position and epoch_warning.
+- First Pages build failed before the configured npm command: automatic Python dependency discovery ran `pip install .` at the monorepo root and returned `error: Multiple top-level packages discovered in a flat-layout: ['data', 'apps', 'packages', 'services']`. Preparing the documented setting that disables automatic dependency installation; the requested build command already explicitly runs npm ci.
+- Preparing step 5: HTTPX fetched the exact D5 bytes 0–4194303 successfully (HTTP 206, 4,194,304 bytes, 4.669 s). This supports a bounded HTTPX transport fallback for the stalled bulk calibration acquisition; no data substitution.
+
+## Step 5 findings and fixes
+
+- Bulk calibration acquisition through validated HTTPX ranges succeeded for all six detectors, each 2040×2040. D5 completed in 5.26 s. The following network suite passed: `7 passed, 131 deselected in 54.42s`.
+- Barnard generated all six detector stacks; default D4 has 24 frames from 7 visits, 2025-08-27 through 2026-09-02. Actual Gaia counterpart 4472832130942575872 shifts 1.7167855535980503 output pixels between those epochs.
+- First real-stack TypeScript parse failed: `SyntaxError: Unexpected token N ... lam_um:NaN ... is not valid JSON`. Root cause: source intensity NaN at saturated pixels was incorrectly applied to the wavelength map and the edge flag. Fixed by sampling center CWAVE/CBAND independently of flux, using detector geometry for edge, upgrading cached metadata from the full maps, and rejecting nonfinite header JSON. Pixel data are preserved.
+- Added regression coverage for saturated-center wavelength and edge handling, plus invalid SPXF header rejection. Fast suite: `133 passed, 7 deselected in 3.54s`.
+- The step 3 one-megabyte check now explicitly measures the original exported JSON files; step 5 binary media have their separate 6 MB/detector and 25 MB/target budgets. The one-megabyte expected value and all scientific expected values remain unchanged.
+- First Pages retry using documented SKIP_DEPENDENCY_INSTALL=1 succeeded. Pages hostname returned HTTP 200. Apex domain is active with SSL in the dashboard; live HTTP probes pending confirmation.
+
+## Step 5 full-package acceptance
+
+- Full-package suite initially failed one acceptance: `1 failed, 142 passed, 8 deselected in 2.56s`. Exact assertion: `test_r_dra_samples_full_baseline`: last selected date `2026-06-12` was before required `2026-09-01`. Expected baseline unchanged.
+- Found a sampling edge case: a visit receiving one frame used linspace with one sample, always selecting its first exposure. The selector now preserves global temporal endpoints and uses actual CWAVE metadata before choosing frames within visits. Added a regression for a long continuous last visit; rebuilding R Dra.
+- Refreshed Gaia catalogs preserve missing proper motion/parallax as null, rather than inventing zero measurements. Counterpart matching only propagates stars with measured proper motion.
+- All 25 original reference assertions remain unchanged. Latest core fast suite before adding visit regression: `134 passed, 8 deselected in 3.20s`; latest network suite: `8 passed, 133 deselected in 44.95s`, including independent QR2 PSF-cube and DR1 compressed-FLAGS comparisons.
+- Live probes to `https://breathingcomets.org` and `/es` both returned HTTP 200.
+
+## Step 5 completed artifacts and remaining acceptance
+
+- All five target jobs finished with actual-lambda sampling: Barnard 12,174,027 bytes; eps-indi-b 11,117,865; WISE 0855 11,111,673; RW Aur 11,637,931. All per-detector files are below 6 MB and target totals below 25 MB. All 35 real stacks parse in TypeScript and contain finite mission pixels.
+- Repeated R Dra baseline acceptance after endpoint and actual-lambda fixes still fails: `assert '2026-06-12' >= '2026-09-01'`. The local source D6 coverage ends in June, while another detector reaches September. The expected assertion remains unchanged. After two unsuccessful attempts, step 5 remains partial and work proceeds to step 6 under the requested rule.
+- Full latest suite: `1 failed, 143 passed, 8 deselected in 2.43s`; sole failure `tests/test_precomputed_targets.py::test_r_dra_samples_full_baseline`. Network suite most recently: `8 passed, 133 deselected in 44.95s`. Golden 3I acceptance still pending.
+- Apex and www Pages custom domains are Active with SSL. Enabled the www-only Single Redirect with query preservation. Live HTTPS probe returned HTTP 301 and `location: https://breathingcomets.org/es?target=barnard`.

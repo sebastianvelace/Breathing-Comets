@@ -98,6 +98,15 @@ def sample_visits(rows, max_frames):
     chosen = []
     for v in visits:
         group = sorted(groups[v], key=lambda r: r.get("lam_um", r["mjd"]))
-        picks = np.linspace(0, len(group)-1, quota[v]).round().astype(int)
+        picks = np.linspace(0, len(group)-1, quota[v]).round().astype(int) if quota[v] > 1 else [len(group)//2]
         chosen.extend(group[i] for i in picks)
+    if max_frames >= 2:
+        endpoints = [ordered[0], ordered[-1]]
+        for endpoint in endpoints:
+            if endpoint in chosen:
+                continue
+            replaceable = [i for i, row in enumerate(chosen) if row["visit"] == endpoint["visit"] and row not in endpoints]
+            if replaceable:
+                i = min(replaceable, key=lambda i: abs(chosen[i]["mjd"]-endpoint["mjd"]))
+                chosen[i] = endpoint
     return sorted(chosen, key=lambda r: r["mjd"])

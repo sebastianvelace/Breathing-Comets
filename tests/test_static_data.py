@@ -124,8 +124,10 @@ def test_channels_cover_all_frames_in_order():
     assert [c["frame"] for c in channels] == list(range(102))
 
 
-def test_static_package_is_smaller_than_one_megabyte():
-    assert sum(p.stat().st_size for p in DATA.rglob("*") if p.is_file()) < 1_000_000
+def test_exported_json_package_is_smaller_than_one_megabyte():
+    # Step 3's exported JSON budget is independent of step 5's binary target packages.
+    files = [*DATA.glob("*.json"), *(DATA / "neo").glob("*.json"), *(DATA / "targets").glob("*.json")]
+    assert sum(p.stat().st_size for p in files) < 1_000_000
 
 
 def test_exposure_index_contract():

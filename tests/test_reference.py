@@ -157,3 +157,21 @@ def test_dr1_wavelength_shift_d5():
         with fitsio.open_l2(url) as h:
             lam.append(WCS(h["IMAGE"].header, key="W", fobj=h).pixel_to_world_values(1020, 1020)[0])
     assert 5.5 < (lam[1] - lam[0]) * 1000 < 7.0   # D5: +6.3 nm (§8.0b)
+
+
+@pytest.mark.network
+def test_fits_layout():
+    import asyncio
+    obs = "2025W21_1B_0112_1"
+    key = _qr2_key(obs, 5)
+    assert key is not None
+    layout = asyncio.run(fitsio.read_hdu_layout(key))
+    hdus = {h["name"]: h for h in layout}
+    assert not hdus["FLAGS"]["header"].get("ZIMAGE", False)
+    assert hdus["FLAGS"]["header"]["BITPIX"] == 32
+    assert hdus["PSF"]["header"]["NAXIS3"] == 121
+    rows = asyncio.run(fitsio.read_rows(key, layout, 1000, 1003, ("IMAGE", "FLAGS")))
+    with fitsio.open_l2(s3.S3 + key) as independent:
+        for name in ("IMAGE", "FLAGS"):
+            assert hdus[name]["dat_loc"] == independent[name].fileinfo()["datLoc"]
+            np.testing.assert_equal(rows[name], independent[name].section[1000:1003, :])

@@ -77,8 +77,9 @@ def open_l2(url):
 
 
 async def read_hdu_layout(key, max_hdus=12):
-    if key in _layouts:
-        return _layouts[key]
+    cache_key = (key, max_hdus)
+    if cache_key in _layouts:
+        return _layouts[cache_key]
     out, loc = [], 0
     for _ in range(max_hdus):
         blocks = 12
@@ -103,7 +104,7 @@ async def read_hdu_layout(key, max_hdus=12):
             break
     if len(_layouts) >= 256:
         _layouts.pop(next(iter(_layouts)))
-    _layouts[key] = out
+    _layouts[cache_key] = out
     return out
 
 

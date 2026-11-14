@@ -60,6 +60,44 @@ def test_reproject_identity():
     assert np.max(np.abs(result[2:-2, 2:-2]/fixture[2:-2, 2:-2]-1)) < 1e-5
 
 
+def test_spxf_rejects_nonfinite_json_header(tmp_path):
+    with pytest.raises(ValueError, match="Out of range float"):
+        spxf.write_spxf(tmp_path / "bad.spxf", {"lam_um": float("nan")}, [])
+
+
+def test_saturated_flux_does_not_invalidate_wavelength_or_edge(monkeypatch):
+    wcs = WCS(naxis=2)
+    wcs.wcs.ctype = ["RA---TAN", "DEC--TAN"]
+    wcs.wcs.crval = [120, 30]
+    wcs.wcs.crpix = [1020.5, 1020.5]
+    wcs.wcs.cdelt = [-6.15/3600, 6.15/3600]
+    header = wcs.to_header()
+    header["MJD-AVG"], header["PSF_FWHM"] = 61041.0, 6.0
+
+    async def layout(key):
+        return [{"name": "IMAGE", "header": header}]
+
+    async def rows(key, layout, y0, y1, names):
+        image = np.ones((y1-y0, 2040), np.float32)
+        image[1020-y0, 1020] = np.nan
+        return {"IMAGE": image, "FLAGS": np.zeros(image.shape, np.int64)}
+
+    async def maps(det):
+        return np.full((2040, 2040), 4.0, np.float32), np.full((2040, 2040), 0.05, np.float32)
+
+    monkeypatch.setattr(fitsio, "read_hdu_layout", layout)
+    monkeypatch.setattr(fitsio, "read_rows", rows)
+    monkeypatch.setattr(calib, "load_maps", maps)
+    grid, meta, frame = asyncio.run(cutout._make_frame(
+        {"obs_id": "synthetic-fixture", "det": 4, "visit": 0}, 120, 30, 0.05, False, "fixture"))
+    center = grid["nx"]//2
+    assert np.isnan(frame["flux"][center, center])
+    assert meta["lam_um"] == 4.0
+    assert meta["bw_um"] == pytest.approx(0.05)
+    assert meta["edge"] is False
+    json.dumps(meta, allow_nan=False)
+
+
 def test_reproject_vs_pkg():
     from reproject import reproject_interp
 
@@ -132,6 +170,16 @@ def test_visit_sampling_spans_time():
     assert selected[-1]["mjd"]-selected[0]["mjd"] > 149
 
 
+def test_visit_sampling_keeps_end_of_long_continuous_visit():
+    fixture = [{"obs_id": str(i), "visit": i, "mjd": i*30, "lam_um": 4.1} for i in range(6)]
+    fixture += [{"obs_id": f"long-{i}", "visit": 6, "mjd": 180+i, "lam_um": 4.1+(i % 10)/100} for i in range(100)]
+    selected = sample_visits(fixture, 7)
+    assert len(selected) == 7
+    assert selected[0]["mjd"] == 0
+    assert selected[-1]["mjd"] == 279
+    assert {row["visit"] for row in selected} == set(range(7))
+
+
 def test_horizons_matches_jd_instead_of_position():
     assert ephem.match_horizons_rows([3, 1, 2], [1, 2, 3]).tolist() == [2, 0, 1]
     with pytest.raises(ValueError, match="epoch mismatch"):
@@ -150,6 +198,14 @@ def test_omega_uses_header():
     assert calib.omega_from_header({"OMEGA_MEDIAN": 40}) == pytest.approx(40*(np.pi/(180*3600))**2)
     with pytest.raises(KeyError):
         calib.omega_from_header({})
+
+
+def test_missing_catalog_values_remain_missing():
+    assert known._nullable_number("") is None
+    assert known._nullable_number(None) is None
+    assert known._nullable_number("nan") is None
+    assert known._nullable_number("0") == 0
+    assert known._nullable_number("-0.1") == -0.1
 
 
 def test_same_lambda_reference_removes_color():

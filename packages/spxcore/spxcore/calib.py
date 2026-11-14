@@ -3,6 +3,7 @@
 import asyncio
 from functools import lru_cache
 
+import httpx
 import numpy as np
 from astropy.io import fits
 from scipy.ndimage import map_coordinates
@@ -35,10 +36,23 @@ async def _load_maps(det):
         async with asyncio.timeout(30):
             metadata = await obstore.head_async(s3.STORE, key)
             size = metadata["size"]
-            block = 4 * 1024 * 1024
-            pieces = await asyncio.gather(*[
-                s3.get_range(key, start, min(block, size-start)) for start in range(0, size, block)
-            ])
+            block = 512 * 1024
+            semaphore = asyncio.Semaphore(8)
+            # Bulk calibration transfer uses HTTPX after stalled Rust body transfers.
+            # The exact same S3 object is fetched, with validated byte ranges.
+            async with httpx.AsyncClient(timeout=8) as client:
+                async def fetch_piece(start):
+                    length = min(block, size-start)
+                    async with semaphore:
+                        response = await client.get(s3.S3+key, headers={"Range": f"bytes={start}-{start+length-1}"})
+                        response.raise_for_status()
+                        expected_range = f"bytes {start}-{start+length-1}/{size}"
+                        if response.status_code != 206 or response.headers.get("Content-Range") != expected_range:
+                            raise ValueError("Unexpected spectral calibration byte range")
+                        if len(response.content) != length:
+                            raise ValueError("Truncated spectral calibration byte range")
+                        return response.content
+                pieces = await asyncio.gather(*[fetch_piece(start) for start in range(0, size, block)])
             data = b"".join(pieces)
             if len(data) != size:
                 raise ValueError("Truncated spectral calibration map")

@@ -13,7 +13,7 @@ def _pad8(b: bytes) -> bytes:
     return b + b"\0" * ((-len(b)) % 8)
 
 def write_spxf(path, header: dict, frames: list[dict], shuffle=True, gz=True):
-    h = json.dumps(header, separators=(",", ":")).encode()
+    h = json.dumps(header, separators=(",", ":"), allow_nan=False).encode()
     h += b" " * ((-len(h)) % 8)
     out = [MAGIC, np.uint16(1).tobytes(), np.uint16(1 if shuffle else 0).tobytes(),
            np.uint32(len(h)).tobytes(), np.uint32(0).tobytes(), h]
