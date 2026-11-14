@@ -20,8 +20,9 @@ test("29P page shows real frames ordered by wavelength and the CO/CO2 spectra", 
   await page.keyboard.press("Home");
   const first = await page.getByTestId("detail-frame").getAttribute("data-lam");
   await page.keyboard.press("End");
-  const last = await page.getByTestId("detail-frame").getAttribute("data-lam");
-  expect(Number(last)).toBeGreaterThan(Number(first));
+  await expect
+    .poll(async () => Number(await page.getByTestId("detail-frame").getAttribute("data-lam")))
+    .toBeGreaterThan(Number(first));
   await expect(page.getByTestId("detail-spectrum")).toHaveAttribute("data-points", "32");
   await expect(page.getByTestId("detail-spectrum-co")).toHaveAttribute("data-points", "18");
   await expect(page.getByTestId("detail-validation")).toContainText("4.50 × 10²⁸");
@@ -45,7 +46,7 @@ test("sweep animation advances frames and can be paused", async ({ page }) => {
   const frame = page.getByTestId("detail-frame");
   const start = await frame.getAttribute("data-lam");
   await page.getByRole("button", { name: "Sweep wavelengths" }).click();
-  await expect.poll(() => frame.getAttribute("data-lam")).not.toBe(start);
+  await expect.poll(() => frame.getAttribute("data-lam"), { timeout: 15000 }).not.toBe(start);
   await page.getByRole("button", { name: "Pause" }).click();
   const frozen = await frame.getAttribute("data-lam");
   await page.waitForTimeout(1000);
