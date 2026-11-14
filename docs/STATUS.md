@@ -15,7 +15,7 @@ All results below describe observed verification. No research scripts have been 
 | Step | Deliverable | Status | Commit | Verification | Open issues |
 |---|---|---|---|---|---|
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
-| 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Web type check blocked by unapproved @types/node; Pages and custom DNS require Cloudflare sign-in. |
+| 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages and custom DNS setup in progress. |
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Pending | — | Not run | — |
 | 5 | Five target precomputation | Pending | — | Not run | — |
@@ -80,3 +80,7 @@ sebasvelace <sebastianvelace@gmail.com> | sebasvelace <sebastianvelace@gmail.com
 Working tree was clean. All 25 approved direct npm dependencies are pinned exactly. A registry lookup confirmed `@types/node@24.19.2` exists; adding it as a development dependency requires user approval because it is outside BUILD §3.2. No extra package was installed.
 
 Next: obtain approval for the Node type declarations, restore a passing web type check, finish Pages/DNS after Cloudflare sign-in, then implement step 4.
+
+## Approved Node type declarations
+
+The user approved `@types/node@24.19.2` as an additional development dependency. Installed exactly that version. `npm run check`: `svelte-check found 0 errors and 0 warnings`. Cloudflare account access is now authenticated and verified; no sign-in blocker remains.
