@@ -67,3 +67,8 @@ Everything else (no emoji, no stock icons, no NASA logos, no generated imagery, 
 
 - Ribbon band labels (CO₂ ν₃ / CO) touch on very narrow phones (≈ 375 px).
 - The hero's first 3I frame is a faint field; the strongest frame is used in §4 as the poster.
+
+## 7. Test findings
+
+- `comet-detail.spec.ts` failed twice on production and passed locally. Cause: the prerendered HTML is interactive before Svelte hydrates, so a key press on the wavelength slider is lost when hydration is slow (local hydrates instantly). First attempt (poll instead of immediate read) did not fix it; the test now retries Home/End until the handler is attached (`toPass`). Product behaviour unchanged: a very early key press before hydration is ignored, as with any hydrated page.
+- Production E2E after the final push: landing, comets, comet-detail and neo suites pass (see STATUS).
