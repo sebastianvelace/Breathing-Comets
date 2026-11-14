@@ -282,6 +282,12 @@
     touch-action: none;
     color: var(--plate-ink);
   }
+  /* Keep plate + timeline in one screen on laptops: the controls are part of the instrument. */
+  @media (min-width: 768px) {
+    .plate {
+      max-height: max(340px, calc(100svh - 370px));
+    }
+  }
   canvas {
     width: 100%;
     height: 100%;

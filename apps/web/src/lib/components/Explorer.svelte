@@ -30,6 +30,7 @@
   import AladinView from "./AladinView.svelte";
   import Inspector from "./Inspector.svelte";
   import LayerTree from "./LayerTree.svelte";
+  import Onboarding from "./Onboarding.svelte";
   import { channels, nearestChannel } from "#lib/astro/hips.js";
 
   let { embed = false }: { embed?: boolean } = $props();
@@ -83,6 +84,8 @@
       ),
     ),
   );
+  let tourOpen = $state(false),
+    wantTour = $state(false);
   let urlTimer: ReturnType<typeof setTimeout> | undefined;
   const active = $derived(view.mode === "diff" ? diff : base);
   const shownIndex = $derived(
@@ -127,6 +130,14 @@
     return localizeHref(url.pathname + url.search, { locale });
   });
 
+  // ?tour=1 opens the guided tour as soon as the plate, timeline and notes exist.
+  $effect(() => {
+    if (wantTour && base?.frames.length && manifest && !embed) {
+      wantTour = false;
+      tourOpen = true;
+    }
+  });
+
   onMount(() => {
     const language = page.url.searchParams.get("lang");
     if ((language === "en" || language === "es") && language !== getLocale()) {
@@ -137,6 +148,7 @@
     }
     Object.assign(view, parseView(page.url.searchParams));
     view.lang = getLocale();
+    wantTour = page.url.searchParams.get("tour") === "1";
     const mobile = matchMedia("(max-width:767px)");
     if (mobile.matches) view.ui = "story";
     const resized = () => {
@@ -644,7 +656,13 @@
           onclick={() => switchUi("lab")}>{m.lab()}</button
         >
       </div>
-      <a href={languageHref} aria-label={m.language()}
+      <button
+        class="tour-btn"
+        onclick={() => (tourOpen = true)}
+        aria-label={m.tour_open()}
+        data-testid="tour-open"
+        ><span class="long">{m.tour_open()}</span><span class="short" aria-hidden="true">?</span></button
+      ><a href={languageHref} aria-label={m.language()}
         >{getLocale() === "en" ? "ES" : "EN"}</a
       ><button onclick={share}>{copied ? m.copied() : m.share()} ↗</button>
     </nav>
@@ -866,12 +884,28 @@
       /><button onclick={share}>{copied ? m.copied() : m.copy_link()}</button>
     </details>{/if}
 </main>
-{#if !embed}<footer class="mono">{m.credits()}</footer>{/if}
+{#if !embed}<footer class="mono">{m.credits()}</footer>
+  <Onboarding bind:open={tourOpen} />{/if}
 
 <style>
   .ui-switch {
     display: flex;
     gap: 0;
+  }
+  .tour-btn {
+    font-size: 12px;
+    min-height: 34px;
+    padding: 6px 12px;
+    border-color: transparent;
+    text-decoration: underline;
+    text-decoration-color: var(--co2);
+    text-underline-offset: 4px;
+  }
+  .tour-btn:hover {
+    border-color: var(--co2);
+  }
+  .tour-btn .short {
+    display: none;
   }
   .ui-switch button {
     font-size: 12px;
@@ -910,10 +944,25 @@
     .ui-switch {
       display: none;
     }
+    .tour-btn .long {
+      display: none;
+    }
+    .tour-btn .short {
+      display: inline;
+      font-size: 14px;
+    }
+    .tour-btn {
+      min-width: 36px;
+      text-decoration: none;
+      border: 1px solid var(--rule);
+    }
+    .site-header .brand {
+      white-space: nowrap;
+    }
   }
 
   .site-header {
-    padding: 20px var(--gutter);
+    padding: 12px var(--gutter);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -929,12 +978,12 @@
     font: 12px var(--font-data);
   }
   main {
-    padding: 30px var(--gutter) 48px;
+    padding: 18px var(--gutter) 48px;
     max-width: 1800px;
     margin: auto;
   }
   .search-section {
-    margin-bottom: 32px;
+    margin-bottom: 18px;
   }
   form {
     display: flex;
@@ -942,9 +991,9 @@
     align-items: center;
   }
   form input {
-    font: italic clamp(21px, 2.5vw, 36px) var(--font-display);
+    font: italic clamp(19px, 1.9vw, 28px) var(--font-display);
     width: 100%;
-    padding: 10px 0 14px;
+    padding: 6px 0 10px;
     border: 0;
     background: transparent;
   }
@@ -956,7 +1005,7 @@
     display: flex;
     gap: 22px;
     flex-wrap: wrap;
-    margin-top: 16px;
+    margin-top: 10px;
   }
   .target-links button {
     padding: 0 0 6px;
