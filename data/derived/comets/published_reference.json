@@ -1,0 +1,13 @@
+{
+  "note": "Literature values only; each entry cites its source. Compared in the product with the measurements exported from the CSVs.",
+  "references": {
+    "3i-atlas_co2_2025-08": {
+      "lo": 9.4e26, "hi": 1.6e27, "unit": "s-1",
+      "source": "Lisse et al. 2025, RNAAS, arXiv:2508.15469 (0.94e27, preliminary); Lisse et al. 2026, ApJL 1000, L52, arXiv:2512.07318 (1.6e27 +/- 0.16e27)"
+    },
+    "29p_co_2025-12": {
+      "lo": 2.9e28, "hi": 5.6e28, "unit": "s-1",
+      "source": "Bockelee-Morvan et al. 2022 (IRAM, 2.9-5.6e28); quiescent 1.8e28 (Festou et al. 2001)"
+    }
+  }
+}

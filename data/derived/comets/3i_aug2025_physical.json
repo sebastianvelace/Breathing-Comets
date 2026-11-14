@@ -1,0 +1,14 @@
+{
+  "comet": "3I/ATLAS",
+  "epoch": "2025-08",
+  "species": "CO2",
+  "method": "Physical nu3 band model (P/R branches, even J) fitted to the sky-subtracted D5 spectrum, aperture 3 px, Haser parent regime",
+  "reproduced": {
+    "command": "python3 research/11_band_physical.py (research repo, read-only; input data/derived/3I_aug2025_D5_skysub.csv, 28 in-band points)",
+    "date": "2026-11-14",
+    "best_no_evolution": {"q": 1.17e27, "q_stat_err": 3.0e25, "chi2_red": 27.5, "T_rot_K": 100, "sigma_x_um": 0.005, "n": 0.0},
+    "r_au_reference": 3.2
+  },
+  "interval_16_84": {"lo": 8.6e26, "hi": 1.38e27, "source": "research notes docs/06 section 5 (Monte Carlo, recipe A); NOT re-run in this build"},
+  "note": "The earlier 3I_aug2025_bandfits.csv (Gaussian band, no sky subtraction) gives 1.11e27 at 3 px with chi2_red 278 and a strong aperture dependence; it is retained but is not the validation measurement."
+}

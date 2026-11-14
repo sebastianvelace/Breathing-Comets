@@ -136,7 +136,7 @@
       <a class="cta primary" href={exploreHref} data-testid="open-sky"
         >{m.landing_hero_cta_sky()}<span aria-hidden="true"> →</span></a
       >
-      <a class="cta secondary" href="#comets">{m.landing_hero_cta_comets()}</a>
+      <a class="cta secondary" href={localizeHref("/comets")} data-testid="meet-comets">{m.landing_hero_cta_comets()}</a>
     </div>
   </div>
 

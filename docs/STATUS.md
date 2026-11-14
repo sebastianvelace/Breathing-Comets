@@ -24,7 +24,7 @@ All results below describe observed verification. No research scripts have been 
 | 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
 | 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
 | 10 | Landing | Partial | Integration commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | 3I packet, 3I hero and gas-map ink-in pending; Lighthouse LCP not measured (proxy 0.8–0.9 s). |
-| 11 | Comets, method, about and Spanish | Pending | — | Not run | — |
+| 11 | Comets, method, about and Spanish | Partial | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
 | 14 | Freeze | Pending | — | Not run | — |
@@ -214,3 +214,12 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Pushed 2f79833..6337571 (four commits: Lab/Aladin, Small-Body Lab, landing, STATUS). Remote has only `refs/heads/main`; prohibited-attribution matches 0.
 - Pages deployed after about 8 polls of 20 s. HTTP 200 on `/`, `/es`, `/explore?target=barnard`, `/neo`, `/es/neo`, `/aladin` and a landing plate.
 - Full E2E against https://breathingcomets.org: `19 passed (1.4m)` (lab 2, landing 11, neo 2, spectrum 1, story 3). This also shows the public API allows the production origin.
+
+## Step 11 first slice: comet atlas (2026-11-14)
+
+- Copied the retained CSVs into `data/derived/comets/` (`co2_census_physical`, `co_census_final`, `h2o_census`, `q_vs_aperture`, `3I_aug2025_bandfits`, `3I_aug2025_spectrum`) and `pipelines/export_comets.py` writes `apps/web/static/data/comets/index.json` (20 comets). Every number is copied from a CSV; the old `co2_census_final.csv` is not used.
+- Status rule (BUILD 8.9): detected S/N ≥ 5 and χ²ᵣ < 50 (17); with systematics S/N ≥ 5 and χ²ᵣ ≥ 50 (2: C/2025 A6 Lemmon χ²ᵣ 71.6, 3I/ATLAS December χ²ᵣ 185); marginal 3 ≤ S/N < 5 (1: P/2021 N1); not detected 0. C/2014 UN271 (15 au) is flagged unreliable.
+- 3I August CO₂ validation: the retained `3I_aug2025_bandfits.csv` is the earlier Gaussian fit without sky subtraction (3 px: 1.11e27, χ²ᵣ 278, strong aperture dependence) and does NOT support the guide's 1.17e27. Re-ran `research/11_band_physical.py` (read-only, system Python with pandas) on `3I_aug2025_D5_skysub.csv`: best no-evolution fit `χ²r=27.5 T=100 σx=0.005 n=0.0 Q(r=3.2au)=1.17e+27 ± 3.0e+25` (statistical). The 16–84% range 0.86–1.38e27 comes from the research notes and was not re-run; the page says so. Evidence stored in `data/derived/comets/3i_aug2025_physical.json`.
+- 29P CO validation uses `co_census_final.csv` (Q(CO) 4.504e28; CO/CO₂ 43.8 [36.6, 51.9]) against 2.9–5.6e28 (Bockelée-Morvan et al. 2022). Per PENDIENTES P3 this is a research result, not an independent re-measurement.
+- Withheld: 3I August H₂O (guide: 4.0e26 against 3.2e26). No CSV or reproducible script output for it was retained; the page shows it as pending with the reason. The "29P in outburst" legend of BUILD 10.6 was also not published: nothing retained verifies it.
+- Verification: `npm run check` 0 errors / 0 warnings; Vitest 39 passed; `pytest -m "not network and not slow"` 164 passed, 1 failed (known R Dra); full E2E built against the local API `26 passed (44.0s)` (comets 7, landing 11, lab 2, neo 2, spectrum 1, story 3).
