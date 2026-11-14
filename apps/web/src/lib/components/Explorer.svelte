@@ -662,10 +662,9 @@
       <button
         class="tour-btn"
         onclick={() => (tourOpen = true)}
-        aria-label={m.tour_open()}
         data-testid="tour-open"
         ><span class="long">{m.tour_open()}</span><span class="short" aria-hidden="true">?</span></button
-      ><a href={languageHref} aria-label={m.language()}
+      ><a href={languageHref} aria-label={`${getLocale() === "en" ? "ES" : "EN"} · ${m.language()}`}
         >{getLocale() === "en" ? "ES" : "EN"}</a
       ><button onclick={share}>{copied ? m.copied() : m.share()} ↗</button>
     </nav>
@@ -957,8 +956,14 @@
     .ui-switch {
       display: none;
     }
+    /* Hidden visually, still the button's accessible name. */
     .tour-btn .long {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
     .tour-btn .short {
       display: inline;
