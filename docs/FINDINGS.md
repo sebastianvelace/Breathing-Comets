@@ -103,3 +103,7 @@ Everything else (no emoji, no stock icons, no NASA logos, no generated imagery, 
 - **Licence finding (open):** the repository has **no `LICENSE` file**, so the page states only the licences verified in `node_modules`: Newsreader and IBM Plex are OFL-1.1, Aladin Lite is **GPL-3**. Because Aladin Lite is bundled in the build (loaded in an iframe in Lab mode), the licence of this site's own code should be chosen with that in mind; the page says "source code is public on GitHub" and claims no licence.
 - Attributions checked against the sources: 2MASS is credited to UMass and IPAC/Caltech and WISE/NEOWISE to NASA/JPL-Caltech (an earlier draft lumped them under IPAC); the Aladin and Astropy citations are those given in BUILD 16 (authors and year only, no venue invented).
 - Test: `about.spec.ts` (4 E2E). Landing initial JS 73.6 KB gz.
+
+## 12. One unexplained intermittent failure (2026-11-14)
+
+- After the `/about` deploy, a full production run gave `39 passed, 1 failed`: `story.spec.ts › shared URL restores the same observation in a fresh context`. The failure message was not captured. The test passed alone twice and in the next full run (`40 passed (1.5m)`). It presses `Home` then `ArrowRight` twelve times on the timeline right after the frame count appears, so a timing cause (progressive frame upload or late hydration, the families in sections 7 and 9) is plausible, **but this is not proven**. Not changed; if it recurs, capture the error before touching the test.
