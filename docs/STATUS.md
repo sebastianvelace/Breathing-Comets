@@ -271,3 +271,7 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 
 - Deployed the Horizons chunking fix to `breathing-comets-api` (image `deployment-01M7DQ56PM0SKP62HE6VB2C19N`). Public health 200 (cold start 18.0 s). Tracked 3I (17 days) 200 in 6.8 s and 29P (11 days) 200 in 4.3 s, content identical to the stored stacks. Full production E2E `36 passed` twice. Details and the intermittent-test finding: `docs/FINDINGS.md` section 9.
 - Still open: 29P through `/v1/resolve`, cold-stack latency target (4 s), JPL SB identification, Lighthouse, about page, submission.
+
+## 29P resolver (2026-11-14)
+
+- Resolver now handles numbered periodic comets (`DES=<des>; CAP`) and ambiguous SBDB answers (HTTP 300). Local API: `29P` → `DES=29P; CAP`, `240P-B` ok, `240P` explicit error. Tests: 5 new pytest; full fast suite `1 failed (known R Dra), 180 passed`. **Not deployed to Fly yet.** Details: `docs/FINDINGS.md` section 10.

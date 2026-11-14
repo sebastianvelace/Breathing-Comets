@@ -132,18 +132,58 @@ async def resolve_sesame(query):
 
 
 async def resolve_moving(query):
-    import asyncio
 
     async with httpx.AsyncClient(timeout=8) as client:
         response = await client.get("https://ssd-api.jpl.nasa.gov/sbdb.api", params={"sstr": query})
+        if response.status_code == 300:
+            # SBDB answers 300 when several records match (e.g. fragments 240P and 240P-B).
+            response = await client.get("https://ssd-api.jpl.nasa.gov/sbdb.api",
+                                        params={"des": pick_sbdb_match(response.json().get("list", []), query)})
         response.raise_for_status()
     data = response.json()
     obj = data.get("object")
     if not obj or "des" not in obj:
         raise ValueError("Moving object is unresolved or ambiguous")
-    position = await asyncio.to_thread(ephem.horizons_positions, obj["des"], [Time.now().mjd])
+    track, position = await first_working_track(track_candidates(obj), Time.now().mjd)
     return {"ra": float(position[0, 0]), "dec": float(position[0, 1]), "name": obj.get("fullname", obj["des"]),
-            "kind": "moving", "source": "JPL SBDB / Horizons", "track": obj["des"], "observer": "SPHEREx"}
+            "kind": "moving", "source": "JPL SBDB / Horizons", "track": track, "observer": "SPHEREx"}
+
+
+def pick_sbdb_match(matches, query):
+    """Choose the single SBDB record whose primary designation equals the query; never guess."""
+    exact = [m["pdes"] for m in matches if m.get("pdes", "").lower() == query.strip().lower()]
+    if len(exact) != 1:
+        names = ", ".join(m.get("name") or m.get("pdes", "?") for m in matches)
+        raise ValueError(f"Moving object is ambiguous: {names}")
+    return exact[0]
+
+
+def track_candidates(obj):
+    """Horizons identifiers to try, most specific last resort. A numbered periodic comet such as
+    ``29P`` has several apparition records, so its bare designation is ambiguous and Horizons answers
+    "no ephemeris"; ``DES=<des>; CAP`` selects the apparition closest to the requested time."""
+    des = obj["des"]
+    candidates = [des]
+    if obj.get("prefix") == "P" or des.endswith("P") or "P/" in des:
+        candidates.append(f"DES={des}; CAP")
+    if obj.get("spkid"):
+        candidates.append(str(obj["spkid"]))
+    return list(dict.fromkeys(candidates))
+
+
+async def first_working_track(candidates, mjd):
+    """Return ``(identifier, position)`` for the first identifier Horizons resolves. Only an
+    "unresolved" answer moves on to the next candidate; an unavailable service is raised as is."""
+    import asyncio
+
+    last = None
+    for candidate in candidates:
+        try:
+            return candidate, await asyncio.to_thread(ephem.horizons_positions, candidate, [mjd])
+        except ValueError as exc:
+            last = exc
+    raise ValueError("Moving object has no unique Horizons ephemeris (tried "
+                     + ", ".join(candidates) + "); a fragment designation such as 240P-B may be required") from last
 
 
 async def gaia(ra, dec, radius=0.25, gmax=19):
