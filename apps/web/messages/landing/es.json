@@ -120,5 +120,6 @@
   "landing_ribbon_readout": "canal {n} · {lam} µm · poder de resolución R ≈ {r}",
   "landing_ribbon_hint": "Pasa el cursor sobre una barra para leer su canal.",
   "landing_ribbon_foot": "Altura de la barra: poder de resolución R. Barras discontinuas: cuadros que el cubo de todo el cielo de DR1 deja en blanco (dicroico).",
-  "landing_hero_scroll": "Baja a los colores"
+  "landing_hero_scroll": "Baja a los colores",
+  "landing_footer_about": "Acerca de"
 }

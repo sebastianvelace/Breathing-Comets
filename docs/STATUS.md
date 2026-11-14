@@ -24,7 +24,7 @@ All results below describe observed verification. No research scripts have been 
 | 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
 | 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
 | 10 | Landing | Partial (3I packet delivered) | Integration commit + 3I commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | Gas-map/ink-in animation not built (no continuum-subtracted maps exist); Lighthouse LCP not measured (proxy 0.8–0.9 s before the 3I packet was bundled). |
-| 11 | Comets, method, about and Spanish | Partial (atlas, 3I/29P pages, /method) | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
+| 11 | Comets, method, about and Spanish | Done (EN/ES); prior-work declaration is the user's | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
 | 12 | Final tests | Pending | — | Not run | — |
 | 13 | Submission | Pending | — | Not run | — |
 | 14 | Freeze | Pending | — | Not run | — |
@@ -275,3 +275,7 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 ## 29P resolver (2026-11-14)
 
 - Resolver now handles numbered periodic comets (`DES=<des>; CAP`) and ambiguous SBDB answers (HTTP 300). Local API: `29P` → `DES=29P; CAP`, `240P-B` ok, `240P` explicit error. Tests: 5 new pytest; full fast suite `1 failed (known R Dra), 180 passed`. **Not deployed to Fly yet.** Details: `docs/FINDINGS.md` section 10.
+
+## /about (2026-11-14)
+
+- `/about` and `/es/about` published with credits, challenge and use of AI. Full local E2E `40 passed (58.4s)`, check 0/0, landing initial JS 73.6 KB gz. Step 11 is complete apart from texts only the user can write (prior-work declaration, team members). Open item: no `LICENSE` in the repo and Aladin Lite is GPL-3 (`docs/FINDINGS.md` section 11). Weighted progress is now about 80%.

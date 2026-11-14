@@ -1,8 +1,8 @@
 {
- "generated": "2026-11-14T18:58Z",
+ "generated": "2026-11-14T19:20Z",
  "generator": "pipelines/build_info.py",
  "git": {
-  "commit": "476f329936ef3a514183cee77dcda7511ab79ace",
+  "commit": "06a20efe006db7d1cd8c6f8dc9351f6b46d65d37",
   "note": "commit that was HEAD when this file was generated; the file itself is committed afterwards"
  },
  "data_version": {

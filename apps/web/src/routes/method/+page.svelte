@@ -54,6 +54,7 @@
     <a href={localizeHref("/")}>{m.method_back()}</a>
     <a href={localizeHref("/comets")}>{m.comets_title()}</a>
     <a href={localizeHref("/neo")}>Small-Body Lab</a>
+    <a href={localizeHref("/about")}>{m.about_title()}</a>
     <a lang={other} href={localizeHref("/method", { locale: other })} data-sveltekit-reload>{other.toUpperCase()}</a>
   </nav>
 </header>

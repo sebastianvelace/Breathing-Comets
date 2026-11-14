@@ -120,5 +120,6 @@
   "landing_ribbon_readout": "channel {n} · {lam} µm · resolving power R ≈ {r}",
   "landing_ribbon_hint": "Hover a bar to read its channel.",
   "landing_ribbon_foot": "Bar height: resolving power R. Dashed bars: frames the DR1 all-sky cube leaves blank (dichroic).",
-  "landing_hero_scroll": "Scroll to the colors"
+  "landing_hero_scroll": "Scroll to the colors",
+  "landing_footer_about": "About"
 }

@@ -30,6 +30,7 @@
       <ul>
         <li><a href="{localizeHref('/explore')}?target=rw-aur&ui=story">{m.landing_footer_explorer()}</a></li>
         <li><a href={localizeHref("/method")}>{m.landing_footer_method()}</a></li>
+        <li><a href={localizeHref("/about")}>{m.landing_footer_about()}</a></li>
         <li>
           <a href="https://github.com/sebastianvelace/Breathing-Comets" rel="external">{m.landing_footer_code()}</a>
         </li>
