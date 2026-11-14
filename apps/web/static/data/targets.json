@@ -1,0 +1,150 @@
+{
+ "generated": "2026-11-12",
+ "positions": "ICRS from SIMBAD (Harvard mirror), propagated with astropy apply_space_motion; ALWAYS propagate to each exposure MJD",
+ "n_exp_d456": "exposures in D4-D6 from data/raw/spherex_exposures_d456.parquet (QR2 to MJD 61241 + QR3 partial); D1-D3 share the same sky footprints (dichroic), so total per target ~2x",
+ "targets": [
+  {
+   "slug": "barnard",
+   "name": "Barnard's Star",
+   "simbad": "NAME Barnard's star",
+   "otype": "BY* (M4 V)",
+   "ra_j2000": 269.4520769586187,
+   "dec_j2000": 4.693364966576667,
+   "pmra_masyr": -801.551,
+   "pmdec_masyr": 10362.394,
+   "plx_mas": 546.9759,
+   "pos_2026_01_01": [
+    269.446268,
+    4.768204
+   ],
+   "why": "Highest proper motion star (10.4 arcsec/yr = 1.7 SPHEREx px/yr): visible motion between survey passes",
+   "n_exp_d456": 179,
+   "collections": [
+    "spherex_qr2",
+    "spherex_qr3"
+   ],
+   "months": [
+    "2025-08",
+    "2025-09",
+    "2025-10",
+    "2026-03",
+    "2026-04",
+    "2026-05",
+    "2026-08",
+    "2026-09"
+   ]
+  },
+  {
+   "slug": "eps-indi-b",
+   "name": "Epsilon Indi B (Ba+Bb)",
+   "simbad": "eps Ind B",
+   "otype": "BD* (T1+T6 binary, ~0.7 arcsec separation: unresolved by SPHEREx)",
+   "ra_j2000": 331.04414658852124,
+   "dec_j2000": -56.782844195116105,
+   "pmra_masyr": 3981.977,
+   "pmdec_masyr": -2466.832,
+   "plx_mas": 270.658,
+   "pos_2026_01_01": [
+    331.096669,
+    -56.800649
+   ],
+   "why": "Brown dwarf pair, 4.7 arcsec/yr; methane absorption ~3.3 um and CO 4.6 um in spectrum; star eps Ind A ~6.7 arcmin away (bright, ghost/saturation risk)",
+   "n_exp_d456": 215,
+   "collections": [
+    "spherex_qr2",
+    "spherex_qr3"
+   ],
+   "months": [
+    "2025-04",
+    "2025-05",
+    "2025-06",
+    "2025-09",
+    "2025-10",
+    "2025-11",
+    "2026-04",
+    "2026-05",
+    "2026-09",
+    "2026-10"
+   ]
+  },
+  {
+   "slug": "wise-0855",
+   "name": "WISE 0855-0714",
+   "simbad": "WISEA J085510.74-071442.5",
+   "otype": "BD* (Y4, ~285 K)",
+   "ra_j2000": 133.81890825,
+   "dec_j2000": -7.247048,
+   "pmra_masyr": -8123.7,
+   "pmdec_masyr": 673.2,
+   "plx_mas": 439.0,
+   "pos_2026_01_01": [
+    133.759765,
+    -7.242182
+   ],
+   "challenge_coords": "08h55m10.831s -07d14m42.53s (epoch ~2010, WISE) -> now ~126 arcsec west",
+   "why": "Coldest known brown dwarf; very faint below 4 um, detectable only at ~4.5-5 um (D6); moves 8.2 arcsec/yr",
+   "n_exp_d456": 127,
+   "collections": [
+    "spherex_qr2"
+   ],
+   "months": [
+    "2025-05",
+    "2025-10",
+    "2025-11",
+    "2025-12",
+    "2026-04",
+    "2026-05"
+   ]
+  },
+  {
+   "slug": "rw-aur",
+   "name": "RW Aurigae",
+   "simbad": "V* RW Aur",
+   "otype": "TT* (classical T Tauri, binary A+B 1.4 arcsec)",
+   "ra_j2000": 76.95652603458333,
+   "dec_j2000": 30.401438173888888,
+   "pmra_masyr": 7.23,
+   "pmdec_masyr": -20.33,
+   "plx_mas": 15.42,
+   "pos_2026_01_01": [
+    76.956587,
+    30.401291
+   ],
+   "why": "Irregular variable with deep dimming episodes; IR excess from disk; light curve across epochs",
+   "n_exp_d456": 166,
+   "collections": [
+    "spherex_qr2",
+    "spherex_qr3"
+   ],
+   "months": [
+    "2025-09",
+    "2026-02",
+    "2026-03",
+    "2026-09"
+   ]
+  },
+  {
+   "slug": "r-dra",
+   "name": "R Draconis",
+   "simbad": "V* R Dra",
+   "otype": "Mi* (Mira, P~246 d)",
+   "ra_j2000": 248.16761083295,
+   "dec_j2000": 66.75497941722,
+   "pmra_masyr": -20.643,
+   "pmdec_masyr": 6.149,
+   "plx_mas": 1.2509,
+   "pos_2026_01_01": [
+    248.167233,
+    66.755024
+   ],
+   "why": "Mira variable near the North Ecliptic Pole deep field: >1200 exposures, best-sampled light curve; very bright -> saturation/OVERFLOW flags in short-lambda bands",
+   "n_exp_d456": 1235,
+   "collections": [
+    "spherex_qr2_deep",
+    "spherex_qr3_deep",
+    "spherex_qr2"
+   ],
+   "months": "every month 2025-04..2026-09"
+  }
+ ]
+}

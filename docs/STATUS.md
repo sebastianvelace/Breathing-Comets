@@ -15,8 +15,8 @@ All results below describe observed verification. No research scripts have been 
 | Step | Deliverable | Status | Commit | Verification | Open issues |
 |---|---|---|---|---|---|
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
-| 2 | Deployed skeletons | Partial | Step 2 commit | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Web type check blocked by unapproved @types/node; Pages and custom DNS require Cloudflare sign-in. |
-| 3 | Static data | Pending | — | Not run | — |
+| 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Web type check blocked by unapproved @types/node; Pages and custom DNS require Cloudflare sign-in. |
+| 3 | Static data | Done | Step 3 commit | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Pending | — | Not run | — |
 | 5 | Five target precomputation | Pending | — | Not run | — |
 | 6 | Story Explorer | Pending | — | Not run | — |
@@ -57,3 +57,12 @@ The user explicitly approved retaining published bootstrap commit `baa2d91` and 
 - Second Fly deployment succeeded: one app machine `847222a27700d8`, image `deployment-01M7D6NVJMD9KWJD2SGT5CWWSN`. Public `https://breathing-comets-api.fly.dev/v1/health` returned HTTP 200 and `{ "ok": true, "index_rows": 0, "index_built": false, "collections": [], "swcs": null }`; data-version header present.
 - `npm run build` passed and wrote the static site to `apps/web/build`. This does not resolve the failing type check.
 - The custom-domain certificate was created; DNS setup is pending: A api → 66.241.125.132 and AAAA api → 2a09:8280:1::1fc:6fed:0, DNS only.
+
+## Step 3 verification
+
+- Copied the published static result package, reference positions and channels, plus the compact exposure and S3 key indices. No scientific scripts executed.
+- `python -m pytest tests/test_static_data.py -q`: `100 passed in 0.31s`. All expected values from the task remain unchanged.
+- `du -sh apps/web/static/data`: `364K`; logical size 261,480 bytes.
+- Every original exported file was verified byte-identical to its source after copying.
+- Step 2 push checks: exact identity, prohibited messages 0, sole remote branch main.
+- Exact custom-domain probes failed: `curl: (6) Could not resolve host: breathingcomets.org` and `curl: (6) Could not resolve host: api.breathingcomets.org`. The working Fly hostname is distinct from the pending custom domain.
