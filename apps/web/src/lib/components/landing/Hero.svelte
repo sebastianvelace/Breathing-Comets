@@ -282,15 +282,14 @@
     animation: word 1000ms var(--ease) var(--d) both;
   }
   @keyframes word {
+    /* Visible from the first paint (no opacity ramp): text that starts at opacity 0 delays LCP. */
     from {
-      opacity: 0;
       transform: translateY(0.45em) rotate(1.5deg);
       filter: blur(6px);
     }
   }
   @keyframes rise {
     from {
-      opacity: 0;
       transform: translateY(14px);
     }
   }
@@ -367,13 +366,12 @@
     100% { transform: scaleY(1); opacity: 0; }
   }
   .plate-col {
-    animation: plate-in 1200ms var(--ease) 300ms both;
+    animation: plate-in 900ms var(--ease) both;
     transform: perspective(1400px) rotateY(calc(var(--px, 0) * 5deg)) rotateX(calc(var(--py, 0) * -5deg));
     transition: transform 400ms var(--ease);
   }
   @keyframes plate-in {
     from {
-      opacity: 0;
       translate: 0 40px;
     }
   }
