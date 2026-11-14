@@ -16,7 +16,7 @@ All results below describe observed verification. No research scripts have been 
 |---|---|---|---|---|---|
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
 | 2 | Deployed skeletons | Partial | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Web type check blocked by unapproved @types/node; Pages and custom DNS require Cloudflare sign-in. |
-| 3 | Static data | Done | Step 3 commit | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
+| 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Pending | — | Not run | — |
 | 5 | Five target precomputation | Pending | — | Not run | — |
 | 6 | Story Explorer | Pending | — | Not run | — |
@@ -66,3 +66,17 @@ The user explicitly approved retaining published bootstrap commit `baa2d91` and 
 - Every original exported file was verified byte-identical to its source after copying.
 - Step 2 push checks: exact identity, prohibited messages 0, sole remote branch main.
 - Exact custom-domain probes failed: `curl: (6) Could not resolve host: breathingcomets.org` and `curl: (6) Could not resolve host: api.breathingcomets.org`. The working Fly hostname is distinct from the pending custom domain.
+
+## Latest repository verification
+
+After push `3d98b0a`:
+
+```text
+sebasvelace <sebastianvelace@gmail.com> | sebasvelace <sebastianvelace@gmail.com>
+0
+3d98b0a1915f04fdf0eafb53b3355ae246944db0 refs/heads/main
+```
+
+Working tree was clean. All 25 approved direct npm dependencies are pinned exactly. A registry lookup confirmed `@types/node@24.19.2` exists; adding it as a development dependency requires user approval because it is outside BUILD §3.2. No extra package was installed.
+
+Next: obtain approval for the Node type declarations, restore a passing web type check, finish Pages/DNS after Cloudflare sign-in, then implement step 4.
