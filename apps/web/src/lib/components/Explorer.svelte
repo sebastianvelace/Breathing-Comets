@@ -27,6 +27,10 @@
   import ModeSwitch from "./ModeSwitch.svelte";
   import FieldNotes from "./FieldNotes.svelte";
   import SpectrumPlot from "./SpectrumPlot.svelte";
+  import AladinView from "./AladinView.svelte";
+  import Inspector from "./Inspector.svelte";
+  import LayerTree from "./LayerTree.svelte";
+  import { channels, nearestChannel } from "#lib/astro/hips.js";
 
   let { embed = false }: { embed?: boolean } = $props();
   const targets = [
@@ -64,21 +68,57 @@
   const apiBase =
     import.meta.env.VITE_API_BASE || "https://api.breathingcomets.org";
   let spectrumAbort: AbortController | undefined;
+  let hipsFrame = $state(0),
+    jplStatus = $state("");
+  const twomassOpacity = $derived(
+    Math.max(
+      0,
+      Math.min(
+        1,
+        Number(
+          view.layers
+            .find((layer) => layer.startsWith("2mass:"))
+            ?.split(":")[1],
+        ) || 0,
+      ),
+    ),
+  );
   let urlTimer: ReturnType<typeof setTimeout> | undefined;
   const active = $derived(view.mode === "diff" ? diff : base);
   const shownIndex = $derived(
-    view.mode === "blink" ? (blend >= 0.5 ? b : a) : index,
+    Math.min(
+      view.mode === "blink" ? (blend >= 0.5 ? b : a) : index,
+      Math.max(0, (active?.frames.length ?? 1) - 1),
+    ),
   );
   const current = $derived(
-    base?.header.frames[
-      Math.min(shownIndex, Math.max(0, (base?.frames.length ?? 1) - 1))
-    ],
+    active?.header.frames[shownIndex] ?? base?.header.frames[shownIndex],
   );
+  const frameHeader = $derived(base?.header);
+  let jplObjects = $state.raw<
+    Record<
+      string,
+      { name: string; ra: number; dec: number; vmag: number | null }[]
+    >
+  >({});
+  const knownForFrame = $derived.by(() => {
+    if (!current || !view.layers.includes("jpl")) return [];
+    const keys = Object.keys(jplObjects);
+    if (!keys.length) return [];
+    const closest = keys.reduce((a, b) =>
+      Math.abs(Number(a) - current!.mjd) < Math.abs(Number(b) - current!.mjd)
+        ? a
+        : b,
+    );
+    return Math.abs(Number(closest) - current.mjd) < 1e-5
+      ? jplObjects[closest]
+      : [];
+  });
   const star = $derived(
     gaia.find((s) => s.source_id === manifest?.gaia_target_id),
   );
   const availableDiff = $derived(
-    view.mode !== "diff" || !!diff?.header.frames[index]?.diff_available,
+    view.mode !== "diff" || !!diff?.header.frames[shownIndex]?.diff_available,
   );
   const languageHref = $derived.by(() => {
     const locale = getLocale() === "en" ? "es" : "en";
@@ -97,6 +137,16 @@
     }
     Object.assign(view, parseView(page.url.searchParams));
     view.lang = getLocale();
+    const mobile = matchMedia("(max-width:767px)");
+    if (mobile.matches) view.ui = "story";
+    const resized = () => {
+      if (mobile.matches && view.ui === "lab") {
+        view.ui = "story";
+        writeUrl();
+      }
+    };
+    mobile.addEventListener("change", resized);
+    hipsFrame = nearestChannel(view.ch);
     if (!page.url.searchParams.has("det"))
       view.det = view.target === "barnard" ? 4 : 6;
     ready = true;
@@ -108,6 +158,7 @@
     window.addEventListener("popstate", pop);
     return () => {
       window.removeEventListener("popstate", pop);
+      mobile.removeEventListener("change", resized);
       clearTimeout(urlTimer);
       spectrumAbort?.abort();
     };
@@ -120,7 +171,7 @@
       view.dec = manifest.dec;
       view.fov = manifest.fov_deg;
       view.t = base.header.frames[index]?.mjd;
-      view.ch = base.header.frames[index]?.lam_um;
+      if (view.mode !== "cube") view.ch = base.header.frames[index]?.lam_um;
       view.a = base.header.frames[a]?.mjd;
       view.b = base.header.frames[b]?.mjd;
       view.lang = getLocale();
@@ -157,6 +208,7 @@
     selected = undefined;
     livePoints = [];
     spectrumStatus = "";
+    jplObjects = {};
     const root = `/data/targets/${encodeURIComponent(slug)}/`;
     (async () => {
       let data: Manifest;
@@ -248,10 +300,18 @@
         slug ? root + data.stacks[String(det)] : data.stacks[String(det)],
         proxy((header: Header) => {
           if (!alive) return;
-          desired = nearestFrame(
-            header.frames.map((f) => f.mjd),
-            view.t,
-          );
+          desired =
+            view.mode === "cube" && view.ch !== undefined
+              ? nearestFrame(
+                  header.frames.map((f) => f.lam_um),
+                  view.ch,
+                )
+              : nearestFrame(
+                  header.frames.map((f) => f.mjd),
+                  view.t,
+                );
+          if (view.mode !== "cube")
+            hipsFrame = nearestChannel(header.frames[desired]?.lam_um);
           a = nearestFrame(
             header.frames.map((f) => f.mjd),
             view.a,
@@ -345,6 +405,80 @@
     }
     id = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(id);
+  });
+  function setLayer(key: string, enabled: boolean) {
+    view.layers = enabled
+      ? [...new Set([...view.layers, key])]
+      : view.layers.filter((layer) => layer !== key);
+    writeUrl();
+  }
+  function setOpacity(value: number, commit: boolean) {
+    view.layers = view.layers.filter((layer) => !layer.startsWith("2mass:"));
+    if (value > 0) view.layers.push(`2mass:${value.toFixed(2)}`);
+    if (commit) writeUrl();
+  }
+  function switchUi(ui: "story" | "lab") {
+    view.ui = ui;
+    if (ui === "lab") hipsFrame = nearestChannel(current?.lam_um);
+    writeUrl();
+  }
+  function channelChanged() {
+    const channel = channels[hipsFrame];
+    if (!channel) return;
+    view.mode = "cube";
+    view.ch = channel.wavelength_um;
+    playing = false;
+    if (view.det !== channel.detector) {
+      view.t = undefined;
+      view.det = channel.detector;
+    } else if (base) {
+      index = nearestFrame(
+        base.header.frames.map((f) => f.lam_um),
+        view.ch,
+      );
+    }
+    writeUrl();
+  }
+  function referenceMoved(ra: number, dec: number, fov?: number) {
+    view.ra = ((ra % 360) + 360) % 360;
+    view.dec = dec;
+    if (fov !== undefined) view.fov = fov;
+    view.target = "";
+    view.t = undefined;
+    view.a = undefined;
+    view.b = undefined;
+    remoteName = m.selected_field();
+    playing = false;
+  }
+  $effect(() => {
+    if (!ready || !view.layers.includes("jpl") || !manifest || !frameHeader)
+      return;
+    const controller = new AbortController();
+    jplStatus = m.jpl_pending();
+    const query = new URLSearchParams({
+      ra: String(manifest.ra),
+      dec: String(manifest.dec),
+      fov: String(manifest.fov_deg),
+      mjd: frameHeader.frames
+        .slice(0, 40)
+        .map((frame) => frame.mjd.toFixed(6))
+        .join(","),
+    });
+    fetch(`${apiBase}/v1/known?${query}`, { signal: controller.signal })
+      .then((r) => r.json().then((body) => ({ ok: r.ok, body })))
+      .then((result) => {
+        if (controller.signal.aborted) return;
+        if (result.ok) jplObjects = result.body;
+        jplStatus = result.ok
+          ? m.jpl_geocentric()
+          : result.body.error?.code === "CATALOG_PENDING"
+            ? m.jpl_pending()
+            : m.jpl_unavailable();
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) jplStatus = m.jpl_unavailable();
+      });
+    return () => controller.abort();
   });
   function modeChange(value: string) {
     view.mode = value as Mode;
@@ -501,12 +635,21 @@
 {#if !embed}<header class="site-header">
     <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
     <nav>
+      <div class="ui-switch">
+        <button
+          aria-pressed={view.ui === "story"}
+          onclick={() => switchUi("story")}>{m.story()}</button
+        ><button
+          aria-pressed={view.ui === "lab"}
+          onclick={() => switchUi("lab")}>{m.lab()}</button
+        >
+      </div>
       <a href={languageHref} aria-label={m.language()}
         >{getLocale() === "en" ? "ES" : "EN"}</a
       ><button onclick={share}>{copied ? m.copied() : m.share()} ↗</button>
     </nav>
   </header>{/if}
-<main class:embedded={embed}>
+<main class:embedded={embed} class:lab={view.ui === "lab"}>
   {#if !embed}<section class="search-section">
       <form onsubmit={submitSearch}>
         <label class="sr-only" for="sky-search">{m.search_sky()}</label><input
@@ -534,9 +677,21 @@
     </section>{/if}
   <div class="explorer-grid">
     <section class="observation">
+      {#if view.ui === "lab"}<div class="lab-layers">
+          <LayerTree
+            detector={view.det}
+            layers={view.layers}
+            twomass={twomassOpacity}
+            onchange={setLayer}
+            onopacity={setOpacity}
+          />
+        </div>{/if}
       <div class="toolbar">
-        <ModeSwitch value={view.mode} onchange={modeChange} /><label
-          class="mono"
+        <ModeSwitch
+          value={view.mode}
+          onchange={modeChange}
+          showCube={view.ui === "lab"}
+        /><label class="mono"
           >{m.detector()}
           <select
             aria-label={m.detector()}
@@ -553,8 +708,7 @@
             type="checkbox"
             checked={view.layers.includes("gaia")}
             onchange={(e) => {
-              view.layers = e.currentTarget.checked ? ["gaia"] : [];
-              writeUrl();
+              setLayer("gaia", e.currentTarget.checked);
             }}
           /> Gaia</label
         >
@@ -570,6 +724,9 @@
             {manifest}
             {star}
             showGaia={view.layers.includes("gaia")}
+            showGrid={view.layers.includes("grid")}
+            showFlags={view.layers.includes("flags")}
+            knownObjects={knownForFrame}
             onpick={pick}
           />{/key}
       {:else}<div class="empty-plate" role="status">
@@ -641,7 +798,7 @@
           </p>{:else if !star}<p class="mono muted">
             {m.no_gaia_target()}
           </p>{/if}
-        {#if selected}<section class="selected-spectrum">
+        {#if selected && view.ui !== "lab"}<section class="selected-spectrum">
             <h2>{m.live_spectrum()}</h2>
             <p class="mono">
               {m.pixel_selected()}: {selected[0].toFixed(6)}, {selected[1].toFixed(
@@ -655,6 +812,22 @@
               />{/if}
           </section>{/if}
       {/if}
+      {#if view.ui === "lab" && manifest}
+        {#if view.layers.includes("jpl")}<p class="mono" role="status">
+            {jplStatus}
+          </p>{/if}
+        <AladinView
+          ra={manifest.ra}
+          dec={manifest.dec}
+          fov={manifest.fov_deg}
+          bind:channel={hipsFrame}
+          twomass={twomassOpacity}
+          showGaia={view.layers.includes("gaia")}
+          stars={gaia}
+          onchannel={channelChanged}
+          onmove={referenceMoved}
+        />
+      {/if}
       {#if base}<p class="loading-progress mono" role="status">
           {m.frame_count({
             loaded: String(base.frames.length),
@@ -662,7 +835,15 @@
           })}
         </p>{/if}
     </section>
-    {#if !embed && manifest}<FieldNotes
+    {#if !embed && view.ui === "lab"}<Inspector
+        stack={active}
+        index={shownIndex}
+        {selected}
+        points={livePoints}
+        status={spectrumStatus}
+        {apiBase}
+      />
+    {:else if !embed && manifest}<FieldNotes
         {manifest}
         {spectrum}
         {playing}
@@ -688,6 +869,49 @@
 {#if !embed}<footer class="mono">{m.credits()}</footer>{/if}
 
 <style>
+  .ui-switch {
+    display: flex;
+    gap: 0;
+  }
+  .ui-switch button {
+    font-size: 12px;
+    min-height: 34px;
+    padding: 6px 10px;
+  }
+  .lab-layers {
+    position: absolute;
+    top: 55px;
+    left: 0;
+    z-index: 2;
+    max-width: 24%;
+  }
+  .lab .explorer-grid {
+    gap: 0;
+  }
+  @media (max-width: 1279px) {
+    .lab-layers {
+      position: static;
+      max-width: none;
+      margin-bottom: 14px;
+    }
+    .lab-layers :global(.layer-tree) {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+    }
+    .lab-layers :global(.source),
+    .lab-layers :global(.note),
+    .lab-layers :global(.reference) {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    .ui-switch {
+      display: none;
+    }
+  }
+
   .site-header {
     padding: 20px var(--gutter);
     display: flex;
@@ -753,6 +977,7 @@
     gap: 0;
   }
   .observation {
+    position: relative;
     min-width: 0;
   }
   .toolbar {

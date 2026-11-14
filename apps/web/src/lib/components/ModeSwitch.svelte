@@ -4,7 +4,12 @@
   let {
     value,
     onchange,
-  }: { value: string; onchange: (value: string) => void } = $props();
+    showCube = false,
+  }: {
+    value: string;
+    showCube?: boolean;
+    onchange: (value: string) => void;
+  } = $props();
 </script>
 
 <ToggleGroup.Root
@@ -19,6 +24,8 @@
   <ToggleGroup.Item value="epoch">{m.epoch()}</ToggleGroup.Item
   ><ToggleGroup.Item value="blink">{m.blink()}</ToggleGroup.Item
   ><ToggleGroup.Item value="diff">{m.diff()}</ToggleGroup.Item>
+  {#if showCube}<ToggleGroup.Item value="cube">{m.cube()}</ToggleGroup.Item
+    >{/if}
 </ToggleGroup.Root>
 
 <style>

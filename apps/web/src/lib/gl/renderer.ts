@@ -8,6 +8,7 @@ precision highp float; precision highp int;
 precision highp sampler2DArray; precision highp usampler2DArray;
 uniform sampler2DArray flux; uniform usampler2DArray flags; uniform sampler2D lut;
 uniform vec3 view; uniform vec2 size, canvasSize, limits;
+uniform uint flagMask;
 uniform int frameA, frameB, mode; uniform float blend, sigma;
 in vec2 uv; out vec4 color;
 vec4 sampleFrame(ivec2 p,int k){
@@ -19,7 +20,9 @@ vec4 sampleFrame(ivec2 p,int k){
  float t;
  if(mode==2) t=clamp(.5+.5*value/(5.*max(sigma,1.e-10)),0.,1.);
  else {float x=clamp((value-limits.x)/max(limits.y-limits.x,1.e-10),0.,1.);t=asinh(20.*x)/asinh(20.);}
- return texture(lut,vec2(t,.5));
+ vec4 result=texture(lut,vec2(t,.5));
+ if((fl&flagMask)!=0u) result=mix(result,vec4(1.,.42,.34,1.),.55);
+ return result;
 }
 void main(){
  ivec2 p=ivec2(floor((uv-.5)*canvasSize/view.z+view.xy));
@@ -74,6 +77,7 @@ export class PlateRenderer {
       "size",
       "canvasSize",
       "limits",
+      "flagMask",
       "frameA",
       "frameB",
       "mode",
@@ -196,6 +200,7 @@ export class PlateRenderer {
     view: [number, number, number],
     width: number,
     height: number,
+    flagMask = 0,
   ) {
     const gl = this.gl,
       ratio = Math.min(devicePixelRatio || 1, 2),
@@ -209,6 +214,7 @@ export class PlateRenderer {
     gl.useProgram(this.program);
     gl.uniform3fv(this.u("view"), view);
     gl.uniform2f(this.u("canvasSize"), width, height);
+    gl.uniform1ui(this.u("flagMask"), flagMask);
     gl.uniform1i(this.u("frameA"), a);
     gl.uniform1i(this.u("frameB"), b);
     gl.uniform1i(this.u("mode"), mode);

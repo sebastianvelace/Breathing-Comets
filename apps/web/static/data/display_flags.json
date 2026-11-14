@@ -1,0 +1,65 @@
+{
+  "flags": [
+    {
+      "bit": 0,
+      "name": "TRANSIENT"
+    },
+    {
+      "bit": 1,
+      "name": "OVERFLOW"
+    },
+    {
+      "bit": 2,
+      "name": "SUR_ERROR"
+    },
+    {
+      "bit": 3,
+      "name": "PHANTOM"
+    },
+    {
+      "bit": 4,
+      "name": "NONFUNC"
+    },
+    {
+      "bit": 5,
+      "name": "DICHROIC"
+    },
+    {
+      "bit": 6,
+      "name": "MISSING_DATA"
+    },
+    {
+      "bit": 7,
+      "name": "HOT"
+    },
+    {
+      "bit": 8,
+      "name": "COLD"
+    },
+    {
+      "bit": 9,
+      "name": "NONLINEAR"
+    },
+    {
+      "bit": 10,
+      "name": "PERSIST"
+    },
+    {
+      "bit": 11,
+      "name": "OUTLIER"
+    },
+    {
+      "bit": 12,
+      "name": "SOURCE"
+    },
+    {
+      "bit": 13,
+      "name": "NODATA"
+    },
+    {
+      "bit": 14,
+      "name": "EXTENDED_HARD"
+    }
+  ],
+  "hard_mask": 18420
+}

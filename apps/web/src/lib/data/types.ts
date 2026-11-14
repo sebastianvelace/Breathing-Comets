@@ -15,6 +15,7 @@ export type FrameMeta = {
   visit: number;
   collection: string;
   diff_sigma?: number;
+  lam_poly?: number[];
   diff_available?: boolean;
 };
 export type Header = {

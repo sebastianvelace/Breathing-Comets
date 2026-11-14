@@ -1,0 +1,13 @@
+{
+  "source": "https://irsa.ipac.caltech.edu/data/hips/SPHEREx/spherex_allsky_cube/properties",
+  "url": "https://irsa.ipac.caltech.edu/data/hips/SPHEREx/spherex_allsky_cube",
+  "title": "SPHEREx DR1 all-sky data cube",
+  "depth": 102,
+  "em_min_m": 7.43e-07,
+  "em_max_m": 5.009e-06,
+  "twomass_url": "https://irsa.ipac.caltech.edu/data/hips/CDS/2MASS/Color",
+  "blank_frames": [
+    50,
+    51
+  ]
+}

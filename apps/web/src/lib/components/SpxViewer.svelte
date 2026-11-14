@@ -8,6 +8,7 @@
   } from "#lib/data/coordinates.js";
   import type { Stack, Manifest, GaiaStar } from "#lib/data/types.js";
   import * as m from "#lib/paraglide/messages.js";
+  import flagDefinitions from "../../../static/data/display_flags.json";
   let {
     stack,
     index,
@@ -18,6 +19,9 @@
     manifest,
     star,
     showGaia = true,
+    showGrid = false,
+    showFlags = false,
+    knownObjects = [],
     onpick,
   }: {
     stack: Stack;
@@ -29,6 +33,14 @@
     manifest: Manifest;
     star?: GaiaStar;
     showGaia?: boolean;
+    showGrid?: boolean;
+    showFlags?: boolean;
+    knownObjects?: {
+      name: string;
+      ra: number;
+      dec: number;
+      vmag: number | null;
+    }[];
     onpick?: (ra: number, dec: number) => void;
   } = $props();
   let canvas: HTMLCanvasElement, box: HTMLDivElement;
@@ -45,7 +57,10 @@
       zoom,
   );
   const displayed = $derived(
-    mode === "blink" && blend >= 0.5 ? b : mode === "blink" ? a : index,
+    Math.min(
+      mode === "blink" && blend >= 0.5 ? b : mode === "blink" ? a : index,
+      Math.max(0, stack.frames.length - 1),
+    ),
   );
   const mjd = $derived(
     stack.header.frames[displayed]?.mjd ?? stack.header.frames[0].mjd,
@@ -66,6 +81,16 @@
       height / 2 - (y + 0.5 - cy) * scale,
     ];
   }
+  const knownMarkers = $derived(
+    knownObjects.map((object) => {
+      const [x, y] = worldToPixel(object.ra, object.dec, stack.header.grid);
+      return {
+        ...object,
+        x: (x + 0.5 - cx) * scale + width / 2,
+        y: height / 2 - (y + 0.5 - cy) * scale,
+      };
+    }),
+  );
   const point = $derived(marker(mjd)),
     future = $derived(marker(mjd + 365.25));
   onMount(() => {
@@ -99,6 +124,7 @@
       [cx, cy, scale],
       width,
       height,
+      showFlags ? flagDefinitions.hard_mask : 0,
     );
   });
   let drag:
@@ -168,6 +194,29 @@
         ><path d="M0 0L5 3L0 6" fill="none" stroke="currentColor" /></marker
       ></defs
     >
+    {#if showGrid}<g class="registration" opacity=".35"
+        >{#each [0.25, 0.5, 0.75] as fraction}<line
+            x1={(stack.header.grid.nx * fraction - cx) * scale + width / 2}
+            y1="0"
+            x2={(stack.header.grid.nx * fraction - cx) * scale + width / 2}
+            y2={height}
+          /><line
+            x1="0"
+            y1={height / 2 - (stack.header.grid.ny * fraction - cy) * scale}
+            x2={width}
+            y2={height / 2 - (stack.header.grid.ny * fraction - cy) * scale}
+          />{/each}</g
+      >{/if}
+    {#each knownMarkers as object}<g
+        class="known-marker"
+        transform={`translate(${object.x},${object.y})`}
+        ><circle
+          r="9"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.25"
+        /><text x="13" y="4">{object.name}</text></g
+      >{/each}
     {#if showGaia && Number.isFinite(point[0])}
       <g
         class="gaia-cross"
@@ -258,6 +307,9 @@
   text {
     font: 11px var(--font-data);
     fill: currentColor;
+  }
+  .known-marker {
+    color: var(--plate-ink);
   }
   .registration,
   .scale,
