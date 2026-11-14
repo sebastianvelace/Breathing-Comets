@@ -45,6 +45,7 @@ test("3I page: August epoch is the validated one, December carries its caveat", 
 
 test("sweep animation advances frames and can be paused", async ({ page }) => {
   await page.goto("/comets/29p-schwassmann-wachmann");
+  await page.waitForLoadState("networkidle");
   const frame = page.getByTestId("detail-frame");
   const start = await frame.getAttribute("data-lam");
   await page.getByRole("button", { name: "Sweep wavelengths" }).click();

@@ -25,6 +25,7 @@ test("honesty notes and the far-comet flag are visible", async ({ page }) => {
 
 test("selecting a point from the keyboard shows the numbers and diagnostics", async ({ page }) => {
   await page.goto("/comets");
+  await page.waitForLoadState("networkidle"); // Enter toggles the selection, so it must not be retried
   const point = page.locator('g[data-slug="c-2022-n2-panstarrs"]');
   await point.focus();
   await page.keyboard.press("Enter");
@@ -36,6 +37,7 @@ test("selecting a point from the keyboard shows the numbers and diagnostics", as
 
 test("status filter narrows table and plot", async ({ page }) => {
   await page.goto("/comets");
+  await page.waitForLoadState("networkidle");
   await page.getByLabel("Status").selectOption("with_systematics");
   await expect(page.getByTestId("comet-row")).toHaveCount(atlas.counts.with_systematics);
   await expect(page.getByTestId("comet-plot")).toHaveAttribute("data-points", String(atlas.counts.with_systematics));

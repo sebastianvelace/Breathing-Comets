@@ -250,7 +250,7 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 | 4 Core | 10 | 90% | golden 3I model test and R Dra baseline pending |
 | 5 Five targets | 8 | 90% | R Dra baseline fails |
 | 6 Story Explorer | 12 | 100% | |
-| 7 Live API | 10 | 80% | cold stack 5.2 s; Horizons fix not deployed; JPL identification |
+| 7 Live API | 10 | 80% | cold stack 5.2 s; Horizons fix deployed 2026-11-14; JPL identification |
 | 8 Lab + Aladin | 8 | 90% | |
 | 9 Small-Body Lab | 8 | 80% | absolute references 5/50 |
 | 10 Landing | 8 | 85% | redesign done; Lighthouse and gas-map animation pending |
@@ -266,3 +266,8 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - `/method` and `/es/method`: ten sections (data, observer, wavelength, Diff λ, photometry, comet gas, validation, nulls, limits, reproducibility) with data-driven tables and `build.json` (new). Tests: 3 pytest (`test_build_info.py`), 5 E2E (`method.spec.ts`), 1 Vitest (note table). Full local E2E 36 passed; Vitest 44 passed; check 0/0; pytest 175 passed + known R Dra.
 - Landing initial JS **75.1 KB gz** after removing the dynamic message lookup (see FINDINGS section 8).
 - Step 11 now lacks only the "about" page; step 11 estimate raised from 55% to about 80%, which moves the weighted total from 75% to about 77%.
+
+## Fly deployment (2026-11-14)
+
+- Deployed the Horizons chunking fix to `breathing-comets-api` (image `deployment-01M7DQ56PM0SKP62HE6VB2C19N`). Public health 200 (cold start 18.0 s). Tracked 3I (17 days) 200 in 6.8 s and 29P (11 days) 200 in 4.3 s, content identical to the stored stacks. Full production E2E `36 passed` twice. Details and the intermittent-test finding: `docs/FINDINGS.md` section 9.
+- Still open: 29P through `/v1/resolve`, cold-stack latency target (4 s), JPL SB identification, Lighthouse, about page, submission.
