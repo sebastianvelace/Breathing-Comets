@@ -62,7 +62,10 @@
   .field {
     position: relative;
     background: var(--plate);
-    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent-on-plate) 14%, transparent),
+      0 30px 80px -40px color-mix(in srgb, var(--accent-on-plate) 45%, transparent);
     padding: 22px 22px 34px;
   }
   .small .field {
@@ -71,6 +74,7 @@
   .sky {
     position: relative;
     overflow: hidden;
+    border-radius: var(--r-sm);
     line-height: 0;
   }
   .sky :global(img),
@@ -81,6 +85,7 @@
     image-rendering: pixelated;
   }
   .reg {
+    display: none; /* registration crosses removed: fewer hairlines */
     position: absolute;
     width: 11px;
     height: 11px;

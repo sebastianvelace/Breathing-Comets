@@ -18,7 +18,6 @@
 
 <section class="section" id="comets" aria-labelledby="s4-title">
   <div class="text">
-    <p class="num">§4</p>
     <h2 id="s4-title">{m.landing_s4_title()}</h2>
     <p>{m.landing_s4_p1()}</p>
     <p>{m.landing_s4_p2()}</p>
@@ -94,7 +93,6 @@
 <style>
   .figure-number {
     margin-top: 28px;
-    border-top: 1px solid var(--rule);
     padding-top: 18px;
   }
   .label {
@@ -121,7 +119,7 @@
   .caveat {
     font-size: 14px;
     color: var(--ink-2);
-    border-left: 2px solid var(--co2);
+    border-left: 2px solid var(--accent);
     padding-left: 10px;
     margin: 8px 0;
   }
@@ -129,7 +127,6 @@
     margin: 20px 0 0;
   }
   .more > div {
-    border-top: 1px solid var(--rule);
     padding: 12px 0;
   }
   .more dt {
@@ -139,7 +136,9 @@
     margin: 2px 0;
   }
   .pending {
-    border: 1px solid var(--rule);
+    border: 0;
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
     padding: 24px;
     background: var(--paper-2);
   }

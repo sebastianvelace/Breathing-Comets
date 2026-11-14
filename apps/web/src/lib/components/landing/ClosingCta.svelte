@@ -42,8 +42,8 @@
   .close {
     max-width: 1280px;
     margin: 0 auto;
+    position: relative;
     padding: clamp(72px, 10vw, 140px) var(--gutter);
-    border-top: 1px solid var(--rule);
     display: grid;
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
     gap: clamp(36px, 6vw, 96px);
@@ -52,7 +52,7 @@
   h2 {
     font-size: clamp(44px, 6.4vw, 96px);
     line-height: 0.98;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     margin: 0 0 24px;
     text-wrap: balance;
   }
@@ -75,7 +75,8 @@
     padding: 12px 26px;
     font-weight: 500;
     text-decoration: none;
-    border: 1px solid var(--co2);
+    border: 1px solid var(--accent);
+    border-radius: var(--r-pill);
     transition:
       background 200ms var(--ease),
       color 200ms var(--ease),
@@ -83,12 +84,12 @@
       transform 200ms var(--ease);
   }
   .cta.primary {
-    background: var(--co2);
-    color: #17160f;
+    background: var(--accent);
+    color: var(--accent-ink);
   }
   .cta.primary:hover {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     transform: translateY(-2px);
   }
   .cta.secondary {
@@ -96,8 +97,8 @@
     border-color: color-mix(in srgb, var(--ink) 30%, transparent);
   }
   .cta.secondary:hover {
-    border-color: var(--co2);
-    color: var(--co2);
+    border-color: var(--accent);
+    color: var(--accent);
   }
   .arrow {
     margin-left: 8px;
@@ -117,7 +118,8 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: 8px;
   }
   li a {
     display: grid;
@@ -125,9 +127,10 @@
     grid-template-areas: "name go" "why go";
     gap: 2px 16px;
     align-items: center;
-    padding: 16px 4px;
+    padding: 14px 18px;
     min-height: 64px;
-    border-bottom: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
     text-decoration: none;
     color: var(--ink);
     transition:
@@ -136,13 +139,14 @@
   }
   li a:hover,
   li a:focus-visible {
-    padding-inline: 14px;
-    background: color-mix(in srgb, var(--co2) 9%, transparent);
+    padding-inline: 24px 18px;
+    background: color-mix(in srgb, var(--accent) 16%, transparent);
   }
   .name {
     grid-area: name;
-    font-family: var(--font-display, inherit);
-    font-size: 22px;
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
   .why {
     grid-area: why;
@@ -151,7 +155,7 @@
   }
   .go {
     grid-area: go;
-    color: var(--co2);
+    color: var(--accent);
     transition: transform 250ms var(--ease);
   }
   li a:hover .go {

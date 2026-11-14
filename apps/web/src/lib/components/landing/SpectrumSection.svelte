@@ -91,7 +91,6 @@
 
 <section class="section" id="spectrum" aria-labelledby="s3-title" bind:this={host}>
   <div class="text">
-    <p class="num">§3</p>
     <h2 id="s3-title">{m.landing_s3_title()}</h2>
     <p>{m.landing_s3_p1()}</p>
     <p>{m.landing_s3_p2()}</p>
@@ -192,9 +191,9 @@
 <style>
   .chart {
     margin: 0;
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    padding: 12px 0;
+    border-radius: var(--r-lg);
+    background: var(--paper-2);
+    padding: 18px 18px 14px;
   }
   svg {
     display: block;
@@ -252,8 +251,8 @@
   .bands button[aria-pressed="true"] {
     background: transparent;
     color: var(--ink);
-    border-color: var(--co2);
-    box-shadow: inset 0 -2px 0 var(--co2);
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
   }
   .bands i {
     width: 10px;
@@ -270,7 +269,7 @@
     max-width: 56ch;
   }
   .band-info a {
-    color: var(--co2);
+    color: var(--accent);
     margin-left: 4px;
   }
 </style>

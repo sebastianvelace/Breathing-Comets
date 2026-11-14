@@ -93,7 +93,7 @@
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}
   main{max-width:760px;margin:auto;padding:56px var(--gutter)}h1{font-size:clamp(44px,6vw,72px)}.intro{font-size:20px;color:var(--ink-2)}section{margin:60px 0}h2{font-size:clamp(28px,3.4vw,40px);margin-bottom:16px}
-  main p,li{font-size:17px;line-height:1.68;color:var(--ink-2)}a{color:var(--co2)}.links{padding-left:20px}.links li{margin-bottom:10px}.scroll{overflow:auto;margin-top:18px}
+  main p,li{font-size:17px;line-height:1.68;color:var(--ink-2)}a{color:var(--accent)}.links{padding-left:20px}.links li{margin-bottom:10px}.scroll{overflow:auto;margin-top:18px}
   table{width:100%;border-collapse:collapse;text-align:left;font-size:14px}th{font-weight:500;color:var(--ink)}thead th{font:12px var(--font-data);color:var(--graphite);font-weight:400}td,th{padding:12px 12px 12px 0;border-bottom:1px solid var(--rule);vertical-align:top}.use{color:var(--ink-2)}
   @media(max-width:700px){header{flex-wrap:wrap}h1{font-size:44px}td,th{min-width:150px}}
 </style>

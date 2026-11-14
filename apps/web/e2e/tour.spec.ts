@@ -21,7 +21,7 @@ test("guided tour dims the page, walks six steps and closes with the keyboard", 
 
   // Everything outside the spotlight is covered by a dark shadow of the highlighted box.
   const shadow = await page.locator(".spot").evaluate((el) => getComputedStyle(el).boxShadow);
-  expect(shadow).toContain("rgba(8, 8, 7, 0.74)");
+  expect(shadow).toContain("rgba(3, 6, 18, 0.76)");
 
   const expected = [
     "Three ways to look",

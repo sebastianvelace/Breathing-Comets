@@ -27,7 +27,6 @@
 
 <section class="section wide" id="validation" aria-labelledby="s5-title">
   <div class="text">
-    <p class="num">§5</p>
     <h2 id="s5-title">{m.landing_s5_title()}</h2>
     <p>{m.landing_s5_p1()}</p>
   </div>
@@ -125,7 +124,7 @@
     font-family: var(--font-display);
     font-size: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
   }
   th,
   td {

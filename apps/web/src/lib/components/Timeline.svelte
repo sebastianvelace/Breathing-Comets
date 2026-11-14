@@ -79,8 +79,10 @@
 
 <style>
   .timeline {
-    padding: 15px 0;
-    border-bottom: 1px solid var(--rule);
+    margin-top: 14px;
+    padding: 12px 18px 12px 12px;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
     display: flex;
     gap: 24px;
     align-items: center;
@@ -121,11 +123,12 @@
   }
   .ticks i {
     position: absolute;
-    width: 1px;
-    background: var(--graphite);
+    width: 2px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--graphite) 60%, transparent);
   }
   .ticks i.active {
-    background: var(--co2);
+    background: var(--accent);
     width: 2px;
   }
   .dates {

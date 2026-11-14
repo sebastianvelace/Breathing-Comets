@@ -115,3 +115,24 @@ Everything else (no emoji, no stock icons, no NASA logos, no generated imagery, 
 - **Side effect handled:** "Open the sky" now names three links, so the strict role selectors in `landing.spec.ts` and `story.spec.ts` were pointed at the existing `data-testid="open-sky"`.
 - **Preview artefact worth knowing:** a `vite preview` left running across a rebuild serves 404 for the new hashed chunks and the page never hydrates (the ribbon stayed at `scaleY(0.04)`). This looked like a ribbon bug and was not; restart the preview after every build.
 - Verified: svelte-check 0 errors / 0 warnings, Vitest 44 passed, local E2E landing + story 16 passed (3 new assertions), initial landing JS 72.7 KB gz. Not re-measured: Lighthouse LCP (still not installed).
+
+## 14. Lighthouse, LCP and explorer layout shift (2026-11-14)
+
+Lighthouse 13.6 (installed outside the repo, Playwright's Chromium), against production.
+
+- **Before:** landing mobile LCP 3.0–3.3 s, desktop 1.3 s; explorer mobile CLS 0.13–0.146 and TBT ~0.9–1.0 s. Accessibility, best practices and SEO 100 on all three pages.
+- **Cause of the slow mobile LCP (mine):** the LCP element was hero text, and kicker, headline words, lede and buttons all started at `opacity: 0` with delays up to ~1.9 s. Lighthouse reported 743 ms of "element render delay". Fix: entrance animations now move and un-blur but never start invisible. After deploy: mobile 1.5–2.7 s over four runs (noisy, throttled slow-4G profile), desktop 0.8–1.3 s. **The 1.5 s budget is met on desktop and not reliably on throttled mobile.**
+- **Cause of the explorer CLS:** while the stack loads the page is short, so the footer and (on phones) the field notes sit inside the viewport and jump down when timeline and metadata mount. Fix: `main` reserves `100svh` and the notes render on phones only once the plate has frames. Local Lighthouse: 0.136 → 0.062.
+- **Open:** explorer mobile TBT ~0.9 s (not investigated; candidates are stack decoding and WebGL upload on the main thread).
+- **Explorer fold:** plate + playback controls now fit one screen (measured: controls end at 840/900, 657/720, 1021/1080 px); before, the timeline was below the fold at 1440×900.
+
+## 15. Onboarding tour and visual redesign (2026-11-14)
+
+- **Tour** (`Onboarding.svelte`): six steps (search, modes, plate, timeline, field notes, header). The rest of the page is darkened by one very large shadow around a rounded spotlight; a click-catcher stops the dimmed page from being operated. Keyboard: arrows, Escape, Tab is kept inside the card, focus returns to the opener. Steps whose element is not displayed are skipped (no Story/Lab switch on phones).
+- **Offered, not forced:** a first visit shows a small dismissible card after 2.5 s (remembered in `localStorage`); `?tour=1` and the "How it works" button start it. A modal on every first load would also have blocked every existing E2E flow.
+- **Redesign requested by the user:** Geist / Geist Mono replace Newsreader and IBM Plex (both OFL-1.1, checked in `node_modules`; the Latin Geist file is 29 KB against 129 KB for Newsreader); interface accent is a galaxy blue (`--accent`), pill buttons, rounded panels instead of hairlines, § numbers and the hero kicker removed, the hero grid replaced by `Starfield.svelte`.
+- **Starfield cost:** static SVG dots and four hand-placed constellations drifting as whole layers with CSS transforms, plus seven twinkles; no canvas, no `requestAnimationFrame`, disabled under reduced motion.
+- **Orange that remains, on purpose:** `--co2` still colours the CO₂ band and positive Diff λ. Those are data encodings, and the Diff λ plate on the landing has the colour baked in by `pipelines/landing_media.py`; changing them means re-rendering and touching the GL colour table (`src/lib/gl/renderer.ts`). Not done.
+- **Bug caught before commit:** a rule meant to lift header/main/footer above the starfield also matched the tour container and cancelled its `position: fixed`, making the tour invisible; the tour screenshots failed and the rule was narrowed.
+- The explorer keeps a night-sky theme in both colour schemes (it displays dark plates). `/comets`, `/method`, `/about` and `/neo` inherit the new tokens and font but were **not** restyled panel by panel.
+- Tests: `tour.spec.ts` (5 E2E). Local: svelte-check 0/0, Vitest 44, E2E 45 passed + the 2 live-API tests that only pass against production.

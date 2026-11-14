@@ -2,6 +2,7 @@
   import * as m from "#lib/paraglide/messages.js";
   import { localizeHref } from "#lib/paraglide/runtime.js";
   import Plate from "./Plate.svelte";
+  import Starfield from "../Starfield.svelte";
   import {
     fmtLam,
     isoDate,
@@ -141,21 +142,10 @@
 </script>
 
 <div class="band on-plate" onpointermove={onmove} role="presentation">
-  <div class="ambient" aria-hidden="true">
-    <svg viewBox="-400 -400 800 800" class="chart">
-      <g fill="none" stroke="currentColor" stroke-width="1">
-        <circle r="150" /><circle r="250" /><circle r="360" stroke-dasharray="2 8" />
-        <path d="M-380 0H380M0 -380V380" opacity=".5" />
-        {#each Array.from({ length: 36 }, (_, k) => k) as k (k)}
-          <path d="M0 -360V-348" transform="rotate({k * 10})" />
-        {/each}
-      </g>
-    </svg>
-  </div>
+  <Starfield />
 
   <section class="hero" aria-labelledby="hero-title">
     <div class="copy">
-      <p class="kicker">{m.landing_hero_kicker()}</p>
       <h1 id="hero-title">
         {#each words as word, i (i)}<span class="w" style:--d="{120 + i * 140}ms">{word}</span>{" "}{/each}
       </h1>
@@ -229,29 +219,6 @@
     background: var(--paper);
     color: var(--ink);
   }
-  .ambient {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(60% 70% at 78% 45%, color-mix(in srgb, var(--co2) 14%, transparent), transparent 70%),
-      repeating-linear-gradient(0deg, transparent 0 79px, color-mix(in srgb, var(--ink) 5%, transparent) 79px 80px),
-      repeating-linear-gradient(90deg, transparent 0 79px, color-mix(in srgb, var(--ink) 5%, transparent) 79px 80px);
-  }
-  .chart {
-    position: absolute;
-    right: -12%;
-    top: 50%;
-    width: min(95vh, 900px);
-    translate: 0 -50%;
-    color: color-mix(in srgb, var(--ink) 16%, transparent);
-    animation: turn 180s linear infinite;
-  }
-  @keyframes turn {
-    to {
-      rotate: 360deg;
-    }
-  }
   .hero {
     position: relative;
     display: grid;
@@ -263,17 +230,11 @@
     margin: 0 auto;
     min-height: min(86vh, 860px);
   }
-  .kicker {
-    font: 12px/1.4 var(--font-data);
-    letter-spacing: 0.16em;
-    color: var(--graphite);
-    margin-bottom: 28px;
-    animation: rise 900ms var(--ease) both;
-  }
   h1 {
-    font-size: clamp(56px, 8.6vw, 124px);
-    line-height: 0.94;
-    letter-spacing: -0.02em;
+    font-size: clamp(52px, 8vw, 112px);
+    font-weight: 600;
+    line-height: 0.96;
+    letter-spacing: -0.045em;
     margin-bottom: 32px;
     text-wrap: balance;
   }
@@ -294,9 +255,8 @@
     }
   }
   .lede {
-    font-family: var(--font-display);
-    font-size: clamp(20px, 1.9vw, 26px);
-    line-height: 1.45;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.55;
     color: var(--ink-2);
     max-width: 34ch;
     margin-bottom: 40px;
@@ -315,17 +275,18 @@
     padding: 12px 26px;
     font-weight: 500;
     text-decoration: none;
-    border: 1px solid var(--co2);
+    border: 1px solid var(--accent);
+    border-radius: var(--r-pill);
     transition: background var(--t-fast, 200ms) var(--ease), color 200ms var(--ease), border-color 200ms var(--ease), transform 200ms var(--ease);
   }
   .cta.primary {
-    background: var(--co2);
-    color: #17160f;
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: 0 8px 28px -10px color-mix(in srgb, var(--accent) 80%, transparent);
   }
   .cta.primary:hover {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
     transform: translateY(-2px);
   }
   .cta .arrow {
@@ -341,8 +302,8 @@
     border-color: color-mix(in srgb, var(--ink) 30%, transparent);
   }
   .cta.secondary:hover {
-    border-color: var(--co2);
-    color: var(--co2);
+    border-color: var(--accent);
+    color: var(--accent);
   }
   .cue {
     display: inline-flex;
@@ -392,8 +353,8 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--co2);
-    box-shadow: 0 0 14px 2px color-mix(in srgb, var(--co2) 70%, transparent);
+    background: var(--accent);
+    box-shadow: 0 0 14px 2px color-mix(in srgb, var(--accent) 70%, transparent);
     animation: scan 6s linear infinite;
     pointer-events: none;
   }
@@ -441,7 +402,7 @@
     left: 0;
     top: -1px;
     height: 3px;
-    background: var(--co2);
+    background: var(--accent);
     transition: width 500ms var(--ease);
   }
   .counter {
@@ -456,10 +417,6 @@
     .lede {
       max-width: none;
     }
-    .chart {
-      right: -40%;
-      width: 130vw;
-    }
     .cue {
       display: none;
     }
@@ -468,7 +425,7 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .w, .kicker, .lede, .actions, .cue, .plate-col, .chart, .scan, .cue span {
+    .w, .lede, .actions, .cue, .plate-col, .scan, .cue span {
       animation: none;
     }
     .plate-col {

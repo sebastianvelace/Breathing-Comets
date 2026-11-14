@@ -109,13 +109,13 @@
     gap: 3px;
     height: clamp(150px, 24vw, 260px);
     padding-bottom: 38px;
-    border-bottom: 1px solid var(--rule);
   }
   .bar {
     flex: 1 1 0;
     min-width: 0;
     height: calc(var(--h) * 100%);
-    background: color-mix(in oklab, var(--co2) calc(var(--t) * 100%), var(--h2o));
+    background: color-mix(in oklab, #a8e6ff calc(var(--t) * 100%), #3b4bd8);
+    border-radius: 3px 3px 0 0;
     transform: scaleY(0.04);
     transform-origin: bottom;
     opacity: 0.2;

@@ -80,15 +80,15 @@
   .tick, .axis-label { font: 11px var(--font-data); fill: var(--graphite); }
   .bar { stroke: var(--graphite); stroke-width: 1.25; }
   .mark { stroke: var(--ink); stroke-width: 1.5; }
-  .detected .mark { fill: var(--co2); }
-  .with_systematics .mark { fill: var(--co2); stroke: var(--signal); stroke-width: 2; }
-  .marginal .mark { fill: var(--paper); stroke: var(--co2); }
+  .detected .mark { fill: var(--accent); }
+  .with_systematics .mark { fill: var(--accent); stroke: var(--signal); stroke-width: 2; }
+  .marginal .mark { fill: var(--paper); stroke: var(--accent); }
   .not_detected .mark { fill: var(--paper); stroke: var(--graphite); stroke-dasharray: 2 2; }
   .far .mark { fill: var(--paper); stroke: var(--signal); stroke-dasharray: 3 2; }
   .hit { fill: transparent; }
   .pt { cursor: pointer; }
   .pt:focus-visible { outline: none; }
-  .pt:focus-visible .hit, .chosen .hit { stroke: var(--co2); stroke-width: 2; }
+  .pt:focus-visible .hit, .chosen .hit { stroke: var(--accent); stroke-width: 2; }
   .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 8px; font: 12px var(--font-data); color: var(--graphite); }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .legend .pt { width: 14px; height: 14px; }

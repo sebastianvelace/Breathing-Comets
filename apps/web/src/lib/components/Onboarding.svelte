@@ -163,16 +163,20 @@
 
 {#if nudge && !open}
   <aside class="nudge" aria-label={m.tour_nudge_title()}>
-    <p class="t">{m.tour_nudge_title()}</p>
-    <p>{m.tour_nudge_body()}</p>
-    <div class="row">
-      <button class="primary" onclick={() => (open = true)}>{m.tour_start()}</button>
-      <button
-        onclick={() => {
-          remember("dismissed");
-          nudge = false;
-        }}>{m.tour_not_now()}</button
-      >
+    <span class="orb" aria-hidden="true"></span>
+    <div>
+      <p class="t">{m.tour_nudge_title()}</p>
+      <p>{m.tour_nudge_body()}</p>
+      <div class="row">
+        <button class="primary" onclick={() => (open = true)}>{m.tour_start()}</button>
+        <button
+          class="ghost"
+          onclick={() => {
+            remember("dismissed");
+            nudge = false;
+          }}>{m.tour_not_now()}</button
+        >
+      </div>
     </div>
   </aside>
 {/if}
@@ -199,18 +203,27 @@
       bind:this={cardEl}
       style:top={place.top === undefined ? undefined : `${place.top}px`}
       style:bottom={place.bottom === undefined ? undefined : `${place.bottom}px`}
-      style:left={rect ? `clamp(12px, ${rect.left}px, calc(100vw - min(380px, 100vw - 24px) - 12px))` : undefined}
+      style:left={rect ? `clamp(12px, ${rect.left}px, calc(100vw - min(400px, 100vw - 24px) - 12px))` : undefined}
     >
-      <p class="count mono" aria-live="polite">{m.tour_step_of({ n: String(i + 1), total: String(list.length) })}</p>
-      <h2 data-testid="tour-title">{step.title()}</h2>
-      <p class="body">{step.body()}</p>
-      <div class="dots" aria-hidden="true">
-        {#each list as _, k (k)}<span class:on={k === i}></span>{/each}
-      </div>
+      {#key i}
+        <div class="content">
+          <div class="head">
+            <span class="badge" aria-hidden="true">{i + 1}</span>
+            <div>
+              <p class="count" aria-live="polite">{m.tour_step_of({ n: String(i + 1), total: String(list.length) })}</p>
+              <h2 data-testid="tour-title">{step.title()}</h2>
+            </div>
+          </div>
+          <p class="body">{step.body()}</p>
+        </div>
+      {/key}
       <div class="row">
-        <button class="ghost" onclick={() => close(false)}>{m.tour_skip()}</button>
+        <div class="dots" aria-hidden="true">
+          {#each list as _, k (k)}<span class:on={k === i} class:past={k < i}></span>{/each}
+        </div>
         <span class="spacer"></span>
-        {#if i > 0}<button onclick={() => go(-1)}>{m.tour_back()}</button>{/if}
+        <button class="ghost" onclick={() => close(false)}>{m.tour_skip()}</button>
+        {#if i > 0}<button class="soft" onclick={() => go(-1)} aria-label={m.tour_back()}>←</button>{/if}
         <button class="primary" data-primary onclick={() => go(1)}>{last ? m.tour_done() : m.tour_next()}</button>
       </div>
     </div>
@@ -227,60 +240,123 @@
     position: absolute;
     inset: 0;
   }
+  /* A soft, rounded window of light: the huge outer shadow darkens everything else. */
   .spot {
     position: fixed;
     pointer-events: none;
-    border: 1.5px solid var(--co2);
-    /* The huge shadow darkens everything except the highlighted region. */
-    box-shadow: 0 0 0 100vmax rgba(8, 8, 7, 0.74);
+    border-radius: 22px;
+    box-shadow:
+      0 0 0 2px rgba(140, 180, 255, 0.85),
+      0 0 46px 8px rgba(100, 150, 255, 0.4),
+      0 0 0 100vmax rgba(3, 6, 18, 0.76);
     transition:
-      top 350ms var(--ease),
-      left 350ms var(--ease),
-      width 350ms var(--ease),
-      height 350ms var(--ease);
+      top 450ms var(--ease),
+      left 450ms var(--ease),
+      width 450ms var(--ease),
+      height 450ms var(--ease);
+  }
+  .spot::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 28px;
+    border: 2px solid rgba(140, 180, 255, 0.6);
+    animation: halo 2.4s var(--ease) infinite;
+  }
+  @keyframes halo {
+    from {
+      opacity: 0.9;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.035);
+    }
   }
   .card,
   .nudge {
-    background: #14130f;
-    color: #ece7dc;
-    border: 1px solid #34312a;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.5);
+    color: #e8ecf8;
+    background: linear-gradient(160deg, rgba(24, 36, 78, 0.92), rgba(9, 14, 34, 0.94));
+    backdrop-filter: blur(16px) saturate(1.3);
+    box-shadow:
+      inset 0 0 0 1px rgba(140, 180, 255, 0.22),
+      0 24px 70px -20px rgba(0, 0, 0, 0.8),
+      0 0 60px -20px rgba(90, 140, 255, 0.5);
   }
   .card {
     position: fixed;
-    width: min(380px, calc(100vw - 24px));
-    padding: 18px 20px 16px;
+    width: min(400px, calc(100vw - 24px));
+    padding: 22px 22px 18px;
+    border-radius: 28px;
+    transition:
+      top 450ms var(--ease),
+      bottom 450ms var(--ease),
+      left 450ms var(--ease);
+  }
+  .content {
+    animation: step-in 420ms var(--ease) both;
+  }
+  @keyframes step-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  .head {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font: 600 18px var(--font-display);
+    color: #061033;
+    background: radial-gradient(circle at 30% 25%, #cfe0ff, #7aa7ff 60%, #4a7bf0);
+    box-shadow: 0 0 24px rgba(122, 167, 255, 0.6);
   }
   .count {
-    margin: 0 0 6px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: #f2a03d;
+    margin: 0 0 2px;
+    font-size: 12px;
+    color: #9db4e8;
   }
   h2 {
-    margin: 0 0 8px;
-    font: 500 24px/1.15 var(--font-display);
-    color: #ece7dc;
+    margin: 0;
+    font: 600 21px/1.2 var(--font-display);
+    letter-spacing: -0.02em;
+    color: #f2f5ff;
   }
   .body {
-    margin: 0 0 14px;
+    margin: 0 0 18px;
     font-size: 15px;
-    line-height: 1.55;
-    color: #c9c2b4;
+    line-height: 1.6;
+    color: #c0cae6;
   }
   .dots {
     display: flex;
+    align-items: center;
     gap: 6px;
-    margin-bottom: 14px;
   }
   .dots span {
-    width: 18px;
-    height: 2px;
-    background: #34312a;
-    transition: background 250ms var(--ease);
+    width: 7px;
+    height: 7px;
+    border-radius: 99px;
+    background: rgba(160, 185, 240, 0.25);
+    transition:
+      width 300ms var(--ease),
+      background 300ms var(--ease);
+  }
+  .dots span.past {
+    background: rgba(140, 180, 255, 0.6);
   }
   .dots span.on {
-    background: #f2a03d;
+    width: 22px;
+    background: #7aa7ff;
   }
   .row {
     display: flex;
@@ -293,47 +369,81 @@
   .card button,
   .nudge button {
     min-height: 40px;
-    padding: 8px 14px;
+    padding: 8px 18px;
     font-size: 14px;
-    color: #ece7dc;
-    background: transparent;
-    border: 1px solid #4a463c;
+    color: #e8ecf8;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(160, 185, 240, 0.14);
   }
   .card button:hover,
   .nudge button:hover {
-    border-color: #f2a03d;
+    background: rgba(160, 185, 240, 0.24);
+  }
+  .card button.soft {
+    padding-inline: 14px;
   }
   .card button.primary,
   .nudge button.primary {
-    background: #f2a03d;
-    border-color: #f2a03d;
-    color: #17160f;
-    font-weight: 500;
+    background: #7aa7ff;
+    color: #061033;
+    font-weight: 600;
+    box-shadow: 0 8px 24px -8px rgba(122, 167, 255, 0.9);
   }
-  .card button.ghost {
-    border-color: transparent;
-    color: #9a9488;
-    padding-inline: 4px;
+  .card button.primary:hover,
+  .nudge button.primary:hover {
+    background: #a6c4ff;
+  }
+  .card button.ghost,
+  .nudge button.ghost {
+    background: transparent;
+    color: #9aa7cc;
+    padding-inline: 10px;
+  }
+  .card button.ghost:hover,
+  .nudge button.ghost:hover {
+    color: #e8ecf8;
+    background: transparent;
   }
   .nudge {
     position: fixed;
     right: 20px;
     bottom: 20px;
     z-index: 90;
-    width: min(320px, calc(100vw - 40px));
-    padding: 16px 18px;
-    animation: nudge-in 500ms var(--ease) both;
+    display: flex;
+    gap: 14px;
+    width: min(360px, calc(100vw - 40px));
+    padding: 18px 20px;
+    border-radius: 26px;
+    animation: nudge-in 600ms var(--ease) both;
+  }
+  .orb {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, #ffffff, #7aa7ff 70%);
+    box-shadow: 0 0 18px 4px rgba(122, 167, 255, 0.7);
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    50% {
+      transform: scale(0.75);
+      opacity: 0.7;
+    }
   }
   .nudge p {
     margin: 0 0 12px;
     font-size: 14px;
     line-height: 1.5;
-    color: #c9c2b4;
+    color: #c0cae6;
   }
   .nudge .t {
-    margin-bottom: 4px;
-    font: 500 20px var(--font-display);
-    color: #ece7dc;
+    margin-bottom: 2px;
+    font: 600 18px var(--font-display);
+    letter-spacing: -0.02em;
+    color: #f2f5ff;
   }
   @keyframes nudge-in {
     from {
@@ -343,11 +453,18 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .spot,
+    .card,
     .dots span {
       transition: none;
     }
+    .spot::after,
+    .content,
+    .orb,
     .nudge {
       animation: none;
+    }
+    .spot::after {
+      opacity: 0;
     }
   }
 </style>

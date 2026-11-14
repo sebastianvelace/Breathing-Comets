@@ -13,7 +13,6 @@
 
 <section class="section" id="diff" aria-labelledby="s2-title">
   <div class="text">
-    <p class="num">§2</p>
     <h2 id="s2-title">{m.landing_s2_title()}</h2>
     <p>{m.landing_s2_p1()}</p>
     <p>{m.landing_s2_p2({ a: fmtLam(raw.a.lam_um), b: fmtLam(raw.b.lam_um) })}</p>

@@ -50,7 +50,6 @@
     max-width: 1280px;
     margin: 0 auto;
     padding: 48px var(--gutter) 40px;
-    border-top: 1px solid var(--ink);
     font: 12px/1.7 var(--font-data);
     color: var(--graphite);
   }
@@ -75,7 +74,7 @@
   }
   a[aria-current="true"] {
     color: var(--ink);
-    text-decoration-color: var(--co2);
+    text-decoration-color: var(--accent);
   }
   .brand-line {
     margin: 36px 0 0;

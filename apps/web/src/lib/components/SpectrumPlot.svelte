@@ -35,7 +35,7 @@
     if (!Constructor || width < 120 || !sorted.length) return;
     const source = sorted;
     const styles = getComputedStyle(host);
-    const accent = styles.getPropertyValue("--co2").trim(),
+    const accent = styles.getPropertyValue("--accent").trim(),
       ink = styles.getPropertyValue("--graphite").trim(),
       rule = styles.getPropertyValue("--rule").trim(),
       paper = styles.getPropertyValue("--paper").trim();
@@ -58,7 +58,7 @@
         axes: [
           {
             label: m.wavelength(),
-            font: "11px IBM Plex Mono",
+            font: "11px Geist Mono Variable",
             labelSize: 24,
             size: 35,
             stroke: ink,
@@ -67,7 +67,7 @@
           },
           {
             label: m.flux(),
-            font: "11px IBM Plex Mono",
+            font: "11px Geist Mono Variable",
             labelSize: 24,
             size: 48,
             stroke: ink,

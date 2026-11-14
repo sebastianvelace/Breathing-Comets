@@ -140,6 +140,8 @@
     --graphite: #9a9488;
     --rule: #34312a;
     --co2: #e39a45;
+    --accent: #7aa7ff;
+    --accent-ink: #061033;
     --co: #5fbfc7;
     --h2o: #8fa5ff;
     background: var(--paper);

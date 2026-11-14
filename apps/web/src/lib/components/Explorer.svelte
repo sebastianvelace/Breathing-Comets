@@ -31,6 +31,7 @@
   import Inspector from "./Inspector.svelte";
   import LayerTree from "./LayerTree.svelte";
   import Onboarding from "./Onboarding.svelte";
+  import Starfield from "./Starfield.svelte";
   import { channels, nearestChannel } from "#lib/astro/hips.js";
 
   let { embed = false }: { embed?: boolean } = $props();
@@ -644,7 +645,9 @@
   /></svelte:head
 >
 
-{#if !embed}<header class="site-header">
+<div class="space" class:embed>
+{#if !embed}<Starfield fixed count={90} constellations={false} seed={41} />
+  <header class="site-header">
     <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
     <nav>
       <div class="ui-switch">
@@ -680,7 +683,7 @@
         /><datalist id="target-list"
           >{#each targets as target}<option value={target.name}
             ></option>{/each}</datalist
-        ><button aria-label={m.search_submit()}>{m.search_submit()} →</button>
+        ><button class="primary" aria-label={m.search_submit()}>{m.search_submit()} →</button>
       </form>
       {#if searchError}<p role="status" class="mono">
           {searchMessage || m.no_target()}
@@ -861,13 +864,16 @@
         status={spectrumStatus}
         {apiBase}
       />
-    {:else if !embed && manifest}<FieldNotes
-        {manifest}
-        {spectrum}
-        {playing}
-        oncompare={compare}
-        onplay={() => (playing = !playing)}
-      />{/if}
+    {:else if !embed && manifest}<!-- On phones the notes sit under the plate: show them only once the plate has its final height, or they jump down when the timeline mounts. -->
+      <div class="notes-slot" class:pending={!base?.frames.length}>
+        <FieldNotes
+          {manifest}
+          {spectrum}
+          {playing}
+          oncompare={compare}
+          onplay={() => (playing = !playing)}
+        />
+      </div>{/if}
   </div>
   {#if embed}<a
       class="embed-brand mono"
@@ -886,6 +892,7 @@
 </main>
 {#if !embed}<footer class="mono">{m.credits()}</footer>
   <Onboarding bind:open={tourOpen} />{/if}
+</div>
 
 <style>
   .ui-switch {
@@ -898,11 +905,11 @@
     padding: 6px 12px;
     border-color: transparent;
     text-decoration: underline;
-    text-decoration-color: var(--co2);
+    text-decoration-color: var(--accent);
     text-underline-offset: 4px;
   }
   .tour-btn:hover {
-    border-color: var(--co2);
+    border-color: var(--accent);
   }
   .tour-btn .short {
     display: none;
@@ -921,6 +928,9 @@
   }
   .lab .explorer-grid {
     gap: 0;
+  }
+  footer {
+    border: 0;
   }
   @media (max-width: 1279px) {
     .lab-layers {
@@ -941,6 +951,9 @@
     }
   }
   @media (max-width: 767px) {
+    .notes-slot.pending {
+      display: none;
+    }
     .ui-switch {
       display: none;
     }
@@ -954,20 +967,63 @@
     .tour-btn {
       min-width: 36px;
       text-decoration: none;
-      border: 1px solid var(--rule);
+      border: 0;
+      background: color-mix(in srgb, var(--ink) 8%, transparent);
     }
     .site-header .brand {
       white-space: nowrap;
     }
   }
 
+  /* The explorer is an instrument for dark plates: it keeps a night-sky theme in both colour schemes. */
+  .space {
+    --paper: #050814;
+    --paper-2: #0b1126;
+    --rule: #1a2342;
+    --ink: #e8ecf8;
+    --ink-2: #b7c0da;
+    --graphite: #8691b2;
+    --accent: #7aa7ff;
+    --accent-strong: #a6c4ff;
+    --accent-ink: #061033;
+    --co2: #e39a45;
+    --co: #5fbfc7;
+    --h2o: #8fa5ff;
+    --signal: #ff6b57;
+    position: relative;
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+    color-scheme: dark;
+  }
+  .space.embed {
+    min-height: 0;
+  }
+  .space > header,
+  .space > main,
+  .space > footer {
+    position: relative;
+    z-index: 1;
+  }
   .site-header {
-    padding: 12px var(--gutter);
+    position: sticky !important;
+    top: 0;
+    z-index: 5 !important;
+    padding: 10px var(--gutter);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--rule);
     gap: 18px;
+    background: color-mix(in srgb, #050814 78%, transparent);
+    backdrop-filter: blur(12px);
+  }
+  .ui-switch {
+    padding: 3px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+  }
+  .ui-switch button {
+    border: 0;
   }
   .site-header nav {
     display: flex;
@@ -977,7 +1033,11 @@
   .site-header nav a {
     font: 12px var(--font-data);
   }
+  .notes-slot {
+    display: contents;
+  }
   main {
+    min-height: 100svh; /* the footer starts below the fold, so it never shifts into view */
     padding: 18px var(--gutter) 48px;
     max-width: 1800px;
     margin: auto;
@@ -987,43 +1047,61 @@
   }
   form {
     display: flex;
-    border-bottom: 1px solid var(--ink);
     align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 22px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+    transition: box-shadow 200ms var(--ease), background 200ms var(--ease);
+  }
+  form:focus-within {
+    background: color-mix(in srgb, var(--ink) 10%, transparent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
   }
   form input {
-    font: italic clamp(19px, 1.9vw, 28px) var(--font-display);
+    font-size: clamp(16px, 1.3vw, 19px);
     width: 100%;
-    padding: 6px 0 10px;
+    padding: 8px 0;
     border: 0;
+    border-radius: 0;
     background: transparent;
+    color: var(--ink);
+  }
+  form input:focus-visible {
+    outline: none;
+  }
+  form input::placeholder {
+    color: var(--graphite);
   }
   form button {
-    border: 0;
     white-space: nowrap;
   }
   .target-links {
     display: flex;
-    gap: 22px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-top: 10px;
+    margin-top: 12px;
   }
   .target-links button {
-    padding: 0 0 6px;
+    padding: 6px 14px;
     border: 0;
-    border-bottom: 1px solid transparent;
     font-size: 13px;
-    min-height: 28px;
-    color: var(--graphite);
-    background: none;
+    min-height: 34px;
+    color: var(--ink-2);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+  }
+  .target-links button:hover {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--ink) 11%, transparent);
   }
   .target-links button.chosen {
-    color: var(--co2);
-    border-bottom-color: var(--co2);
+    color: var(--accent-strong);
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
   }
   .explorer-grid {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(250px, 1fr);
-    gap: 0;
+    grid-template-columns: minmax(0, 3fr) minmax(270px, 1fr);
+    gap: 28px;
   }
   .observation {
     position: relative;
@@ -1050,7 +1128,7 @@
     aspect-ratio: 1.47;
     background: var(--plate);
     color: var(--plate-ink);
-    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1067,8 +1145,7 @@
     display: flex;
     gap: 12px;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--rule);
+    padding: 12px 0 0;
     flex-wrap: wrap;
   }
   .compare-dates label {
@@ -1083,18 +1160,24 @@
   }
   .metadata {
     display: flex;
-    gap: 8px 20px;
+    gap: 8px;
     flex-wrap: wrap;
-    padding: 15px 0;
+    padding: 14px 0 10px;
     color: var(--ink-2);
     overflow-wrap: anywhere;
+  }
+  .metadata span {
+    padding: 5px 12px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
   }
   .stretch-note {
     color: var(--graphite);
     font-size: 10px;
   }
   .explanation {
-    font: 20px/1.4 var(--font-display);
+    font-size: 17px;
+    line-height: 1.55;
     max-width: 650px;
     color: var(--ink-2);
   }
@@ -1103,9 +1186,7 @@
     font-size: 10px;
   }
   .share-details {
-    border-top: 1px solid var(--rule);
-    padding-top: 18px;
-    margin-top: 35px;
+    margin-top: 28px;
   }
   .share-details input {
     display: block;
@@ -1119,8 +1200,10 @@
   }
   .selected-spectrum {
     max-width: 650px;
-    border-top: 1px solid var(--rule);
-    padding-top: 24px;
+    margin-top: 16px;
+    padding: 20px;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
   }
   .embedded {
     padding: 0;

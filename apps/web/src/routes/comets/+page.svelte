@@ -152,11 +152,11 @@
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}main{max-width:1440px;margin:auto;padding:64px var(--gutter)}.intro{max-width:640px;font-size:20px}section{margin-bottom:56px}h2{font-size:32px}h3{font-size:22px}
   .honesty{max-width:760px;border-top:1px solid var(--ink);padding-top:12px;margin-top:32px}.honesty h2{font-size:22px}.honesty li{margin-bottom:8px;font-size:15px;color:var(--ink-2)}
-  .chart{max-width:960px}.inspection{min-height:110px;margin-top:12px}.caveat{border-left:2px solid var(--co2);padding-left:14px;font-size:14px}
+  .chart{max-width:960px}.inspection{min-height:110px;margin-top:12px}.caveat{border-left:2px solid var(--accent);padding-left:14px;font-size:14px}
   .filters{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}label{display:grid;gap:6px}.scroll{overflow:auto}
   table{width:100%;border-collapse:collapse;text-align:left;font:12px var(--font-data)}th{font-weight:400;color:var(--graphite)}td,th{padding:12px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}.r{text-align:right}
-  .catalog button{padding:3px 0;min-height:40px;border:0;text-align:left;color:var(--co2);text-decoration:underline;text-underline-offset:4px}.catalog button[aria-pressed=true]{background:transparent;color:var(--signal)}.chosen{background:var(--paper-2)}.badge{display:block;color:var(--graphite);font-size:11px}
+  .catalog button{padding:3px 0;min-height:40px;border:0;text-align:left;color:var(--accent);text-decoration:underline;text-underline-offset:4px}.catalog button[aria-pressed=true]{background:transparent;color:var(--signal)}.chosen{background:var(--paper-2)}.badge{display:block;color:var(--graphite);font-size:11px}
   .validation{max-width:960px}.validation tr.sub td{white-space:normal;color:var(--ink-2);padding-top:0}.src{color:var(--graphite)}.ok{color:var(--co)}.off{color:var(--signal)}
-  .method{max-width:680px;font-size:15px}.method a{color:var(--co2)}
+  .method{max-width:680px;font-size:15px}.method a{color:var(--accent)}
   @media(max-width:850px){main{padding-top:40px}header{flex-wrap:wrap}h1{font-size:44px}}
 </style>

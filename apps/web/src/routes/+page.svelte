@@ -12,6 +12,7 @@
   import TargetsSection from "#lib/components/landing/TargetsSection.svelte";
   import LandingFooter from "#lib/components/landing/LandingFooter.svelte";
   import ClosingCta from "#lib/components/landing/ClosingCta.svelte";
+  import Starfield from "#lib/components/Starfield.svelte";
   import {
     bundledComet,
     landingMedia,
@@ -73,12 +74,12 @@
   const exploreHref = `${localizeHref("/explore")}?target=barnard&ui=story`;
 
   const sections = [
-    { id: "blink", n: "§1", label: () => m.landing_nav_blink() },
-    { id: "diff", n: "§2", label: () => m.landing_nav_diff() },
-    { id: "spectrum", n: "§3", label: () => m.landing_nav_spectrum() },
-    { id: "comets", n: "§4", label: () => m.landing_nav_comets() },
-    { id: "validation", n: "§5", label: () => m.landing_nav_validation() },
-    { id: "targets", n: "§6", label: () => m.landing_nav_targets() },
+    { id: "blink", label: () => m.landing_nav_blink() },
+    { id: "diff", label: () => m.landing_nav_diff() },
+    { id: "spectrum", label: () => m.landing_nav_spectrum() },
+    { id: "comets", label: () => m.landing_nav_comets() },
+    { id: "validation", label: () => m.landing_nav_validation() },
+    { id: "targets", label: () => m.landing_nav_targets() },
   ];
   const poster =
     bundledComet.status === "ready" && bundledComet.packet.plates.epochs[0]
@@ -107,7 +108,7 @@
     <nav aria-label={m.landing_nav_label()}>
       <ul>
         {#each sections as s (s.id)}
-          <li><a href="#{s.id}" class:active={active === s.id} aria-current={active === s.id ? "location" : undefined}><span class="n">{s.n}</span> {s.label()}</a></li>
+          <li><a href="#{s.id}" class:active={active === s.id} aria-current={active === s.id ? "location" : undefined}>{s.label()}</a></li>
         {/each}
       </ul>
     </nav>
@@ -141,7 +142,7 @@
     <div class="on-plate"><CometsSection {comet} /></div>
     <ValidationSection {comet} />
     <div class="tone"><TargetsSection /></div>
-    <div class="on-plate"><ClosingCta /></div>
+    <div class="on-plate closing"><Starfield count={70} seed={23} /><ClosingCta /></div>
   </main>
 
   <div class="on-plate"><LandingFooter /></div>
@@ -168,7 +169,7 @@
     position: fixed;
     inset: 0 0 auto 0;
     height: 2px;
-    background: var(--co2);
+    background: var(--accent);
     transform-origin: 0 50%;
     transform: scaleX(0);
     z-index: 25;
@@ -193,10 +194,9 @@
     align-items: center;
     gap: 24px;
     padding: 14px max(var(--gutter), calc((100vw - 1280px) / 2 + var(--gutter)));
-    border-bottom: 1px solid #26241f;
   }
   header.masthead.on-plate {
-    background: color-mix(in srgb, #0b0b0a 93%, transparent);
+    background: color-mix(in srgb, #050814 88%, transparent);
     backdrop-filter: blur(14px) saturate(1.2);
   }
   .masthead .brand {
@@ -237,7 +237,7 @@
     right: 0;
     bottom: 6px;
     height: 1px;
-    background: var(--co2);
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 300ms var(--ease);
@@ -250,12 +250,6 @@
   nav a.active::after {
     transform: scaleX(1);
   }
-  .n {
-    font-family: var(--font-data);
-    font-size: 12px;
-    color: var(--graphite);
-    margin-right: 4px;
-  }
   .nav-cta {
     flex: none;
     display: inline-flex;
@@ -265,9 +259,10 @@
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    background: var(--co2);
-    color: #17160f;
-    border: 1px solid var(--co2);
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    border-radius: var(--r-pill);
     opacity: 0;
     translate: 0 -6px;
     visibility: hidden;
@@ -284,8 +279,8 @@
     transition-delay: 0s;
   }
   .nav-cta:hover {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
   }
   .lang {
     display: flex;
@@ -303,7 +298,7 @@
   .lang a[aria-current="true"] {
     color: var(--ink);
     text-decoration: underline;
-    text-decoration-color: var(--co2);
+    text-decoration-color: var(--accent);
     text-decoration-thickness: 2px;
   }
   @media (max-width: 1060px) {
@@ -331,12 +326,15 @@
 
   /* Dark "plate" bands: the same tokens, flipped, so every component inherits them. */
   .landing :global(.on-plate) {
-    --paper: #0b0b0a;
-    --paper-2: #14130f;
-    --ink: #ece7dc;
-    --ink-2: #c9c2b4;
-    --graphite: #9a9488;
-    --rule: #34312a;
+    --paper: #050814;
+    --paper-2: #0b1126;
+    --ink: #e8ecf8;
+    --ink-2: #b7c0da;
+    --graphite: #8691b2;
+    --rule: #1a2342;
+    --accent: #7aa7ff;
+    --accent-strong: #a6c4ff;
+    --accent-ink: #061033;
     --co2: #f2a03d;
     --co: #7fd4e6;
     --h2o: #8fa5ff;
@@ -344,11 +342,12 @@
     background: var(--paper);
     color: var(--ink);
   }
+  .closing {
+    position: relative;
+    overflow: hidden;
+  }
   .landing :global(.tone) {
     background: var(--paper-2);
-  }
-  .band-ribbon {
-    border-top: 1px solid var(--rule);
   }
 
   /* Shared section grammar. */
@@ -359,11 +358,7 @@
     max-width: 1280px;
     margin: 0 auto;
     padding: clamp(72px, 10vw, 150px) var(--gutter);
-    border-top: 1px solid var(--rule);
     align-items: start;
-  }
-  .landing :global(.on-plate .section) {
-    border-top-color: var(--rule);
   }
   .landing :global(.section.wide) {
     grid-template-columns: minmax(0, 1fr);
@@ -372,37 +367,20 @@
   .landing :global(.section .text) {
     max-width: 640px;
   }
-  .landing :global(.section .num) {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font: 13px/1 var(--font-data);
-    color: var(--co2);
-    margin-bottom: 22px;
-  }
-  .landing :global(.section .num::after) {
-    content: "";
-    width: 56px;
-    height: 1px;
-    background: var(--co2);
-    transform-origin: left;
-  }
   .landing :global(.section h2) {
-    font-size: clamp(38px, 5.2vw, 76px);
-    line-height: 1;
-    letter-spacing: -0.015em;
+    font-size: clamp(36px, 4.8vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
     margin-bottom: 28px;
     text-wrap: balance;
   }
-  .landing :global(.section .text > p:not(.num):not(.margin-note)) {
+  .landing :global(.section .text > p:not(.margin-note)) {
     font-size: 18px;
     line-height: 1.68;
     color: var(--ink-2);
   }
   .landing :global(.margin-note) {
-    margin-top: 28px;
-    padding-top: 14px;
-    border-top: 1px solid var(--rule);
+    margin-top: 24px;
     font: 12px/1.6 var(--font-data);
     color: var(--graphite);
     max-width: 52ch;

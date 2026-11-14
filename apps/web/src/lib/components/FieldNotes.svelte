@@ -64,8 +64,11 @@
 
 <style>
   .field-notes {
-    padding: 4px 0 0 28px;
     min-width: 0;
+    align-self: start;
+    padding: 24px;
+    border-radius: var(--r-lg);
+    background: color-mix(in srgb, var(--ink) 5%, transparent);
   }
   .eyebrow {
     color: var(--graphite);
@@ -73,13 +76,14 @@
     margin-bottom: 20px;
   }
   h2 {
-    font-size: 34px;
+    font-size: 30px;
     margin-bottom: 14px;
   }
   .intro {
-    font: 20px/1.4 var(--font-display);
+    font-size: 16px;
+    line-height: 1.55;
     color: var(--ink-2);
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
   .compare,
   .play-note {
@@ -89,24 +93,37 @@
     justify-content: space-between;
     margin-bottom: 8px;
   }
+  .compare,
   .play-note {
-    border: 0;
-    padding-left: 0;
-    margin-bottom: 25px;
+    align-items: center;
+    background: color-mix(in srgb, var(--ink) 6%, transparent);
+    border-color: transparent;
+    border-radius: var(--r-md);
+    padding: 10px 16px;
+  }
+  .compare:hover,
+  .play-note:hover {
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .play-note {
+    margin-bottom: 8px;
   }
   .notes section,
   .spectrum {
-    border-top: 1px solid var(--rule);
-    padding-top: 19px;
-    margin-top: 16px;
+    margin-top: 12px;
+    padding: 16px;
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
   }
   h3 {
-    font: 14px/1.4 var(--font-ui);
-    margin-bottom: 8px;
-    color: var(--ink-2);
+    font: 500 12px/1.4 var(--font-ui);
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+    color: var(--graphite);
   }
   .measurement {
-    font: 23px/1.3 var(--font-display);
+    font: 600 22px/1.25 var(--font-display);
+    letter-spacing: -0.02em;
     margin-bottom: 7px;
   }
   .reference {
@@ -121,12 +138,12 @@
   }
   @media (max-width: 1000px) {
     .field-notes {
-      padding-left: 18px;
+      padding: 18px;
     }
   }
   @media (max-width: 767px) {
     .field-notes {
-      padding: 30px 0 0;
+      margin-top: 24px;
     }
     .intro {
       max-width: 500px;
@@ -135,7 +152,7 @@
       display: block;
     }
     h2 {
-      font-size: 38px;
+      font-size: 30px;
     }
   }
 </style>

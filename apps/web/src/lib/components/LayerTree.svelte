@@ -92,11 +92,11 @@
     margin: 12px 0;
   }
   input[type="checkbox"] {
-    accent-color: var(--co2-on-plate);
+    accent-color: var(--accent-on-plate);
   }
   input[type="range"] {
     width: 100%;
-    accent-color: var(--co2-on-plate);
+    accent-color: var(--accent-on-plate);
   }
   .reference,
   .note {

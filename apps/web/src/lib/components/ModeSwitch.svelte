@@ -29,20 +29,27 @@
 </ToggleGroup.Root>
 
 <style>
+  /* One soft pill holding the options, instead of three boxed buttons. */
   :global(.mode-switch) {
-    display: flex;
-    gap: 0;
+    display: inline-flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
   }
   :global(.mode-switch button) {
-    border-right-width: 0;
+    border: 0;
+    min-height: 36px;
+    padding: 6px 18px;
     white-space: nowrap;
+    color: var(--ink-2);
   }
-  :global(.mode-switch button:last-child) {
-    border-right-width: 1px;
+  :global(.mode-switch button:hover) {
+    color: var(--ink);
   }
   :global(.mode-switch button[data-state="on"]) {
-    background: var(--co2);
-    color: var(--paper);
-    border-color: var(--co2);
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: 0 6px 18px -8px var(--accent);
   }
 </style>

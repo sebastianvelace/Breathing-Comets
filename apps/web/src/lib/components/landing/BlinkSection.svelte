@@ -84,7 +84,6 @@
 
 <section class="section" id="blink" aria-labelledby="s1-title">
   <div class="text">
-    <p class="num">§1</p>
     <h2 id="s1-title">{m.landing_s1_title()}</h2>
     <p>{m.landing_s1_p1()}</p>
     <p>{m.landing_s1_p2()}</p>

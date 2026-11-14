@@ -237,10 +237,6 @@
         class="motion"
       />
     {/if}
-    <path
-      class="registration"
-      d={`M12 24V12H24M${width - 24} 12H${width - 12}V24M12 ${height - 24}V${height - 12}H24M${width - 24} ${height - 12}H${width - 12}V${height - 24}`}
-    />
     <g class="scale"
       ><path
         d={`M28 ${height - 36}v6h${(60 / (Math.abs(stack.header.grid.cdelt_deg[0]) * 3600)) * scale}v-6`}
@@ -277,7 +273,10 @@
     width: 100%;
     aspect-ratio: 1.47;
     background: var(--plate);
-    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--accent-on-plate) 16%, transparent),
+      0 40px 90px -50px color-mix(in srgb, var(--accent-on-plate) 55%, transparent);
     overflow: hidden;
     touch-action: none;
     color: var(--plate-ink);
@@ -308,7 +307,7 @@
   }
   .gaia-cross,
   .motion {
-    color: var(--co2-on-plate);
+    color: var(--accent-on-plate);
   }
   text {
     font: 11px var(--font-data);
@@ -327,12 +326,17 @@
     bottom: 22px;
     right: 20px;
     display: flex;
-    gap: 1px;
+    gap: 2px;
+    padding: 4px;
+    border-radius: var(--r-pill);
+    background: color-mix(in srgb, var(--lab-panel) 82%, transparent);
+    backdrop-filter: blur(8px);
   }
   .zoom button {
-    background: var(--lab-panel);
+    background: transparent;
     color: var(--plate-ink);
-    border: 1px solid var(--plate-dim);
+    border: 0;
+    padding: 0;
     min-width: 36px;
     min-height: 36px;
     font-size: 18px;

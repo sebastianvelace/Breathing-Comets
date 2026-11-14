@@ -187,8 +187,8 @@
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}main{max-width:1280px;margin:auto;padding:56px var(--gutter)}.intro{max-width:640px;font-size:20px}section{margin:56px 0}h2{font-size:30px}
   .epochs{display:flex;gap:8px;margin:20px 0}.plate-grid{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:48px;align-items:start}.plate :global(img){image-rendering:pixelated}
-  .controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:12px}.slider{display:grid;gap:2px;flex:1 1 220px;font-size:14px;color:var(--ink-2)}.slider input{width:100%}.inband{color:var(--co2)}
+  .controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:12px}.slider{display:grid;gap:2px;flex:1 1 220px;font-size:14px;color:var(--ink-2)}.slider input{width:100%}.inband{color:var(--accent)}
   .note{max-width:44ch;font-size:15px}.spectrum{max-width:960px}.status{font:13px var(--font-data);letter-spacing:.08em}.status[data-status=with_systematics]{color:var(--signal)}.big{font-size:clamp(24px,3.4vw,40px)}
-  .ok{color:var(--co)}.off{color:var(--signal)}.src{font-size:12px}.prov{max-width:760px;font-size:15px}.prov a{color:var(--co2)}.obs{overflow-wrap:anywhere}
+  .ok{color:var(--co)}.off{color:var(--signal)}.src{font-size:12px}.prov{max-width:760px;font-size:15px}.prov a{color:var(--accent)}.obs{overflow-wrap:anywhere}
   @media(max-width:850px){.plate-grid{grid-template-columns:minmax(0,1fr);gap:20px}main{padding-top:36px}header{flex-wrap:wrap}h1{font-size:44px}}
 </style>

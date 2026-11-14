@@ -41,7 +41,6 @@
 
 <section class="section wide" id="targets" aria-labelledby="s6-title">
   <div class="text">
-    <p class="num">§6</p>
     <h2 id="s6-title">{m.landing_s6_title()}</h2>
     <p>{m.landing_s6_p1()}</p>
   </div>
@@ -96,10 +95,6 @@
 </section>
 
 <style>
-  .rail-wrap {
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-  }
   .rail {
     list-style: none;
     margin: 0;
@@ -114,7 +109,7 @@
     scrollbar-color: var(--rule) transparent;
   }
   .rail:focus-visible {
-    outline: 2px solid var(--co2);
+    outline: 2px solid var(--accent);
     outline-offset: 4px;
   }
   .card {
@@ -139,7 +134,7 @@
     transition: color 250ms var(--ease);
   }
   .card:hover h3 {
-    color: var(--co2);
+    color: var(--accent);
   }
   @media (prefers-reduced-motion: reduce) {
     .card,
@@ -171,7 +166,6 @@
     margin: 0 0 10px;
   }
   .notes div {
-    border-top: 1px solid var(--rule);
     padding: 8px 0;
   }
   dt {
@@ -193,13 +187,13 @@
   .caveat {
     font-size: 13px;
     color: var(--ink-2);
-    border-left: 2px solid var(--co2);
+    border-left: 2px solid var(--accent);
     padding-left: 10px;
   }
   .open {
     margin-top: auto;
     padding-top: 8px;
-    color: var(--co2);
+    color: var(--accent);
     font-weight: 500;
     min-height: 40px;
     display: inline-flex;

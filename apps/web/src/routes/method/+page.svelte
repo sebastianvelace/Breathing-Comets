@@ -197,11 +197,11 @@
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}
   .layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:clamp(24px,5vw,80px);max-width:1180px;margin:auto;padding:56px var(--gutter)}
-  aside{position:sticky;top:24px;align-self:start;font-size:14px}.toc-title{color:var(--graphite);margin-bottom:10px}aside ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}aside a{display:block;padding:7px 0 7px 12px;border-left:1px solid var(--rule);color:var(--ink-2);text-decoration:none;transition:color 200ms var(--ease),border-color 200ms var(--ease)}aside a:hover{color:var(--co2);border-color:var(--co2)}
+  aside{position:sticky;top:24px;align-self:start;font-size:14px}.toc-title{color:var(--graphite);margin-bottom:10px}aside ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}aside a{display:block;padding:7px 0 7px 12px;border-left:1px solid var(--rule);color:var(--ink-2);text-decoration:none;transition:color 200ms var(--ease),border-color 200ms var(--ease)}aside a:hover{color:var(--accent);border-color:var(--accent)}
   main{max-width:720px;min-width:0}.intro{font-size:20px;color:var(--ink-2)}section{margin:64px 0;scroll-margin-top:24px}h1{font-size:clamp(44px,6vw,72px)}h2{font-size:clamp(28px,3.4vw,40px);margin-bottom:18px}
-  main p,li{font-size:17px;line-height:1.68;color:var(--ink-2)}li{margin-bottom:8px}a{color:var(--co2)}.scroll{overflow:auto;margin:18px 0}
+  main p,li{font-size:17px;line-height:1.68;color:var(--ink-2)}li{margin-bottom:8px}a{color:var(--accent)}.scroll{overflow:auto;margin:18px 0}
   table{width:100%;border-collapse:collapse;text-align:left;font:13px var(--font-data);font-variant-numeric:tabular-nums}th{font-weight:400;color:var(--graphite)}td,th{padding:10px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}.r{text-align:right}tbody th{color:var(--ink)}
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}.pic{background:var(--plate);border:1px solid var(--rule);padding:8px;line-height:0}.pic img{width:100%;height:auto;image-rendering:pixelated}.pair figcaption{grid-column:1/-1;color:var(--graphite)}
-  .caveat{border-left:2px solid var(--co2);padding-left:14px}
+  .caveat{border-left:2px solid var(--accent);padding-left:14px}
   @media(max-width:900px){.layout{grid-template-columns:minmax(0,1fr)}aside{display:none}header{flex-wrap:wrap}h1{font-size:44px}}
 </style>
