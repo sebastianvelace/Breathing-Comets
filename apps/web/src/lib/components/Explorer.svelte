@@ -1,6 +1,6 @@
 <script lang="ts">
   import ProductNav from "#lib/components/ProductNav.svelte";
-  import { onMount, tick, untrack } from "svelte";
+  import { onMount, tick } from "svelte";
   import { wrap, proxy } from "comlink";
   import { page } from "$app/state";
   import { replaceState } from "$app/navigation";
@@ -23,7 +23,6 @@
     SpectrumPoint,
   } from "#lib/data/types.js";
   import type { StackService } from "#lib/workers/stack.worker.js";
-  import { propagate } from "#lib/data/coordinates.js";
   import SpxViewer from "./SpxViewer.svelte";
   import Timeline from "./Timeline.svelte";
   import ModeSwitch from "./ModeSwitch.svelte";
@@ -37,6 +36,7 @@
   import { channels, nearestChannel } from "#lib/astro/hips.js";
   import { spectrumPosition } from "#lib/astro/spectrum-position.js";
   import { comparisonPair } from "#lib/astro/comparison.js";
+  import { referenceCounterpart } from "#lib/astro/gaia-target.js";
 
   let { embed = false }: { embed?: boolean } = $props();
   const targets = [
@@ -128,9 +128,9 @@
       ? jplObjects[closest]
       : [];
   });
-  const star = $derived(
-    gaia.find((s) => s.source_id === manifest?.gaia_target_id),
-  );
+  const star = $derived(manifest?.slug
+    ? gaia.find(s => s.source_id === manifest?.gaia_target_id)
+    : manifest ? referenceCounterpart(gaia, manifest.ra, manifest.dec) : undefined);
   const gaiaUrl = $derived(manifest ? manifest.slug
     ? `/data/targets/${encodeURIComponent(manifest.slug)}/${manifest.gaia}`
     : manifest.gaia : "");
@@ -331,10 +331,9 @@
   $effect(() => {
     const url = gaiaUrl, attempt = gaiaRetry;
     void attempt;
-    const data = untrack(() => manifest);
     gaia = [];
     gaiaState = "loading";
-    if (!url || !data) return;
+    if (!url) return;
     const abort = new AbortController();
     fetch(url, {signal: abort.signal})
       .then(r => {
@@ -346,17 +345,6 @@
         if (!Array.isArray(list)) throw Error("Invalid Gaia catalog");
         gaia = list;
         gaiaState = "ready";
-        if (!data.slug) {
-          const candidates = list.filter(s => s.pmra !== null && s.pmdec !== null)
-            .map(s => {
-              const [r, d] = propagate(s.ra, s.dec, s.pmra!, s.pmdec!, s.ref_epoch, 61041);
-              return {star: s, distance: Math.hypot(
-                (((r - data.ra + 540) % 360) - 180) * Math.cos(data.dec * Math.PI / 180),
-                d - data.dec) * 3600};
-            }).sort((a, b) => a.distance - b.distance);
-          if (manifest) manifest = {...manifest, gaia_target_id:
-            candidates[0]?.distance < 2 ? candidates[0].star.source_id : undefined};
-        }
       }).catch(() => {
         if (!abort.signal.aborted) gaiaState = "failed";
       });
