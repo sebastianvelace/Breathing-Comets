@@ -19,13 +19,13 @@ All results below describe observed verification. The user confirmed that the re
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
 | 4 | Scientific core | Done | 8f9b92b + c0b908b | Golden model passes; all 25 original assertions retained; full network suite 9 passed | Slow independent table acquisition is bounded and ETag-validated. |
 | 5 | Five target precomputation | Partial | cfe29d7 | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
-| 6 | Story Explorer | Done | 21ca8f1 + a2c5bb4 | 28 Vitest; check 0 errors/warnings; build; 3 local and 3 public E2E passed | Arbitrary pixel spectrum belongs to step 7. |
+| 6 | Story Explorer | Done | 4c8e4c0 | 62 production browser tests; guided comparisons, locale/state restoration and 50 unit tests pass | Existing scientific limits remain explicit. |
 | 7 | Live API | Partial | 0cb0cc3 + bf9e845 | Deployed 29P resolve 200; real API stellar ratios and live-click checks pass | General cold acquisition >4 s; JPL asteroid identification unavailable. |
-| 8 | Lab and Aladin | Done | 2c8ccc3 | Real frame-85 tiles, visible attribution and live pixel spectra verified | No current feature blocker. |
+| 8 | Lab and Aladin | Done | 4c8e4c0 | Real frame-85 tiles and live spectra pass; expanded layers usable at 390/1024/1280/1440 px | No current feature blocker. |
 | 9 | Small-Body Lab | Done | 8f9b92b | All 50 absolute validation pairs; integrity and interval/tier E2E pass | Ratios retain original export rounding, stated in UI. |
-| 10 | Landing | Partial | fdee401 + 8c78225 | Actual 3I plates; EN/ES and accessibility; deployed mobile LCP 1.410 s, performance 98 | No continuum-subtracted gas map; no invented substitute. |
+| 10 | Landing | Partial | 4c8e4c0 | Actual 3I plates; global navigation; EN/ES; deployed mobile LCP 1.170 s, performance 98 | No continuum-subtracted gas map; no invented substitute. |
 | 11 | Comets, method, about and Spanish | Done | d7fe353 + follow-up | Atlas, 3I/29P details, method and about pages verified EN/ES | Unsupported 3I August H2O remains withheld. |
-| 12 | Final tests | Partial | 56512f8 | 50 production browser checks; 9 network checks; 47 frontend unit checks pass | Known R Dra failure and cold-acquisition budget remain explicit. |
+| 12 | Final tests | Partial | 4c8e4c0 | 62 production browser checks; 50 frontend unit checks pass; previous full network suite 9/9 | Known R Dra failure and cold-acquisition budget remain explicit. |
 | 13 | Written submission | Prepared | a4526b6 | Generated from product JSON; one user-disclosure marker | Video is user-owned; user writes prior-work disclosure and supplies video URL. |
 | 14 | Freeze | Pending | — | Not run | — |
 
@@ -345,7 +345,7 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - Final local frontend verification after readiness patch: Vitest `47 passed (47)`; `npm run check` reports `0 errors and 0 warnings`; production build passes. Data and submission checks: `101 passed in 0.10s`. Independent AST comparison: 25 original assertions, 30 current, zero missing or altered.
 - Latest landing build references 21 initial JavaScript modules, totalling 75,398 bytes with gzip level 9, below the 90,000-byte budget; lazy Lab imports remain separate.
 
-## Final observed checkpoint
+## Previous observed checkpoint (before experience revision)
 
 - Application commit: `56512f8`, confirmed published on https://breathingcomets.org before the run.
 - Full deployed Chromium suite: **`50 passed (2.9m)`**. Includes real API clicks, Aladin frame 85, five prepared targets with the API blocked, mobile EN/ES, restored URLs, NEO intervals and scripted-control readiness. Retained output: `docs/verification/production-e2e.txt`.
@@ -373,3 +373,12 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - The first-visit tour offer is inline beside help, so it cannot intercept the image controls. Its existing dismissal and keyboard-tour behavior remain covered. WISE uses the approved brown-dwarf description in both locales.
 - Final type check: 0 errors / 0 warnings. Vitest: 50 passed. Data/submission consistency: 101 passed in 0.17s. Initial landing JavaScript: 76,099 gzip bytes in 22 referenced modules, below 90,000 bytes.
 - First complete local run: 62 passed (1.2m). Final local rerun after Cube-to-Story and readiness guards: **62 passed (1.1m)**. Deployment verification will follow publication. See UX_IMPROVEMENTS.md for the behavior changes and tradeoffs.
+
+## Published experience checkpoint (2026-11-15)
+
+- Pages check completed successfully for `4c8e4c0`. Public HTML was checked for the new navigation and approved WISE copy before testing.
+- **Complete production browser suite: 62 passed (1.8m).** Retained output: `docs/verification/experience-production-e2e.txt`. No original scientific acceptance assertion was changed.
+- Latest local suite: 62 passed (1.1m); frontend unit suite: 50 passed; type check 0 errors / 0 warnings; build passed; data/submission consistency 101 passed.
+- Manually confirmed live Spanish switching and the mobile 2025 YH5 panel with its unchanged size, interval, evidence tier, systematic floor and single-visit warnings. A stale inspection tab was replaced after a debugger timeout; no application failure was inferred from that tool error.
+- All three post-push checks passed: exact author/committer identity, zero prohibited attribution message matches, remote main only. User-owned AGENTS.md and video files remain untouched.
+- Final deployed landing Lighthouse 13.6.0 mobile audit: performance 98, accessibility/best-practices/SEO 100; LCP 1169.7645 ms, TBT 157 ms, CLS 0.0000919631. Initial referenced JS: 76,099 gzip bytes. Raw-derived measurements and hash: `docs/verification/performance.json`. This is one observed audit, not a percentile guarantee.

@@ -89,5 +89,40 @@
     "gzip_bytes": 75398,
     "budget_bytes": 90000,
     "measurement": "Sum of gzip level 9 sizes of distinct JavaScript files referenced by the generated index.html; excludes lazy Lab imports."
+  },
+  "experience_revision_landing_mobile": {
+    "source_commit": "4c8e4c0aa1b35323591ee914ff66c3224a2c928d",
+    "url": "https://breathingcomets.org/",
+    "fetch_time": "2026-11-15T06:21:20.987Z",
+    "lighthouse": "13.6.0",
+    "form_factor": "mobile",
+    "scores": {
+      "performance": 0.98,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "metrics": {
+      "largest-contentful-paint": {
+        "value": 1169.7645000000002,
+        "unit": "millisecond"
+      },
+      "total-blocking-time": {
+        "value": 157,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 9.196311827417465e-05,
+        "unit": "unitless"
+      }
+    },
+    "raw_report": "breathing-comets-ux-lighthouse.json",
+    "raw_sha256": "f47978d5442677db184b14ddeed453b90214e59a7d87cb336884a8eeadd194b7",
+    "initial_js": {
+      "referenced_modules": 22,
+      "gzip_bytes": 76099,
+      "budget_bytes": 90000,
+      "method": "Sum of distinct JavaScript references in generated index.html, compressed with gzip level 9."
+    }
   }
 }

@@ -25,3 +25,5 @@ Locale switches perform a complete navigation so static translated content and r
 ## Verification
 
 The browser suite covers live spectra, Aladin, offline prepared fields, view restoration, language transitions, delayed requests, sharing, navigation, keyboard operation and mobile layouts. Explicit pointer-hit checks exercise Lab with expanded layers at 390, 1024, 1280 and 1440 pixels. First-visit invitations are checked on narrow English and Spanish views. See STATUS.md for final observed counts and deployment evidence.
+
+Final observed results on application commit 4c8e4c0: production E2E 62 passed (1.8m), local E2E 62 passed (1.1m), frontend unit tests 50 passed, type check 0 errors/0 warnings, build passed, data/submission checks 101 passed. Mobile landing Lighthouse: performance 98, accessibility/best-practices/SEO 100, LCP 1.170 s. This observed audit does not establish a latency percentile. The general cold-field and scientific-data limitations remain listed in STATUS.md.

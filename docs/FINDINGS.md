@@ -151,3 +151,9 @@ Lighthouse 13.6 (installed outside the repo, Playwright's Chromium), against pro
 - Project GPL v3 licence, exact Aladin notices and Geist OFL notices retained. The installed Aladin package has LGPL in LICENSE and GPL in COPYING/metadata; both are disclosed without guessing away the discrepancy.
 - Remaining actual limits: R Dra D6 September coverage, cold arbitrary acquisition latency, JPL identification availability, and absent continuum-subtracted gas maps/fully supported August H2O validation. None is hidden by a changed assertion or fabricated data.
 - Final published application 56512f8 passes the complete production browser suite: `50 passed (2.9m)`, including the previously early-clicking NEO and Blink controls. Frontend check remains 0/0 and all 47 unit tests pass.
+
+## Experience walkthrough resolution (2026-11-15)
+
+The subsequent live walkthrough exposed three missing transition checks despite the earlier passing suite: locale changes could retain the old document language and lose Explorer parameters; sharing while acquiring another target could copy the old field; and Layers could intercept Lab playback. Commits 022cb5b and 4c8e4c0 address these with explicit acquisition identity, localized document navigation, request cancellation and layers in normal flow. The suite now includes the actual failing transitions and pointer-hit checks at four widths.
+
+The same revision adds common workspace navigation, target-specific observation guidance, nearby-wavelength visit comparison, comparison recovery actions, readable adjacent NEO details, mobile Lab, keyboard-accessible asteroid chart links and an inline tour invitation. Uncertainty, systematic floor and observing caveats remain adjacent to each measurement. The complete published suite passes 62/62; local type check is 0/0, 50 unit tests pass and 101 data/submission checks pass. Scientific data and original expected assertions were not changed.
