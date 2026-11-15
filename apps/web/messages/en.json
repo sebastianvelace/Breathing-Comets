@@ -334,7 +334,7 @@
   "method_s9_l2": "Gas needs nearby or very productive objects: the band flux scales as Q r_h⁻² Δ⁻². Beyond about 10 au the Q is not trusted.",
   "method_s9_l3": "The wavelength of D5 and D6 depends on the spectral calibration version; the shift stays free in every fit.",
   "method_s9_l4": "A professional multi-comet catalogue exists (spherex-comet by bumhooLIM, 68 comets, results not public). We do not claim a first census; our contribution is a public, reproducible tool with its checks.",
-  "method_s9_l5": "Cold-cache stacks take about 5–6 s; the precomputed targets load instantly.",
+  "method_s9_l5": "A field requested for the first time takes about 5–20 s to stack (measured 2–22 s, depending on coverage and catalog services); repeat views and the precomputed targets load instantly.",
   "method_s10": "10. Reproducibility",
   "method_s10_p1": "The record below is generated from the product's own files at commit {commit}. Source code, pipelines and tests are in the repository. Some headline results are retained research summaries whose full generators and inputs are not yet in the public repository: the asteroid NEATM fits and cross-validation, the ε Indi B differential parallax, the comet band fits and their 16–84% intervals, and the null and injection tests. They are labelled as retained wherever they appear.",
   "method_s10_col": "Item",

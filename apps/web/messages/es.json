@@ -334,7 +334,7 @@
   "method_s9_l2": "El gas exige objetos cercanos o muy productivos: el flujo de la banda escala como Q r_h⁻² Δ⁻². Más allá de unas 10 au, Q no es fiable.",
   "method_s9_l3": "La longitud de onda de D5 y D6 depende de la versión de la calibración espectral; el desplazamiento se deja libre en cada ajuste.",
   "method_s9_l4": "Existe un catálogo profesional de varios cometas (spherex-comet de bumhooLIM, 68 cometas, resultados no públicos). No afirmamos un primer censo; nuestro aporte es una herramienta pública y reproducible con sus verificaciones.",
-  "method_s9_l5": "Las pilas en frío tardan unos 5–6 s; los objetivos precalculados cargan al instante.",
+  "method_s9_l5": "Un campo pedido por primera vez tarda unos 5–20 s en apilarse (medido entre 2 y 22 s, según la cobertura y los servicios de catálogo); las vistas repetidas y los objetivos precalculados cargan al instante.",
   "method_s10": "10. Reproducibilidad",
   "method_s10_p1": "El registro de abajo se genera a partir de los archivos del propio producto en el commit {commit}. El código, los pipelines y las pruebas están en el repositorio. Algunos resultados principales son resúmenes de investigación conservados cuyos generadores y datos de entrada completos aún no están en el repositorio público: los ajustes NEATM y la validación cruzada de asteroides, el paralaje diferencial de ε Indi B, los ajustes de banda de cometas con sus intervalos 16–84% y las pruebas nulas y de inyección. Se marcan como conservados donde aparecen.",
   "method_s10_col": "Elemento",
