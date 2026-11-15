@@ -85,9 +85,10 @@ test('retrying Gaia preserves the loaded images and selected observation', async
   await page.goto('/explore?target=barnard');
   await expect(page.getByTestId('share-view')).toBeEnabled();
   const timeline=page.getByRole('slider',{name:'Observation timeline'});
+  const initialTime=new URL(page.url()).searchParams.get('t');
   await timeline.press('End');
   const observation=await timeline.inputValue();
-  await expect(page).toHaveURL(/t=/);
+  await expect.poll(()=>new URL(page.url()).searchParams.get('t')).not.toBe(initialTime);
   const before=new URL(page.url());
   await page.getByRole('status').filter({hasText:'Gaia DR3 unavailable'}).getByRole('button',{name:'Retry'}).click();
   await expect(page.getByRole('status').filter({hasText:'Loading Gaia DR3 overlay'})).toBeVisible();
