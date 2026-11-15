@@ -422,3 +422,19 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
   team still owns final video editing, personal prior-work disclosure and the
   actual Space Apps submission. No science data or expected scientific assertions
   were changed for this revision.
+
+## Pre-submission polish (2026-11-15)
+
+- Exploratory production walkthrough found: comet/asteroid searches in the Explorer
+  ended at a message with no way forward; a target-level caveat was repeated under
+  every field note (ε Indi B parallax note under methane; WISE W2 note three times);
+  the Story spectrum appeared below the fold after a click; SIMBAD identifiers such as
+  `* alf Ori` were used as titles; unknown paths returned the landing with HTTP 200;
+  the method page stated 5–6 s for cold stacks although 2–22 s had been measured.
+- Fixed in e65231d and 1ff4097: moving-target link to the tracked comet page (29P,
+  3I via C/2025 N1), the atlas or the Small-Body Lab; one caveat beside the measurement
+  it qualifies; scroll to the measured spectrum; the typed name for SIMBAD results; a
+  static 404 page; the measured first-request time on the method page (EN/ES).
+- New `e2e/polish.spec.ts` (5 tests). Local: 69 passed, 1 skipped (404 needs Pages).
+  **Production: 70 passed (2.7m)**, raw output `docs/verification/polish-production-e2e.txt`.
+  Type check 0/0, Vitest 58 passed, build passed. No scientific values changed.

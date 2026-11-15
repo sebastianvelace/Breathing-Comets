@@ -191,7 +191,7 @@ Nothing is counted as passing unless it was observed. Raw outputs are retained i
 
 | Check | Result | When |
 |---|---|---|
-| Production browser suite (Playwright, Chromium, 13 spec files) | **65 / 65 passed** (2.6 min) against https://breathingcomets.org | Re-run 2026-11-15 |
+| Production browser suite (Playwright, Chromium, 14 spec files) | **70 / 70 passed** (2.7 min) against https://breathingcomets.org | Re-run 2026-11-15 |
 | Python acceptance (offline) | **202 passed, 1 known failure** (R Dra D6 baseline, see §7), 9 network tests deselected | Re-run 2026-11-15 |
 | Python real-network suite (S3, IRSA, Horizons) | 9 / 9 passed | Recorded in STATUS.md |
 | Frontend unit tests (Vitest) | **58 / 58 passed** (incl. parallax vs Astropy/DE440, ≤ 4.67 mas) | Re-run 2026-11-15 |
@@ -219,6 +219,9 @@ Stated here and on the method page, never hidden:
   September baseline fails and is reported as failing.
 - **Cold arbitrary fields** can take longer than the 4 s goal (observed 2–22 s on
   first acquisition); prepared targets and warm fields are fast.
+- **Moving objects** (comets, asteroids) are not tracked inside the Explorer: a
+  search explains this and links to the tracked comet pages, the atlas or the
+  Small-Body Lab.
 - **JPL Small-Body Identification** can time out; it is shown as unavailable, never
   as an empty result.
 - **No continuum-subtracted gas maps** are produced; band images are labelled as such.

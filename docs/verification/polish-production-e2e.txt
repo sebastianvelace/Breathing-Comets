@@ -1,0 +1,74 @@
+
+Running 70 tests using 1 worker
+
+[1/70] e2e/about.spec.ts:6:1 › about page states what it is, the challenge, the credits and the AI use
+[2/70] e2e/about.spec.ts:20:1 › figures on the page come from the data and links resolve
+[3/70] e2e/about.spec.ts:29:1 › Spanish about page and mobile layout
+[4/70] e2e/about.spec.ts:40:1 › landing footer and method link to about
+[5/70] e2e/catalog.spec.ts:4:1 › a free-field Gaia counterpart survives a detector change without requerying the catalog
+[6/70] e2e/comet-detail.spec.ts:6:1 › atlas links to both detail pages
+[7/70] e2e/comet-detail.spec.ts:13:1 › 29P page shows real frames ordered by wavelength and the CO/CO2 spectra
+[8/70] e2e/comet-detail.spec.ts:32:1 › 3I page: August epoch is the validated one, December carries its caveat
+[9/70] e2e/comet-detail.spec.ts:44:1 › sweep animation advances frames and can be paused
+[10/70] e2e/comet-detail.spec.ts:57:1 › Spanish detail page keeps decimal points and fits a phone
+[11/70] e2e/comets.spec.ts:6:1 › every census comet is plotted and tabulated with its status
+[12/70] e2e/comets.spec.ts:18:1 › honesty notes and the far-comet flag are visible
+[13/70] e2e/comets.spec.ts:26:1 › selecting a point from the keyboard shows the numbers and diagnostics
+[14/70] e2e/comets.spec.ts:38:1 › status filter narrows table and plot
+[15/70] e2e/comets.spec.ts:46:1 › validation compares measured and published values and keeps H2O pending
+[16/70] e2e/comets.spec.ts:56:1 › Spanish atlas keeps decimal points; mobile does not scroll sideways
+[17/70] e2e/comets.spec.ts:68:1 › landing leads to the atlas
+[18/70] e2e/experience.spec.ts:3:1 › language switch translates the catalog without a manual reload
+[19/70] e2e/experience.spec.ts:13:1 › language switch preserves the current target, observation and comparison
+[20/70] e2e/experience.spec.ts:35:1 › sharing cannot copy the previous target while the new data are pending
+[21/70] e2e/experience.spec.ts:53:1 › a delayed name lookup cannot replace a target selected afterwards
+[22/70] e2e/experience.spec.ts:72:1 › retrying Gaia preserves the loaded images and selected observation
+[23/70] e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 390px
+[24/70] e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1024px
+[25/70] e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1280px
+[26/70] e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1440px
+[27/70] e2e/experience.spec.ts:130:1 › mobile navigation connects the three workspaces and exposes a guided comparison
+[28/70] e2e/experience.spec.ts:163:1 › a selected asteroid exposes its size and interval beside the catalog
+[29/70] e2e/experience.spec.ts:175:1 › guided focus survives the viewer replacement when leaving Diff λ
+[30/70] e2e/experience.spec.ts:184:3 › first-visit invitation leaves the mobile image controls reachable in en
+[31/70] e2e/experience.spec.ts:184:3 › first-visit invitation leaves the mobile image controls reachable in es
+[32/70] e2e/lab.spec.ts:5:1 › Lab requests the real DR1 HiPS frame 85 and preserves Aladin attribution
+[33/70] e2e/lab.spec.ts:22:1 › a real Lab pixel streams at least fifty measured spectrum points
+[34/70] e2e/landing.spec.ts:13:1 › hero opens the Barnard story with real frames
+[35/70] e2e/landing.spec.ts:25:1 › all five target entries open real Explorer stacks
+[36/70] e2e/landing.spec.ts:43:1 › every field-note value is shown with its caveat
+[37/70] e2e/landing.spec.ts:52:1 › internal links and anchors resolve
+[38/70] e2e/landing.spec.ts:66:1 › hero loop plays, pauses, and respects reduced motion
+[39/70] e2e/landing.spec.ts:86:1 › blink, Diff λ slider and spectrum bands work from the keyboard
+[40/70] e2e/landing.spec.ts:113:1 › visible focus ring on the primary action
+[41/70] e2e/landing.spec.ts:121:1 › /es is Spanish with decimal points
+[42/70] e2e/landing.spec.ts:136:3 › mobile › no horizontal scroll in either language
+[43/70] e2e/landing.spec.ts:145:1 › published 3I packet fills hero, §4 and §5 with real plates and caveats
+[44/70] e2e/landing.spec.ts:162:1 › Spanish landing shows the Spanish 3I caveats
+[45/70] e2e/landing.spec.ts:170:1 › a persistent call to action follows the reader and a closing band ends the page
+[46/70] e2e/landing.spec.ts:189:1 › persistent call to action fits on a phone without horizontal scroll
+[47/70] e2e/method.spec.ts:8:1 › method page renders all ten sections with data-driven tables
+[48/70] e2e/method.spec.ts:19:1 › claims carry their caveats: status counts, NEO median by construction, pending injection
+[49/70] e2e/method.spec.ts:28:1 › table of contents jumps to its section
+[50/70] e2e/method.spec.ts:35:1 › Spanish method keeps decimal points and has no ambiguous commas; mobile fits
+[51/70] e2e/method.spec.ts:47:1 › landing footer and atlas link to the method
+[52/70] e2e/neo.spec.ts:4:1 › every published diameter retains its interval, evidence tier and systematic floor
+[53/70] e2e/neo.spec.ts:23:1 › NEO Spanish page preserves decimal points and fits a mobile viewport
+[54/70] e2e/neo.spec.ts:31:1 › static catalog stays readable while scripted controls cannot yet respond
+[55/70] e2e/polish.spec.ts:3:1 › searching a comet explains why it moves and links to its tracked page
+[56/70] e2e/polish.spec.ts:17:1 › 3I/ATLAS resolves through its C/2025 N1 designation to the detail page, also in Spanish
+[57/70] e2e/polish.spec.ts:26:1 › a target caveat is shown once, beside the measurement it qualifies
+[58/70] e2e/polish.spec.ts:38:1 › clicking the sky in Story brings the measured spectrum into view
+[59/70] e2e/polish.spec.ts:51:1 › an unknown address returns a real 404 page
+[60/70] e2e/resilience.spec.ts:3:1 › all prepared targets and the 3I landing remain available when the live API fails
+[61/70] e2e/resilience.spec.ts:20:1 › iPhone playback, comparison and sharing fit the viewport
+[62/70] e2e/spectrum.spec.ts:3:1 › a real sky click streams at least fifty forced-ePSF points
+[63/70] e2e/story.spec.ts:3:1 › landing opens real Barnard frames and Gaia moves by epoch
+[64/70] e2e/story.spec.ts:24:1 › WISE reference spectrum is deblended and independent of clicked pixels
+[65/70] e2e/story.spec.ts:59:1 › shared URL restores the same observation in a fresh context
+[66/70] e2e/tour.spec.ts:5:1 › tour is offered, not forced: no overlay on a normal visit
+[67/70] e2e/tour.spec.ts:12:1 › guided tour dims the page, walks six steps and closes with the keyboard
+[68/70] e2e/tour.spec.ts:44:1 › Escape closes the tour, focus returns, and the page was not operated
+[69/70] e2e/tour.spec.ts:59:1 › first-visit nudge appears once and is remembered
+[70/70] e2e/tour.spec.ts:70:1 › tour works in Spanish and on a phone
+  70 passed (2.7m)
