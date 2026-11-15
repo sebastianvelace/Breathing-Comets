@@ -1,4 +1,7 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
+  let mounted = $state(false);
+  onMount(() => {mounted = true;});
   import { cometAtlas, classLabel, STATUSES, statusLabel, velocityDropPercent, type CometStatus } from "#lib/data/comets.js";
   import { fmtSciUnicode } from "#lib/data/format.js";
   import CometPlot from "#lib/components/CometPlot.svelte";
@@ -74,9 +77,9 @@
   <section>
     <h2>{m.comets_table()}</h2>
     <div class="filters">
-      <label>{m.comets_filters_search()}<input type="search" bind:value={filter} /></label>
+      <label>{m.comets_filters_search()}<input type="search" bind:value={filter} disabled={!mounted} /></label>
       <label>{m.comets_filters_status()}
-        <select bind:value={status}><option value="">{m.comets_all()}</option>{#each STATUSES as s (s)}<option value={s}>{label(s)}</option>{/each}</select>
+        <select bind:value={status} disabled={!mounted}><option value="">{m.comets_all()}</option>{#each STATUSES as s (s)}<option value={s}>{label(s)}</option>{/each}</select>
       </label>
     </div>
     <div class="scroll">
@@ -90,7 +93,7 @@
         <tbody>
           {#each rows as c (c.slug)}
             <tr id="comet-{c.slug}" class:chosen={selected === c.slug} data-testid="comet-row" data-slug={c.slug} data-status={c.co2.status}>
-              <td><button onclick={() => pick(c.slug)} aria-pressed={selected === c.slug}>{c.name}</button>
+              <td><button disabled={!mounted} onclick={() => pick(c.slug)} aria-pressed={selected === c.slug}>{c.name}</button>
                 {#if detailSlugs.includes(c.slug)}<a class="badge" href={localizeHref(`/comets/${c.slug}`)} data-testid="detail-link">{m.comets_open_detail()}</a>{/if}
                 {#if c.flags.includes("far_unreliable")}<span class="badge">{m.comets_flag_far()}</span>{/if}</td>
               <td class="r">{sig(c.r_au)}</td><td class="r">{sig(c.delta_au)}</td>

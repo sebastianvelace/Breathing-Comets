@@ -88,7 +88,9 @@ test("blink, Diff λ slider and spectrum bands work from the keyboard", async ({
   const blink = page.getByTestId("blink-plate");
   await blink.scrollIntoViewIfNeeded();
   await expect(blink).toHaveAttribute("data-epoch", "a");
-  await page.getByRole("button", { name: /^B · 2026-09-02$/ }).focus();
+  const epochB = page.getByRole("button", { name: /^B · 2026-09-02$/ });
+  await expect(epochB).toBeEnabled();
+  await epochB.focus();
   await page.keyboard.press("Enter");
   await expect(blink).toHaveAttribute("data-epoch", "b");
 

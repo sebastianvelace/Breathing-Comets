@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
   import * as m from "#lib/paraglide/messages.js";
   import { localizeHref } from "#lib/paraglide/runtime.js";
   import { bands } from "#lib/astro/bands.js";
@@ -11,6 +12,8 @@
     | { status: "ready"; points: Point[]; name: string };
 
   const SLUG = "eps-indi-b";
+  let mounted = $state(false);
+  onMount(() => {mounted = true;});
   let spec = $state<Load>({ status: "idle" });
   let host: HTMLElement | undefined = $state();
   let selected = $state<number | null>(null);
@@ -159,6 +162,7 @@
       {#each bands as band, i (band.label)}
         <button
           type="button"
+          disabled={!mounted}
           aria-pressed={selected === i}
           style:--swatch={colorVar(band.color)}
           onclick={() => (selected = selected === i ? null : i)}

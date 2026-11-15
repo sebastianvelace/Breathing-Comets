@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
   import * as m from "#lib/paraglide/messages.js";
   import Plate from "./Plate.svelte";
   import { fmtLam, gaiaPixel, isoDate, landingMedia } from "./landing.js";
@@ -26,6 +27,8 @@
   const y0 = Math.max(0, Math.min(grid.ny - 2 * HALF, Math.round(cy - HALF)));
 
   let showB = $state(false);
+  let mounted = $state(false);
+  onMount(() => {mounted = true;});
   let blinking = $state(false);
   let drawn = $state(false);
   let near = $state(false);
@@ -143,17 +146,19 @@
     <div class="controls" role="group" aria-label={m.landing_s1_controls()}>
       <button
         type="button"
+        disabled={!mounted}
         aria-pressed={!showB && !blinking}
         onclick={() => ((blinking = false), (showB = false))}
         >{m.landing_s1_epoch_a({ date: isoDate(a.date) })}</button
       >
       <button
         type="button"
+        disabled={!mounted}
         aria-pressed={showB && !blinking}
         onclick={() => ((blinking = false), (showB = true))}
         >{m.landing_s1_epoch_b({ date: isoDate(b.date) })}</button
       >
-      <button type="button" aria-pressed={blinking} onclick={() => (blinking = !blinking)}>
+      <button type="button" disabled={!mounted} aria-pressed={blinking} onclick={() => (blinking = !blinking)}>
         {blinking ? m.landing_pause() : m.landing_s1_blink()}
       </button>
     </div>

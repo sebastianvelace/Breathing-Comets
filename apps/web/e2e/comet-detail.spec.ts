@@ -17,14 +17,12 @@ test("29P page shows real frames ordered by wavelength and the CO/CO2 spectra", 
   const slider = page.getByRole("slider");
   await expect(slider).toHaveAttribute("max", String(d.epochs[0].frames.length - 1));
   const frame = page.getByTestId("detail-frame");
-  // The static HTML is interactive before Svelte hydrates; retry until the handler is attached.
-  await expect(async () => {
-    await slider.focus();
-    await page.keyboard.press("Home");
-    const first = Number(await frame.getAttribute("data-lam"));
-    await page.keyboard.press("End");
-    await expect.poll(async () => Number(await frame.getAttribute("data-lam")), { timeout: 1500 }).toBeGreaterThan(first);
-  }).toPass({ timeout: 20000 });
+  await expect(slider).toBeEnabled();
+  await slider.focus();
+  await page.keyboard.press("Home");
+  const first = Number(await frame.getAttribute("data-lam"));
+  await page.keyboard.press("End");
+  await expect.poll(async () => Number(await frame.getAttribute("data-lam")), { timeout: 1500 }).toBeGreaterThan(first);
   await expect(page.getByTestId("detail-spectrum")).toHaveAttribute("data-points", "32");
   await expect(page.getByTestId("detail-spectrum-co")).toHaveAttribute("data-points", "18");
   await expect(page.getByTestId("detail-validation")).toContainText("4.50 × 10²⁸");

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
   import * as m from "#lib/paraglide/messages.js";
   import Plate from "./Plate.svelte";
   import { fmtLam, isoDate, landingMedia } from "./landing.js";
@@ -9,6 +10,8 @@
   const diff = d.diff_lambda;
 
   let split = $state(50);
+  let mounted = $state(false);
+  onMount(() => {mounted = true;});
 </script>
 
 <section class="section" id="diff" aria-labelledby="s2-title">
@@ -63,6 +66,7 @@
       <span>{m.landing_s2_slider()}</span>
       <input
         type="range"
+        disabled={!mounted}
         min="0"
         max="100"
         step="1"

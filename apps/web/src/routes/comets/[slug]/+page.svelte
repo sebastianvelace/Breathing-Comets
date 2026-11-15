@@ -1,4 +1,7 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
+  let mounted = $state(false);
+  onMount(() => {mounted = true;});
   import Plate from "#lib/components/landing/Plate.svelte";
   import SpectrumPlot from "#lib/components/SpectrumPlot.svelte";
   import { classLabel, statusLabel, type CometStatus } from "#lib/data/comets.js";
@@ -15,7 +18,7 @@
   let epochId = $state<string>("");
   let index = $state(0);
   let sweeping = $state(false);
-  const epoch = $derived(d.epochs.find((e) => e.id === epochId) ?? d.epochs[d.epochs.length - 1]);
+  const epoch = $derived(d.epochs.find((e) => e.id === epochId) ?? d.epochs.find(e => e.id === "2025-08") ?? d.epochs[d.epochs.length - 1]);
   const frame = $derived(epoch.frames[Math.min(index, epoch.frames.length - 1)]);
   const spectra = $derived(d.spectrum.by_epoch[epoch.id]);
   const census = $derived(d.census);
@@ -78,7 +81,7 @@
   {#if d.epochs.length > 1}
     <div class="epochs" role="group" aria-label={m.cd_epochs()}>
       {#each d.epochs as e (e.id)}
-        <button type="button" aria-pressed={epoch.id === e.id} onclick={() => (epochId = e.id)} data-epoch={e.id}>{e.id}</button>
+        <button type="button" disabled={!mounted} aria-pressed={epoch.id === e.id} onclick={() => (epochId = e.id)} data-epoch={e.id}>{e.id}</button>
       {/each}
     </div>
   {/if}
@@ -107,9 +110,9 @@
         <div class="controls">
           <label class="slider">
             <span>{m.cd_slider()}</span>
-            <input type="range" min="0" max={epoch.frames.length - 1} step="1" bind:value={index} aria-valuetext={`${frame.lam_um.toFixed(2)} µm`} />
+            <input type="range" disabled={!mounted} min="0" max={epoch.frames.length - 1} step="1" bind:value={index} aria-valuetext={`${frame.lam_um.toFixed(2)} µm`} />
           </label>
-          <button type="button" aria-pressed={sweeping} onclick={() => (sweeping = !sweeping)}>{sweeping ? m.cd_pause() : m.cd_sweep()}</button>
+          <button type="button" disabled={!mounted} aria-pressed={sweeping} onclick={() => (sweeping = !sweeping)}>{sweeping ? m.cd_pause() : m.cd_sweep()}</button>
           <span class="mono">{m.cd_frame_of({ n: index + 1, total: epoch.frames.length })}</span>
         </div>
       </div>
