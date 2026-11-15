@@ -1,0 +1,71 @@
+{
+  "reprojection": {
+    "synthetic": true,
+    "input_fraction": [
+      0.49000000000648924,
+      0.49000000000739874
+    ],
+    "output_flux": 24.010000228881836,
+    "flagged_input_flux": 100.0,
+    "output_flags": 0,
+    "official_hard_flag_masked": false,
+    "returned_variance": 1.0,
+    "independent_pixel_variance": 0.2502000399997221,
+    "variance_factor": 3.9968019189809505
+  },
+  "bad_reference": {
+    "synthetic": true,
+    "true_static_flux": 10.0,
+    "invalid_reference_flux": 100.0,
+    "invalid_reference_flags": 4,
+    "result_flux": -30.0,
+    "result_flags": 0,
+    "diff_available": true,
+    "expected": "No valid three-reference result: only two unflagged references remain."
+  },
+  "unbracketed_color": {
+    "synthetic": true,
+    "sky_changes": false,
+    "wavelengths_um": [
+      4.5,
+      4.52,
+      4.54,
+      4.56
+    ],
+    "returned_difference": -4.0,
+    "diff_available": true,
+    "expected_same_color_difference": 0.0
+  },
+  "haser_independent_integral": [
+    {
+      "aperture_over_scale": 0.001,
+      "direct_integral": 0.0015665344832182862,
+      "product": 0.00156653448321822,
+      "relative_error": 4.218847493575595e-14
+    },
+    {
+      "aperture_over_scale": 0.01,
+      "direct_integral": 0.015396906869439217,
+      "product": 0.015396906869438,
+      "relative_error": 7.904787935331115e-14
+    },
+    {
+      "aperture_over_scale": 0.1,
+      "direct_integral": 0.13747871021663166,
+      "product": 0.13747871021661845,
+      "relative_error": 9.614531393253856e-14
+    },
+    {
+      "aperture_over_scale": 1.0,
+      "direct_integral": 0.7263792479738838,
+      "product": 0.7263792479738307,
+      "relative_error": 7.30526750203353e-14
+    },
+    {
+      "aperture_over_scale": 10.0,
+      "direct_integral": 0.9999836640546393,
+      "product": 0.9999836640546379,
+      "relative_error": 1.4432899320127035e-15
+    }
+  ]
+}

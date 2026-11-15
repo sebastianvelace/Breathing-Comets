@@ -1,0 +1,93 @@
+{
+  "reference_leakage_diagnostic": [
+    {
+      "synthetic": true,
+      "r_au": 1.05,
+      "observer_distance_au": 0.3201562118716425,
+      "phase_deg": 72.24720983805331,
+      "true_diameter_km": 0.5,
+      "fixed_H": 18.0,
+      "results": [
+        {
+          "reference_diameter_km": 0.4,
+          "cv_amplitude_diameter_km": 0.5370821795420823
+        },
+        {
+          "reference_diameter_km": 0.7,
+          "cv_amplitude_diameter_km": 0.46444550737018614
+        },
+        {
+          "reference_diameter_km": 1.0,
+          "cv_amplitude_diameter_km": 0.44574989592328074
+        }
+      ],
+      "blind_fit_diameter_km": 0.49999945254143235
+    },
+    {
+      "synthetic": true,
+      "r_au": 1.5,
+      "observer_distance_au": 1.118033988749895,
+      "phase_deg": 41.810314895778596,
+      "true_diameter_km": 0.5,
+      "fixed_H": 18.0,
+      "results": [
+        {
+          "reference_diameter_km": 0.4,
+          "cv_amplitude_diameter_km": 0.4769411792835991
+        },
+        {
+          "reference_diameter_km": 0.7,
+          "cv_amplitude_diameter_km": 0.502163633435163
+        },
+        {
+          "reference_diameter_km": 1.0,
+          "cv_amplitude_diameter_km": 0.49518993662958566
+        }
+      ],
+      "blind_fit_diameter_km": 0.5000000753039131
+    },
+    {
+      "synthetic": true,
+      "r_au": 2.0,
+      "observer_distance_au": 1.7320508075688772,
+      "phase_deg": 30.000000000000004,
+      "true_diameter_km": 0.5,
+      "fixed_H": 18.0,
+      "results": [
+        {
+          "reference_diameter_km": 0.4,
+          "cv_amplitude_diameter_km": 0.4325410737791763
+        },
+        {
+          "reference_diameter_km": 0.7,
+          "cv_amplitude_diameter_km": 0.5696392428063168
+        },
+        {
+          "reference_diameter_km": 1.0,
+          "cv_amplitude_diameter_km": 0.5998867877756722
+        }
+      ],
+      "blind_fit_diameter_km": 0.5000001051239986
+    }
+  ],
+  "neatm_quadrature": [
+    {
+      "lambda_um": 4.3,
+      "r_au": 1.0,
+      "phase_deg": 40.0,
+      "grid_to_independent_quadrature_ratio": 1.0000278361727997
+    },
+    {
+      "lambda_um": 4.8,
+      "r_au": 1.4,
+      "phase_deg": 80.0,
+      "grid_to_independent_quadrature_ratio": 1.0001865318558683
+    },
+    {
+      "lambda_um": 3.9,
+      "r_au": 1.2,
+      "phase_deg": 100.0,
+      "grid_to_independent_quadrature_ratio": 1.000460965951775
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "retained_nulls": {
+    "n": 79,
+    "snr_only_ge5": 1,
+    "joint_rule_pass": 0,
+    "largest_snr": 5.287096848150391,
+    "note": "Spectral controls are correlated and not processed identically to the sky-subtracted census; no population false-alarm rate is inferred."
+  },
+  "retained_stellar_scale": {
+    "J": {
+      "n": 38,
+      "median": 0.982100857658151,
+      "robust_MAD_sigma": 0.019553278525990442,
+      "sample_standard_deviation_ddof1": 0.0834896757119751
+    },
+    "H": {
+      "n": 39,
+      "median": 1.0080610344885215,
+      "robust_MAD_sigma": 0.03812690857907126,
+      "sample_standard_deviation_ddof1": 0.04878382871791337
+    },
+    "Ks": {
+      "n": 29,
+      "median": 1.0108711782774804,
+      "robust_MAD_sigma": 0.032824994754392024,
+      "sample_standard_deviation_ddof1": 0.057456566161523275
+    },
+    "W1": {
+      "n": 41,
+      "median": 0.9720834740934367,
+      "robust_MAD_sigma": 0.013894305036435609,
+      "sample_standard_deviation_ddof1": 0.0316475315597719
+    },
+    "W2": {
+      "n": 41,
+      "median": 0.9958946281236695,
+      "robust_MAD_sigma": 0.013553903491211976,
+      "sample_standard_deviation_ddof1": 0.025836343311699792
+    }
+  },
+  "cv_transcription": {
+    "n": 50,
+    "ratios_matching_retained_source": 50
+  },
+  "retained_injections": {
+    "joint_detection_rule": {
+      "n": 573,
+      "ratio_percentiles": [
+        0.9933302949816437,
+        1.0007364672833632,
+        1.0921437942646648
+      ],
+      "one_sigma_pull_coverage": 0.5497382198952879
+    },
+    "joint_rule_no_core": {
+      "n": 12,
+      "ratio_percentiles": [
+        0.32144775468150916,
+        1.1614070961128908,
+        5.037156137836553
+      ],
+      "one_sigma_pull_coverage": 0.08333333333333333
+    },
+    "joint_rule_two_core": {
+      "n": 358,
+      "ratio_percentiles": [
+        0.9911582432977833,
+        1.0001782937965862,
+        1.051933061826623
+      ],
+      "one_sigma_pull_coverage": 0.664804469273743
+    }
+  },
+  "wise0855_W2_tail_sensitivity": {
+    "baseline_mJy": 0.44989904167419925,
+    "zero_unobserved_tail_mJy": 0.41472839667367073,
+    "double_flat_unobserved_tail_mJy": 0.48506968667472783,
+    "quoted_sigma_mJy": 0.02,
+    "response_fraction_gt5_um": 0.13894280846143653,
+    "last_supported_bin_um": 4.97127479303061,
+    "last_supported_bin_mJy": 0.24617435190527703
+  },
+  "speed_copy_diagnostic": [
+    {
+      "r_au": 3.2,
+      "baseline_km_s": 0.4751644452187053,
+      "ratio_if_constant_half_km_s_small_aperture": 1.0522672835293128,
+      "ratio_if_constant_half_km_s_exact_haser": 1.0510735921861447,
+      "ratio_if_half_coefficient_small_aperture": 0.5882352941176471
+    },
+    {
+      "r_au": 6.3045,
+      "baseline_km_s": 0.33852722497976756,
+      "ratio_if_constant_half_km_s_small_aperture": 1.4769860829653598,
+      "ratio_if_constant_half_km_s_exact_haser": 1.4670936369193803,
+      "ratio_if_half_coefficient_small_aperture": 0.5882352941176471
+    }
+  ],
+  "barnard_observer_parallax_omitted": {
+    "max_2026_shift_arcsec": 0.545826291870244,
+    "max_native_pixels": 0.08875224258052748
+  },
+  "golden_CO2_recomputed": {
+    "q_s_1": 1.1674317710972488e+27,
+    "statistical_error": 3.004166205315089e+25,
+    "chi2_red": 27.48334369420547,
+    "temperature_K": 100,
+    "extra_width_um": 0.005,
+    "n_points": 26
+  }
+}

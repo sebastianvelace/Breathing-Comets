@@ -1,0 +1,16 @@
+.............................................F.......................... [ 46%]
+........................................................................ [ 92%]
+...........                                                              [100%]
+=================================== FAILURES ===================================
+_______________________ test_r_dra_samples_full_baseline _______________________
+
+    def test_r_dra_samples_full_baseline():
+        header, _ = read_stack(STATIC_DIR / "targets/r-dra/D6.spxf.gz")
+        assert header["frames"][0]["date"][:10] <= "2025-04-30"
+>       assert header["frames"][-1]["date"][:10] >= "2026-09-01"
+E       AssertionError: assert '2026-06-12' >= '2026-09-01'
+
+tests/test_precomputed_targets.py:106: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_precomputed_targets.py::test_r_dra_samples_full_baseline - ...
+1 failed, 154 passed, 8 deselected in 5.56s

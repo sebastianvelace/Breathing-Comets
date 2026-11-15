@@ -1,0 +1,10 @@
+{
+  "source": "retained centroids, independent weighted linear solve; no image remeasurement",
+  "n_used": 194,
+  "n_visits": 9,
+  "bootstrap_draws_used": 968,
+  "parallax_mas": 270.7391727886396,
+  "pmra_mas_yr": 4048.5649211915884,
+  "pmdec_mas_yr": -2491.604432543974,
+  "parallax_visit_bootstrap_half_16_84_mas": 19.485550620407345
+}

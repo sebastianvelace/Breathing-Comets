@@ -199,3 +199,60 @@ passed (3.6m), 15 local affected transitions passed, all 53 frontend unit tests
 passed, type check 0/0 and build passed. The offline Python suite remains 199
 passed with the one unchanged R Dra coverage failure. Retained output is linked
 from STATUS.md; the original reference assertions remain unchanged.
+
+## Scientific audit response (2026-11-15)
+
+The audit in `docs/audits/scientific-2026-11-15/` (reviewed commit f47f1e4)
+reported two P1 and nine P2 findings. Response:
+
+- **F1, fixed in code and in the shipped differences.** `difference_stack` now
+  excludes reference samples in the official hard-mask categories (and NODATA)
+  before the wavelength fit and the 3σ clip, and requires three usable references
+  per pixel. Reprojected flags are the OR of every native pixel with non-zero
+  bilinear weight. The five prepared Diff λ packages were rebuilt offline from the
+  published epoch stacks (`pipelines/rebuild_diffs.py`). The audit's own
+  `prepared_probe.py` now reports zero changed pixels from masking the inputs and
+  zero lost references for all five targets, with replay identical to the shipped
+  files. Limit: the shipped epoch stacks keep the nearest-neighbour flags they were
+  precomputed with; contributor-OR flags apply to every new cutout (cache key
+  bumped) and to the next full precompute.
+- **F3, fixed.** Reprojected variance is Σ wᵢ² Var(xᵢ), and any non-finite
+  contributor makes it non-finite. The audit probe gives a factor of 1.0000 against
+  the independent-pixel value (0.25020004) instead of 3.9968. Covariance between
+  neighbouring resampled pixels is still not represented, and the method page says so.
+- **F8, disclosed and flagged.** Median-fallback pixels keep their value (the audit
+  case still gives −4) but carry the new DIFF_MEDIAN_FALLBACK display flag (bit 15).
+  Each frame records `diff_bracketed_fraction`. The method page calls the fallback a
+  colour-dependent approximation and states that the MAD scale is a display scale,
+  not a calibrated significance.
+- **F2, wording corrected; blind re-validation not done.** The −33%/+36% figure is
+  now described everywhere as a retained cross-validation diagnostic whose held-out
+  templates used the NEOWISE diameter and albedo. A blind CV with the new-object
+  estimator needs the research generators, which are not in this repository.
+- **F4, flagged.** Detections with zero band-core channels (235P/LINEAR, C/2025 Q3)
+  carry a `zero_core` flag and a caveat that Q is weakly constrained; the method page
+  distinguishes band excess from a constrained Q. Matched end-to-end injections remain
+  pending.
+- **F5, scoped.** The W2 value is labelled statistical and conditional on a flat
+  tail beyond 4.97 µm; the tail sensitivity of 0.41–0.49 mJy and the absent WISE
+  colour correction are stated.
+- **F6, scoped.** The ±3% statement now applies to band medians of the selected
+  41-star sample, with a power law evaluated at the isophotal wavelength. The page
+  states that this is not response-convolved photometry or a per-source accuracy.
+  The J sample standard deviation is 8.35%.
+- **F7, corrected.** Both outflow laws are written as v = v₀ r_h^−0.5 km/s
+  (v₀ = 0.85 or 0.50), in the method page, the atlas caveat, the landing caveats and
+  `pipelines/landing_3i.py`.
+- **F9, disclosed.** The Barnard guide states that the Gaia cross is a
+  proper-motion-only prediction (observer parallax up to about 0.55″, 0.09 px, not
+  applied). Observer-referenced live positions are not implemented.
+- **F10, partly corrected.** The retained 3I spectrum has 26 points, not 28; the
+  provenance text is fixed. The method page states the Gaussian channel response and
+  that errors are conditional on it. The 3I comparison is described as an envelope of
+  a preliminary and an updated estimate from the same campaign. Response-convolved
+  fitting and joint uncertainty evaluation remain open.
+- **F11, disclosed.** The method page lists the retained research results whose
+  generators and inputs are not in the public repository.
+
+Not changed: the R Dra D6 baseline assertion still fails; no expected scientific
+threshold or reference value was relaxed.

@@ -1,0 +1,57 @@
+[
+  {
+    "target": "barnard",
+    "detector": "4",
+    "finite_hard_flagged_input_pixels": 32251,
+    "unflagged_finite_difference_pixels": 460117,
+    "changed_gt_1e_5_MJy_sr_by_input_mask_only": 66168,
+    "lost_minimum_references_after_masking": 18118,
+    "change_gt_5_original_display_MAD_scales": 4379,
+    "maximum_change_MJy_sr": 4513.7626953125,
+    "original_replay_vs_published_maximum_delta_MJy_sr": 0.0
+  },
+  {
+    "target": "eps-indi-b",
+    "detector": "6",
+    "finite_hard_flagged_input_pixels": 29386,
+    "unflagged_finite_difference_pixels": 443119,
+    "changed_gt_1e_5_MJy_sr_by_input_mask_only": 106994,
+    "lost_minimum_references_after_masking": 11442,
+    "change_gt_5_original_display_MAD_scales": 3299,
+    "maximum_change_MJy_sr": 3826.251220703125,
+    "original_replay_vs_published_maximum_delta_MJy_sr": 0.0
+  },
+  {
+    "target": "r-dra",
+    "detector": "6",
+    "finite_hard_flagged_input_pixels": 15478,
+    "unflagged_finite_difference_pixels": 487000,
+    "changed_gt_1e_5_MJy_sr_by_input_mask_only": 74293,
+    "lost_minimum_references_after_masking": 261,
+    "change_gt_5_original_display_MAD_scales": 4116,
+    "maximum_change_MJy_sr": 520.6207885742188,
+    "original_replay_vs_published_maximum_delta_MJy_sr": 0.0
+  },
+  {
+    "target": "rw-aur",
+    "detector": "6",
+    "finite_hard_flagged_input_pixels": 9639,
+    "unflagged_finite_difference_pixels": 458273,
+    "changed_gt_1e_5_MJy_sr_by_input_mask_only": 36372,
+    "lost_minimum_references_after_masking": 4919,
+    "change_gt_5_original_display_MAD_scales": 3527,
+    "maximum_change_MJy_sr": 1021.667724609375,
+    "original_replay_vs_published_maximum_delta_MJy_sr": 0.0
+  },
+  {
+    "target": "wise-0855",
+    "detector": "6",
+    "finite_hard_flagged_input_pixels": 10460,
+    "unflagged_finite_difference_pixels": 411794,
+    "changed_gt_1e_5_MJy_sr_by_input_mask_only": 51194,
+    "lost_minimum_references_after_masking": 1274,
+    "change_gt_5_original_display_MAD_scales": 2223,
+    "maximum_change_MJy_sr": 532.7929077148438,
+    "original_replay_vs_published_maximum_delta_MJy_sr": 0.0
+  }
+]
