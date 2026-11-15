@@ -29,6 +29,19 @@
       } as Record<string, () => string>
     )[manifest.slug]?.() ?? "",
   );
+  // The manifest carries one target-level caveat; show it once, next to the
+  // measurement it qualifies, instead of under every note.
+  const caveatKey: Record<string, string> = {
+    barnard: "pm",
+    "eps-indi-b": "plx",
+    "wise-0855": "w2",
+    "r-dra": "period",
+    "rw-aur": "anti",
+  };
+  const caveatNote = $derived(
+    manifest.field_notes.find((n) => n.key === caveatKey[manifest.slug])?.key ??
+      manifest.field_notes.at(-1)?.key,
+  );
 </script>
 
 <aside class="field-notes">
@@ -51,16 +64,15 @@
         <p class="reference mono">
           {noteText(manifest.slug, `${note.key}_ref`, note.ref)}
         </p>
-        <p class="caveat">
-          {noteText(manifest.slug, "caveat", manifest.caveat)}
-        </p>
+        {#if note.key === caveatNote}<p class="caveat" data-testid="field-caveat">
+            {noteText(manifest.slug, "caveat", manifest.caveat)}
+          </p>{/if}
       </section>{/each}
   </div>
   {#if spectrum.length}<section class="spectrum">
       <h3>{m.reference_spectrum()}</h3>
       <SpectrumPlot points={spectrum} label={m.reference_spectrum()} />
       <p class="caveat">{m.reference_caption()}</p>
-      <p class="caveat">{noteText(manifest.slug, "caveat", manifest.caveat)}</p>
     </section>{/if}
 </aside>
 

@@ -448,5 +448,9 @@
   "no_results_reset": "Limpiar filtros",
   "comets_overview": "Selecciona un cometa en el gráfico para ver su medición, o abre las imágenes reales de 3I/ATLAS y 29P.",
   "comets_limits_toggle": "Cómo interpretar estas mediciones",
-  "gaia_pending": "Cargando la capa Gaia DR3… Las imágenes siguen disponibles."
+  "gaia_pending": "Cargando la capa Gaia DR3… Las imágenes siguen disponibles.",
+  "moving_named": "{name} se mueve en el cielo, así que un campo fijo no puede seguirlo.",
+  "moving_open_detail": "Abrir {name} seguido con las efemérides de SPHEREx",
+  "moving_open_atlas": "Ver los cometas seguidos en el atlas",
+  "moving_open_neo": "Ver tamaños de asteroides en el Small-Body Lab"
 }

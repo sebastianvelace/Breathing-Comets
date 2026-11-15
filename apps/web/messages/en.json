@@ -448,5 +448,9 @@
   "no_results_reset": "Clear filters",
   "comets_overview": "Choose a comet in the plot to inspect its measurement, or open the real plates for 3I/ATLAS and 29P.",
   "comets_limits_toggle": "How to interpret these measurements",
-  "gaia_pending": "Loading Gaia DR3 overlay… Sky images remain usable."
+  "gaia_pending": "Loading Gaia DR3 overlay… Sky images remain usable.",
+  "moving_named": "{name} moves across the sky, so a fixed field cannot follow it.",
+  "moving_open_detail": "Open {name} tracked with the SPHEREx ephemeris",
+  "moving_open_atlas": "Browse the tracked comets in the atlas",
+  "moving_open_neo": "See asteroid sizes in the Small-Body Lab"
 }

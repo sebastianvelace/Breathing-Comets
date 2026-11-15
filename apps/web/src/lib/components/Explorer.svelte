@@ -69,7 +69,9 @@
   let shareLink = $state(""),
     selected = $state<[number, number]>(),
     livePoints = $state.raw<SpectrumPoint[]>([]),
-    spectrumStatus = $state("");
+    spectrumStatus = $state(""),
+    spectrumSection = $state<HTMLElement | undefined>(),
+    movingLink = $state<{ href: string; label: string } | null>(null);
   let remoteName = $state(""),
     searchMessage = $state("");
   const apiBase =
@@ -511,6 +513,15 @@
     search = "";
     searchError = false;
   }
+  const cometPages: Record<string, string> = { "29P": "29p-schwassmann-wachmann", "2025 N1": "3i-atlas", "3I": "3i-atlas" };
+  function cometSlug(result: { name?: string; track?: string }) {
+    for (const text of [result.track ?? "", result.name ?? ""]) {
+      for (const [key, slug] of Object.entries(cometPages)) {
+        if (new RegExp(`(^|[^0-9A-Z])${key.replace(" ", "\\s+")}([^0-9A-Z]|$)`, "i").test(text)) return slug;
+      }
+    }
+    return "";
+  }
   async function submitSearch(e: SubmitEvent) {
     e.preventDefault();
     searchAbort?.abort();
@@ -529,6 +540,7 @@
     searchAbort = abort;
     resolving = true;
     searchError = true;
+    movingLink = null;
     searchMessage = m.resolving();
     try {
       const response = await fetch(
@@ -543,10 +555,16 @@
         return;
       }
       if (result.kind === "moving") {
-        searchMessage = m.moving_interval();
+        const slug = cometSlug(result);
+        movingLink = slug
+          ? { href: localizeHref(`/comets/${slug}`), label: m.moving_open_detail({ name: result.name }) }
+          : /^(?:[CPDI]\/|\d+[PI](?:\/|\b))/.test(result.name ?? "")
+            ? { href: localizeHref("/comets"), label: m.moving_open_atlas() }
+            : { href: localizeHref("/neo"), label: m.moving_open_neo() };
+        searchMessage = m.moving_named({ name: result.name });
         return;
       }
-      remoteName = result.name;
+      remoteName = result.source === "SIMBAD" ? query : result.name;
       view.ra = result.ra;
       view.dec = result.dec;
       view.target = "";
@@ -584,11 +602,20 @@
       copyFailed = true;
     }
   }
+  async function revealSpectrum() {
+    if (view.ui === "lab") return;
+    await tick();
+    const box = spectrumSection?.getBoundingClientRect();
+    if (!spectrumSection || !box || box.top < innerHeight - 120) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    spectrumSection.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
   async function pick(ra: number, dec: number) {
     spectrumAbort?.abort();
     const abort = new AbortController();
     spectrumAbort = abort;
     selected = [ra, dec];
+    void revealSpectrum();
     const position = spectrumPosition(ra, dec, current?.mjd ?? 61041, gaia, manifest);
     const note = position.source ? m.spectrum_tracks({source: position.source}) : '';
     const status = (text: string) => { spectrumStatus = note ? text + ' · ' + note : text; };
@@ -713,6 +740,7 @@
       </form>
       {#if searchError}<p role="status" class="mono">
           {searchMessage || m.no_target()}
+          {#if movingLink}<a class="moving-link" href={movingLink.href} data-testid="moving-link">{movingLink.label} →</a>{/if}
         </p>{/if}
       <div class="target-links">
         {#each targets as target}<button
@@ -863,7 +891,7 @@
           </p>{:else if !star}<p class="mono muted">
             {m.no_gaia_target()}
           </p>{/if}
-        {#if selected && view.ui !== "lab"}<section class="selected-spectrum">
+        {#if selected && view.ui !== "lab"}<section class="selected-spectrum" bind:this={spectrumSection} data-testid="story-spectrum">
             <h2>{m.live_spectrum()}</h2>
             <p class="mono">
               {m.pixel_selected()}: {selected[0].toFixed(6)}, {selected[1].toFixed(
@@ -1248,7 +1276,14 @@
     font-size: 13px;
     cursor: pointer;
   }
+  .moving-link {
+    margin-left: 8px;
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
   .selected-spectrum {
+    scroll-margin-top: 88px;
     max-width: 650px;
     margin-top: 16px;
     padding: 20px;
