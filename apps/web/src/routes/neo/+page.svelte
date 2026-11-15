@@ -36,7 +36,7 @@
   <link rel="alternate" hreflang="en" href="https://breathingcomets.org/neo"/>
   <link rel="alternate" hreflang="es" href="https://breathingcomets.org/es/neo"/>
 </svelte:head>
-<header><a class="brand" href={localizeHref('/')}>BREATHING COMETS</a><nav><a href={localizeHref('/explore')}>{m.open_sky()}</a><a lang={getLocale() === 'en' ? 'es' : 'en'} href={localizeHref('/neo', {locale: getLocale() === 'en' ? 'es' : 'en'})}>{getLocale() === 'en' ? 'ES' : 'EN'}</a></nav></header>
+<header><a class="brand" href={localizeHref('/')}>BREATHING COMETS</a><nav><a href={localizeHref('/explore')}>{m.open_sky()}</a><a data-sveltekit-reload lang={getLocale() === 'en' ? 'es' : 'en'} href={localizeHref('/neo', {locale: getLocale() === 'en' ? 'es' : 'en'})}>{getLocale() === 'en' ? 'ES' : 'EN'}</a></nav></header>
 <main>
   <h1>{m.neo_title()}</h1><p class="intro">{m.neo_intro()}</p>
   <p class="mono">{m.neo_counts({a: neo.counts.A, b: neo.counts.B, p: neo.counts.provisional, pha: neo.counts.pha_AB})}</p>

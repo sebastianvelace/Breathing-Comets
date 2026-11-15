@@ -6,6 +6,7 @@
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
   import * as m from "#lib/paraglide/messages.js";
   import { view } from "#lib/state/view.svelte.js";
+  import { acquisitionKey, snapshot } from "#lib/state/snapshot.js";
   import {
     parseView,
     serializeView,
@@ -71,6 +72,10 @@
   const apiBase =
     import.meta.env.VITE_API_BASE || "https://api.breathingcomets.org";
   let spectrumAbort: AbortController | undefined;
+  let searchAbort: AbortController | undefined;
+  let resolving = $state(false), loadedKey = $state("");
+  const requestedKey = $derived(acquisitionKey(view));
+  const canShare = $derived(ready && !resolving && loadedKey === requestedKey && !!base?.frames.length && !!manifest && !error);
   let hipsFrame = $state(0),
     jplStatus = $state("");
   const twomassOpacity = $derived(
@@ -127,9 +132,8 @@
   );
   const languageHref = $derived.by(() => {
     const locale = getLocale() === "en" ? "es" : "en";
-    const url = new URL(page.url.href);
-    url.searchParams.set("lang", locale);
-    return localizeHref(url.pathname + url.search, { locale });
+    const state = canShare && manifest && base ? snapshot(view, manifest, base, index, a, b) : view;
+    return localizeHref("/explore?" + serializeView({...state, lang: locale}), { locale });
   });
 
   // ?tour=1 opens the guided tour as soon as the plate, timeline and notes exist.
@@ -175,22 +179,17 @@
       mobile.removeEventListener("change", resized);
       clearTimeout(urlTimer);
       spectrumAbort?.abort();
+      searchAbort?.abort();
     };
   });
   function writeUrl(immediate = false) {
     clearTimeout(urlTimer);
     const write = () => {
-      if (!base || !manifest) return;
-      view.ra = manifest.ra;
-      view.dec = manifest.dec;
-      view.fov = manifest.fov_deg;
-      view.t = base.header.frames[index]?.mjd;
-      if (view.mode !== "cube") view.ch = base.header.frames[index]?.lam_um;
-      view.a = base.header.frames[a]?.mjd;
-      view.b = base.header.frames[b]?.mjd;
-      view.lang = getLocale();
-      const url = new URL(page.url.href);
-      url.search = serializeView(view).toString();
+      if (!canShare || !base || !manifest) return;
+      const state = snapshot(view, manifest, base, index, a, b);
+      Object.assign(view, state, {lang: getLocale()});
+      const url = new URL(location.href);
+      url.search = serializeView({...state, lang: getLocale()}).toString();
       replaceState(url, {});
       shareLink = url.href;
     };
@@ -202,6 +201,7 @@
     const slug = view.target,
       det = view.det,
       attempt = retry;
+    const key = requestedKey;
     const ra = slug ? 0 : view.ra,
       dec = slug ? 0 : view.dec,
       fov = slug ? 0.25 : view.fov;
@@ -210,6 +210,9 @@
     let worker: Worker | undefined,
       alive = true;
     spectrumAbort?.abort();
+    loadedKey = "";
+    shareLink = "";
+    copied = false;
     base = undefined;
     diff = undefined;
     gaia = [];
@@ -347,7 +350,10 @@
           index = Math.min(desired, i);
         }),
       );
-      if (alive) writeUrl(true);
+      if (alive) {
+        loadedKey = key;
+        writeUrl(true);
+      }
     })().catch((e) => {
       if (alive && !abort.signal.aborted) error = String(e);
     });
@@ -502,6 +508,8 @@
   }
   function choose(slug: string) {
     if (!targets.some((t) => t.slug === slug)) return;
+    searchAbort?.abort();
+    resolving = false;
     view.target = slug;
     view.det = slug === "barnard" ? 4 : 6;
     view.mode = "epoch";
@@ -513,6 +521,8 @@
   }
   async function submitSearch(e: SubmitEvent) {
     e.preventDefault();
+    searchAbort?.abort();
+    resolving = false;
     const query = search.trim(),
       q = query.toLowerCase(),
       target = targets.find(
@@ -523,14 +533,19 @@
       return;
     }
     if (!query) return;
+    const abort = new AbortController();
+    searchAbort = abort;
+    resolving = true;
     searchError = true;
     searchMessage = m.resolving();
     try {
       const response = await fetch(
         `${apiBase}/v1/resolve?${new URLSearchParams({ q: query })}`,
+        {signal: abort.signal},
       );
       if (!response.ok) throw Error();
       const result = await response.json();
+      if (abort.signal.aborted) return;
       if (result.slug) {
         choose(result.slug);
         return;
@@ -549,7 +564,9 @@
       view.b = undefined;
       searchError = false;
     } catch {
-      searchMessage = m.resolve_unavailable();
+      if (!abort.signal.aborted) searchMessage = m.resolve_unavailable();
+    } finally {
+      if (!abort.signal.aborted) resolving = false;
     }
   }
   function compare() {
@@ -561,6 +578,7 @@
     writeUrl();
   }
   async function share() {
+    if (!canShare) return;
     writeUrl(true);
     try {
       await navigator.clipboard.writeText(shareLink);
@@ -668,9 +686,9 @@
         onclick={() => (tourOpen = true)}
         data-testid="tour-open"
         ><span class="long">{m.tour_open()}</span><span class="short" aria-hidden="true">?</span></button
-      ><a href={languageHref} aria-label={`${getLocale() === "en" ? "ES" : "EN"} · ${m.language()}`}
+      ><a href={languageHref} data-sveltekit-reload aria-label={`${getLocale() === "en" ? "ES" : "EN"} · ${m.language()}`}
         >{getLocale() === "en" ? "ES" : "EN"}</a
-      ><button onclick={share}>{copied ? m.copied() : m.share()} ↗</button>
+      ><button onclick={share} disabled={!canShare} data-testid="share-view">{copied ? m.copied() : m.share()} ↗</button>
     </nav>
   </header>{/if}
 <main class:embedded={embed} class:lab={view.ui === "lab"}>
@@ -889,8 +907,8 @@
       ><input
         id="share-link"
         readonly
-        value={shareLink || page.url.href}
-      /><button onclick={share}>{copied ? m.copied() : m.copy_link()}</button>
+        value={canShare ? shareLink : ""}
+      /><button onclick={share} disabled={!canShare}>{copied ? m.copied() : m.copy_link()}</button>
     </details>{/if}
 </main>
 {#if !embed}<footer class="mono">{m.credits()}</footer>

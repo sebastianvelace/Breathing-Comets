@@ -356,3 +356,10 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - The general four-second cold-field budget, R Dra D6 September coverage, intermittent JPL identification, continuum-subtracted gas maps and fully supported August H2O validation remain open. None is counted as passed.
 - Written deliverable: `docs/SUBMISSION.md`; freeze instructions: `docs/RELEASE.md`. User owns the video and prior-work declaration. The future Sunday freeze is pending.
 - Git publication of the application passed all three checks: exact required author/committer, zero prohibited commit-message matches, only remote `main`. This record and regenerated provenance are committed in the following documentation checkpoint.
+
+## Experience revision: view integrity
+
+- Manual production review reproduced stale locale rendering, lost Explorer parameters on language change and copying the preceding field during acquisition.
+- Language changes now request the localized document and serialize the live observation state, rather than depending on a stale route URL. NEO uses the same full-navigation locale boundary.
+- Sharing requires the completed acquisition key to match the requested field/detector. Each copy serializes the current observation; pending acquisitions cannot reuse an old link. Superseded name resolution is aborted.
+- Regression browser checks: `4 passed (5.6s)`; type check 0 errors/0 warnings; build passed. No scientific expected values changed.
