@@ -279,3 +279,13 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 ## /about (2026-11-14)
 
 - `/about` and `/es/about` published with credits, challenge and use of AI. Full local E2E `40 passed (58.4s)`, check 0/0, landing initial JS 73.6 KB gz. Step 11 is complete apart from texts only the user can write (prior-work declaration, team members). Open item: no `LICENSE` in the repo and Aladin Lite is GPL-3 (`docs/FINDINGS.md` section 11). Weighted progress is now about 80%.
+
+## Closure work authorized 2026-11-14
+
+- User confirmed the prior research-script execution was authorized and permitted justified flexibility. Video is being produced by the user; coordinator owns the remaining technical work and written submission. No video files will be changed.
+- Added independent product implementation of the CO2 even-J P/R profile and parent Haser conversion, checking the retained August D5 data rather than asserting a stored Q. `tests/test_comet_model.py`: 2 passed, including `test_golden_3I_co2` in the unchanged published [0.94, 1.6]e27 range. This is verification, not a replacement census or regenerated uncertainty interval.
+- API resolver/Horizons contracts: 19 passed. Deployed existing periodic-comet resolver fix plus explicit local test origin http://127.0.0.1:4183 to Fly image deployment-01M7EB5KQ7HN7ATFSM988W2HM8. Public verification is running.
+
+- Public deployment confirmed: /v1/resolve?q=29P HTTP 200 (track DES=29P; CAP); health HTTP 200 with 809,593 rows and v5 maps; Access-Control-Allow-Origin matches http://127.0.0.1:4183. Post-push 0cb0cc3 checks passed: sole exact identity, 0 prohibited messages, sole remote main.
+- Recovered the complete NEOWISE reference table through documented Gator after TAP timed out. 1,523 catalog rows, all 50 CV designations matched; the five previously retained medians agree exactly. Export now contains all 50 absolute diameter pairs, retains the original rounded CV ratios, and records source query and SHA-256. New reference integrity test passes.
+- R Dra diagnostic: D4 index ends 2026-09-25 (starts June in the retained stack), D6 ends 2026-06-12 (starts April). Attempting a September D6 file at the corresponding D4 observation raises `ValueError: Source outside the reliable detector interior`. The D6 September acceptance remains unchanged and failing; no detector or date is relabelled.
