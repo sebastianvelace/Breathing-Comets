@@ -1,0 +1,29 @@
+1
+00:00:00,000 --> 00:00:05,000
+Breathing Comets turns NASA’s SPHEREx survey
+into a time machine.
+
+2
+00:00:05,000 --> 00:00:08,000
+Choose a target or enter coordinates.
+
+3
+00:00:08,000 --> 00:00:12,000
+Blink two dates to see what moved.
+
+4
+00:00:12,000 --> 00:00:16,000
+Subtract the sky at matched wavelengths.
+
+5
+00:00:16,000 --> 00:00:20,000
+Click a source for its measured spectrum.
+
+6
+00:00:20,000 --> 00:00:26,000
+Explore comet gas and asteroid sizes,
+with uncertainties.
+
+7
+00:00:26,000 --> 00:00:29,000
+Real observations. Open to everyone.

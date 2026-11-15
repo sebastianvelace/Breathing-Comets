@@ -157,3 +157,45 @@ Lighthouse 13.6 (installed outside the repo, Playwright's Chromium), against pro
 The subsequent live walkthrough exposed three missing transition checks despite the earlier passing suite: locale changes could retain the old document language and lose Explorer parameters; sharing while acquiring another target could copy the old field; and Layers could intercept Lab playback. Commits 022cb5b and 4c8e4c0 address these with explicit acquisition identity, localized document navigation, request cancellation and layers in normal flow. The suite now includes the actual failing transitions and pointer-hit checks at four widths.
 
 The same revision adds common workspace navigation, target-specific observation guidance, nearby-wavelength visit comparison, comparison recovery actions, readable adjacent NEO details, mobile Lab, keyboard-accessible asteroid chart links and an inline tour invitation. Uncertainty, systematic floor and observing caveats remain adjacent to each measurement. The complete published suite passes 62/62; local type check is 0/0, 50 unit tests pass and 101 data/submission checks pass. Scientific data and original expected assertions were not changed.
+
+## Final challenge-focused recovery (2026-11-15)
+
+- The audited M31 cone reproduced an ESA connection timeout; the documented ARI
+  Heidelberg DR3 TAP service returned the same requested table and columns. A
+  short 3-second connect budget then failed on both services locally; the final
+  implementation keeps bounded 4/8-second provider wall-clock budgets with an
+  8-second HTTP timeout. The executed core request returned 1,380 real sources in
+  6.22 s through ARI. The first public request after deployment failed with a
+  mirror ConnectError; a later request after the retry interval returned the same
+  source count in 7.198 s. This improves recovery, not guaranteed availability or
+  compliance with the separate four-second cold-image goal.
+- Remote catalogs retain provider provenance and validate the requested DR3 CSV
+  schema and source values. Error documents and potentially truncated cones are
+  rejected instead of persisting an empty successful result. The cache schema is
+  version 3. The original source-ID precision and nullable astrometry are retained.
+- Catalog-only retries preserve the image stack and selected date. A new test
+  initially sampled the URL before its 150 ms debounce completed; its first
+  production run failed that stale baseline comparison while preserving image
+  and slider state. Waiting for the selected observation URL, without changing
+  the preservation assertions, resolved the test race; the full 64-test deployed
+  suite then passed.
+- A subsequent focused regression reproduced a real issue introduced by the
+  request split: changing detector in a free field could rebuild the manifest
+  without its inferred Gaia ID while reusing the unchanged catalog URL. Matching
+  is now derived from the retained catalog and field coordinates, preserving the
+  marker across detectors without another catalog request or a manifest mutation.
+  The failing transport-fixture test is retained and passes after the fix.
+- Guided comparison framing uses Gaia or retained proper motion at the two actual
+  dates. It waits for the viewer dimensions, including a Diff-to-Blink replacement,
+  and never claims a new measured motion. Reset returns the full field. Tour copy
+  explicitly permits color differences and artifacts in subtraction residuals.
+- The demo revision preserves the existing footage order, adds team/challenge
+  identity in the opening, and replaces unbounded search/date/channel claims. The
+  49-word voice script and seven draft SRT cues target 29 s. No exported video,
+  recorded audio or real participant study is represented as verified.
+
+Final observed verification of application 6fe00a7: 65 production browser checks
+passed (3.6m), 15 local affected transitions passed, all 53 frontend unit tests
+passed, type check 0/0 and build passed. The offline Python suite remains 199
+passed with the one unchanged R Dra coverage failure. Retained output is linked
+from STATUS.md; the original reference assertions remain unchanged.

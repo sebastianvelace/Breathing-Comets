@@ -382,3 +382,43 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - Manually confirmed live Spanish switching and the mobile 2025 YH5 panel with its unchanged size, interval, evidence tier, systematic floor and single-visit warnings. A stale inspection tab was replaced after a debugger timeout; no application failure was inferred from that tool error.
 - All three post-push checks passed: exact author/committer identity, zero prohibited attribution message matches, remote main only. User-owned AGENTS.md and video files remain untouched.
 - Final deployed landing Lighthouse 13.6.0 mobile audit: performance 98, accessibility/best-practices/SEO 100; LCP 1169.7645 ms, TBT 157 ms, CLS 0.0000919631. Initial referenced JS: 76,099 gzip bytes. Raw-derived measurements and hash: `docs/verification/performance.json`. This is one observed audit, not a percentile guarantee.
+
+## Final challenge-focused verification (2026-11-15)
+
+- Published application: `6fe00a79a1ac35fab3f290179eecd2cff055c617`; Gaia
+  backend implementation: `7e1b5ef`. The existing Fly machine passed deployment
+  health checks. Cloudflare Pages reported successful deployment of `6fe00a7`;
+  the fresh public entry and deployment preview both referenced
+  `_app/immutable/entry/app.BTrDa6B6.js`.
+- Complete final production Chromium run: **65 passed (3.6m)**, observed by
+  2026-11-15 13:02 UTC. This includes the new catalog-only retry, delayed URL
+  preservation, focused comparison after leaving Diff, and free-field detector
+  transition. Raw output: `docs/verification/final-challenge-production-e2e.txt`.
+- Final local affected-transition suite: **15 passed (21.6s)**; frontend unit
+  tests **53 passed**; type check **0 errors / 0 warnings**; production build
+  passed. The preceding local experience/tour suite passed 19/19.
+- Complete offline Python acceptance: **199 passed, 1 failed, 9 deselected**,
+  7.46 s. The unchanged failure is R Dra D6 coverage ending on 2026-06-12 rather
+  than reaching the internal 2026-09-01 acceptance date. That date is an internal
+  product target, not a newly inferred NASA requirement. All 25 original reference
+  assertions remain; the current file has 30, with zero missing or altered.
+- The real M31 Gaia cone returned **1,380 DR3 sources** through the documented
+  ARI mirror: 6.22 s in the local core and 7.198 s through the public API. The
+  first post-deployment request returned 503 before the later successful retry;
+  no universal availability or cold-image percentile is claimed. Provenance and
+  timing: `docs/verification/gaia-recovery.json`.
+- Prior test failures are retained: the URL-debounce test race and a subsequently
+  reproduced free-field marker regression, both corrected and covered in the final
+  65-test run. See FINDINGS.md and the intermediate verification outputs.
+- Delivery assets: `docs/DEMO_SCRIPT.md` has the revised 49-word English voice,
+  first-five-second identity card, scene timing and rubric rationale;
+  `docs/DEMO_SUBTITLES.srt` has seven matching draft cues ending at 29 s. Their text
+  agrees exactly. The exported video was not inspected or edited; cue times must
+  be synchronized to the replacement voice and actual final duration measured.
+- Human validation tasks are ready in UX_IMPROVEMENTS.md, but no participant
+  results are claimed. Cold arbitrary-field latency, R Dra detector coverage,
+  intermittent external identification, continuum-subtracted gas maps and the
+  unsupported August H2O comparison remain open as previously documented. The
+  team still owns final video editing, personal prior-work disclosure and the
+  actual Space Apps submission. No science data or expected scientific assertions
+  were changed for this revision.

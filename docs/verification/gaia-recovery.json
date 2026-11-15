@@ -1,0 +1,20 @@
+{
+  "query": {
+    "ra": 10.684708,
+    "dec": 41.26875,
+    "radius": 0.25,
+    "gmax": 19
+  },
+  "sources": 1380,
+  "provider": "https://gaia.ari.uni-heidelberg.de/tap/sync",
+  "ref_epoch": 2016.0,
+  "public_api_seconds": 7.19769,
+  "local_core_seconds": 6.22,
+  "public_first_attempt": {
+    "http": 503,
+    "seconds": 7.887418,
+    "reason": "Mirror ConnectError after primary timeout"
+  },
+  "public_retry_http": 200,
+  "catalog_sha256": "18ef8c518fb95846d740b38d710ebbb221a20b198abd961e74b3206dcbb73d3f"
+}

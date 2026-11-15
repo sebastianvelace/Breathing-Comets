@@ -1,0 +1,24 @@
+[WebServer] (node:2065699) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:2065733) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 e2e/catalog.spec.ts:4:1 › a free-field Gaia counterpart survives a detector change without requerying the catalog (920ms)
+  ✓   2 e2e/experience.spec.ts:3:1 › language switch translates the catalog without a manual reload (337ms)
+  ✓   3 e2e/experience.spec.ts:13:1 › language switch preserves the current target, observation and comparison (1.9s)
+  ✓   4 e2e/experience.spec.ts:35:1 › sharing cannot copy the previous target while the new data are pending (852ms)
+  ✓   5 e2e/experience.spec.ts:53:1 › a delayed name lookup cannot replace a target selected afterwards (1.4s)
+  ✓   6 e2e/experience.spec.ts:72:1 › retrying Gaia preserves the loaded images and selected observation (1.1s)
+  ✓   7 e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 390px (1.3s)
+  ✓   8 e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1024px (1.4s)
+  ✓   9 e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1280px (1.5s)
+  ✓  10 e2e/experience.spec.ts:106:3 › Lab controls stay usable with the layers expanded at 1440px (1.5s)
+  ✓  11 e2e/experience.spec.ts:130:1 › mobile navigation connects the three workspaces and exposes a guided comparison (844ms)
+  ✓  12 e2e/experience.spec.ts:163:1 › a selected asteroid exposes its size and interval beside the catalog (249ms)
+  ✓  13 e2e/experience.spec.ts:175:1 › guided focus survives the viewer replacement when leaving Diff λ (559ms)
+  ✓  14 e2e/experience.spec.ts:184:3 › first-visit invitation leaves the mobile image controls reachable in en (3.2s)
+  ✓  15 e2e/experience.spec.ts:184:3 › first-visit invitation leaves the mobile image controls reachable in es (2.9s)
+
+  15 passed (21.6s)
