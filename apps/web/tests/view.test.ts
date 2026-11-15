@@ -2,6 +2,14 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { parseView, serializeView, nearestFrame } from "../src/lib/state/view";
+
+it("direct target links use the same prepared detector as the target picker", () => {
+  for (const slug of ["eps-indi-b", "wise-0855", "rw-aur", "r-dra"]) {
+    expect(parseView(new URLSearchParams({target: slug})).det).toBe(6);
+    expect(parseView(new URLSearchParams({target: slug, det: "4"})).det).toBe(4);
+  }
+  expect(parseView(new URLSearchParams({target: "barnard"})).det).toBe(4);
+});
 import {
   worldToPixel,
   pixelToWorld,

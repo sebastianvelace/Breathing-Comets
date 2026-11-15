@@ -172,7 +172,7 @@
   }
 </script>
 
-<div class="plate" bind:this={box}>
+<div class="plate" data-stack-kind={stack.header.kind} bind:this={box}>
   <canvas
     bind:this={canvas}
     aria-label={m.sky_plate()}
