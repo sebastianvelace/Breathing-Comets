@@ -81,8 +81,14 @@ async def read_hdu_layout(key, max_hdus=12):
     cache_key = (key, max_hdus)
     if cache_key in _layouts:
         return _layouts[cache_key]
-    out, loc = [], 0
-    for _ in range(max_hdus):
+    # Metadata selection already read PRIMARY/IMAGE. Extend those same physical
+    # headers instead of fetching them again for every selected image cutout.
+    prefixes = [value for (file_key, _), value in _layouts.items() if file_key == key]
+    out = list(max(prefixes, key=len, default=[]))
+    if len(out) >= max_hdus or (out and out[-1]["name"] == "WCS-WAVE"):
+        return out[:max_hdus]
+    loc = out[-1]["dat_loc"] + out[-1]["dat_span"] if out else 0
+    for _ in range(len(out), max_hdus):
         blocks = 12
         while True:
             chunk = await s3.get_range(key, loc, BLOCK * blocks)

@@ -28,22 +28,20 @@ async def identify(ra, dec, fov, mjd):
     result = []
     async with JPL_LIMIT, httpx.AsyncClient(timeout=25) as client:
         for kind in ("a", "c"):
-            parameters = {"sb-kind": kind, "mpc-code": "500", "obs-time": str(Time(mjd, format="mjd", scale="utc").jd),
+            parameters = {"sb-kind": kind, "xobs": "0,0,0,0,0,0", "obs-time": str(Time(mjd, format="mjd", scale="utc").jd),
                           "fov-ra-center": rac, "fov-dec-center": decc, "fov-ra-hwidth": fov/2,
                           "fov-dec-hwidth": fov/2, "two-pass": "true", "suppress-first-pass": "true", "req-elem": "false"}
             response = await client.get("https://ssd-api.jpl.nasa.gov/sb_ident.api", params=parameters)
-            if response.status_code == 400:
-                # Current API documentation excludes geocentric MPC 500.
-                parameters.pop("mpc-code")
-                parameters["xobs"] = "0,0,0,0,0,0"
-                response = await client.get("https://ssd-api.jpl.nasa.gov/sb_ident.api", params=parameters)
             response.raise_for_status()
             data = response.json()
             if data.get("signature", {}).get("version") != "1.1":
                 raise ValueError("Unrecognized SB Identification schema version")
             fields = data.get("fields_second", [])
             rows = data.get("data_second_pass", [])
-            if "n_second_pass" not in data:
+            # The live v1.1 service omits the count and table for an explicitly
+            # empty field. Other missing-count payloads remain schema failures.
+            empty = data.get("warning") == "no matching records" and not rows
+            if "n_second_pass" not in data and not empty:
                 raise ValueError("SB Identification omitted the result count")
             for values in rows:
                 row = dict(zip(fields, values))
