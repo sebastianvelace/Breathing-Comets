@@ -268,3 +268,58 @@ def test_diff_propagates_independent_reference_variance():
     for frame in difference:
         np.testing.assert_allclose(frame["flux"], 0)
         np.testing.assert_allclose(frame["var"], 4+4/3, rtol=1e-6)
+
+
+def _flat_frames(values, flag_values=None, lam=4.5):
+    grid = {"nx": 1, "ny": 1, "crpix": [1, 1]}
+    metadata = [{"mjd": 61000+3*i, "visit": i, "lam_um": lam, "bw_um": .1, "lam_poly": [lam, 0, 0, 0, 0, 0]}
+                for i in range(len(values))]
+    flag_values = flag_values or [0]*len(values)
+    frames = [{"flux": np.full((1, 1), v, np.float32), "flags": np.full((1, 1), f, np.uint16)}
+              for v, f in zip(values, flag_values)]
+    return grid, metadata, frames
+
+
+def test_diff_excludes_hard_flagged_references():
+    # Audit F1: target 10, references 100 (SUR_ERROR), 10, 10 gave -30 with flags 0.
+    from spxcore.flags import HARD_DISPLAY, NODATA, remap_flags
+    sur_error = int(remap_flags(np.array([1 << 2], np.int64))[0])
+    assert sur_error & HARD_DISPLAY
+    grid, metadata, frames = _flat_frames([10, 100, 10, 10], [0, sur_error, 0, 0])
+    info, result = sky.difference_stack(metadata, frames, grid)
+    assert np.isnan(result[0]["flux"][0, 0])
+    assert result[0]["flags"][0, 0] & NODATA
+    assert not info[0]["diff_available"]
+    # With a third clean reference the flagged value no longer contaminates the result.
+    grid, metadata, frames = _flat_frames([10, 100, 10, 10, 10], [0, sur_error, 0, 0, 0])
+    info, result = sky.difference_stack(metadata, frames, grid)
+    assert result[0]["flux"][0, 0] == pytest.approx(0, abs=1e-6)
+
+
+def test_diff_marks_median_fallback_as_colour_dependent():
+    # Audit F8: static F = 10 + 100 lambda, target 4.50, references 4.52/4.54/4.56 only.
+    from spxcore.flags import DIFF_MEDIAN
+    grid = {"nx": 1, "ny": 1, "crpix": [1, 1]}
+    lams = [4.50, 4.52, 4.54, 4.56]
+    metadata = [{"mjd": 61000+3*i, "visit": i, "lam_um": lam, "bw_um": .1, "lam_poly": [lam, 0, 0, 0, 0, 0]}
+                for i, lam in enumerate(lams)]
+    frames = [{"flux": np.full((1, 1), 10+100*lam, np.float32), "flags": np.zeros((1, 1), np.uint16)} for lam in lams]
+    info, result = sky.difference_stack(metadata, frames, grid)
+    assert result[0]["flux"][0, 0] == pytest.approx(-4, abs=1e-3)
+    assert result[0]["flags"][0, 0] & DIFF_MEDIAN
+    assert info[0]["diff_bracketed_fraction"] == 0
+
+
+def test_reprojection_propagates_every_contributor_flag_and_variance():
+    # Audit F1/F3: a flagged native pixel contributing to a bilinear sample at (0.49, 0.49).
+    native_flags = np.zeros((4, 4), np.int64)
+    native_flags[0, 0] = 1 << 2
+    ys, xs = np.array([[0.49]]), np.array([[0.49]])
+    assert cutout.contributor_flags(native_flags, ys, xs)[0, 0] & (1 << 2)
+    assert cutout.contributor_flags(native_flags, np.array([[1.0]]), np.array([[1.0]]))[0, 0] == 0
+    variance = cutout.interpolate_variance(np.ones((4, 4)), ys, xs)
+    assert variance[0, 0] == pytest.approx(0.51**4+2*(0.51*0.49)**2+0.49**4, rel=1e-12)
+    assert variance[0, 0] == pytest.approx(0.25020004, rel=1e-7)
+    native_var = np.ones((4, 4))
+    native_var[1, 1] = np.nan
+    assert np.isnan(cutout.interpolate_variance(native_var, ys, xs)[0, 0])

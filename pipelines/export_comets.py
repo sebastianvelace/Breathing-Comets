@@ -81,6 +81,10 @@ def main():
         }
         if r_au is not None and r_au > FAR_AU:
             entry["flags"].append("far_unreliable")
+        if entry["co2"]["n_core"] == 0 and entry["co2"]["status"] in ("detected", "with_systematics"):
+            # Band excess without any channel in the band core: Q rests on the wings
+            # and is weakly constrained (scientific audit 2026-11-15, F4).
+            entry["flags"].append("zero_core")
         c = co.get(name)
         entry["co"] = None if c is None else {
             "class": CO_CLASS[c["clase_CO"]], "q50": num(c["QCO_50"]), "ratio_co_co2": num(c["ratio_50"]),

@@ -4,7 +4,9 @@ import warnings
 
 import numpy as np
 
-from .flags import NODATA
+from .flags import DIFF_MEDIAN, HARD_DISPLAY, NODATA
+
+MIN_REFERENCES = 3
 
 
 def wavelength_plane(meta, grid):
@@ -33,7 +35,10 @@ def difference_stack(metadata, frames, grid):
             continue
         flux = np.stack([frames[j]["flux"] for j in candidates]).astype(float)
         delta = np.stack([wavelengths[j]-wavelengths[i] for j in candidates])
-        valid = np.isfinite(flux) & np.isfinite(delta)
+        reference_flags = np.stack([frames[j]["flags"] for j in candidates])
+        # A reference sample is usable only if finite and free of the official
+        # hard-mask categories (and of NODATA) before fitting or clipping.
+        valid = np.isfinite(flux) & np.isfinite(delta) & ((reference_flags & (HARD_DISPLAY | NODATA)) == 0)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", RuntimeWarning)
             for iteration in range(2):
@@ -53,10 +58,14 @@ def difference_stack(metadata, frames, grid):
             median = np.nanmedian(np.where(valid, flux, np.nan), axis=0)
             reference = np.where(bracketed, intercept, median)
             diff = frames[i]["flux"]-reference
-            diff[n < 3] = np.nan
+            diff[n < MIN_REFERENCES] = np.nan
             sigma = float(1.4826*np.nanmedian(np.abs(diff-np.nanmedian(diff))))
         flags = frames[i]["flags"].copy()
         flags[~np.isfinite(diff)] |= NODATA
+        # Not wavelength-bracketed: the median of redder or bluer references is a
+        # colour-dependent approximation, not a same-colour static reference.
+        median_fallback = np.isfinite(diff) & ~bracketed
+        flags[median_fallback] |= DIFF_MEDIAN
         output = {"flux": diff.astype(np.float32), "flags": flags}
         if has_variance:
             # Independent visits: propagate the fitted intercept's linear
@@ -77,6 +86,8 @@ def difference_stack(metadata, frames, grid):
             output["var"] = (frames[i]["var"]+np.where(bracketed, linear_var, median_var)).astype(np.float32)
             output["var"][~np.isfinite(diff)] = np.nan
         result.append(output)
-        info.append({**meta, "diff_available": bool(np.isfinite(diff).any()),
-                     "reference_count": len(candidates), "diff_sigma": sigma if np.isfinite(sigma) else None})
+        finite = int(np.isfinite(diff).sum())
+        info.append({**meta, "diff_available": bool(finite),
+                     "reference_count": len(candidates), "diff_sigma": sigma if np.isfinite(sigma) else None,
+                     "diff_bracketed_fraction": round(float((np.isfinite(diff) & bracketed).sum())/finite, 4) if finite else None})
     return info, result

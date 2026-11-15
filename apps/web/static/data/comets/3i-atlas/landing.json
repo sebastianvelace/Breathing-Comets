@@ -124,8 +124,8 @@
    "lo": 8.6e+26,
    "hi": 1.38e+27,
    "unit": "s⁻¹",
-   "caveat": "Statistical error ±3.0e+25; χ²ᵣ 27.5. The 16–84% range comes from the research notes and Q scales with the assumed outflow speed (about −40% for 0.50 instead of 0.85 r_h^−0.5 km/s).",
-   "caveat_es": "Error estadístico ±3.0e+25; χ²ᵣ 27.5. El intervalo 16–84% sale de las notas de investigación y Q es proporcional a la velocidad de salida supuesta (cerca de −40% con 0.50 en lugar de 0.85 r_h^−0.5 km/s).",
+   "caveat": "Statistical error ±3.0e+25; χ²ᵣ 27.5. The 16–84% range comes from the research notes and Q scales with the assumed outflow speed v = v₀ r_h^−0.5 km/s (about −40% for v₀ = 0.50 instead of 0.85, still scaled with r_h^−0.5).",
+   "caveat_es": "Error estadístico ±3.0e+25; χ²ᵣ 27.5. El intervalo 16–84% sale de las notas de investigación y Q es proporcional a la velocidad de salida supuesta v = v₀ r_h^−0.5 km/s (cerca de −40% con v₀ = 0.50 en lugar de 0.85, también escalada con r_h^−0.5).",
    "source": "Research fit of the CO₂ ν₃ band (research/11_band_physical.py), reproduced 2026-11-14"
   },
   {

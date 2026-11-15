@@ -842,7 +842,7 @@
    "published_lo": 9.4e+26,
    "published_hi": 1.6e+27,
    "source": "Lisse et al. 2025, RNAAS, arXiv:2508.15469 (0.94e27, preliminary); Lisse et al. 2026, ApJL 1000, L52, arXiv:2512.07318 (1.6e27 +/- 0.16e27)",
-   "provenance": "python3 research/11_band_physical.py (research repo, read-only; input data/derived/3I_aug2025_D5_skysub.csv, 28 in-band points)",
+   "provenance": "python3 research/11_band_physical.py (research repo, read-only; input data/derived/3I_aug2025_D5_skysub.csv, 26 retained spectrum points)",
    "interval_source": "research notes docs/06 section 5 (Monte Carlo, recipe A); NOT re-run in this build"
   }
  ]

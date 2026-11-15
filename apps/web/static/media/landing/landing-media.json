@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T00:35Z",
+ "generated": "2026-11-15T14:00Z",
  "generator": "pipelines/landing_media.py",
  "sources": [
   "apps/web/static/data/targets/barnard/D4.spxf.gz",
@@ -188,14 +188,14 @@
     }
    ],
    "difference": {
-    "sigma": 0.019589899495828417,
+    "sigma": 0.018359564637712787,
     "map": "0.5 + 0.5 v / (5 sigma)",
     "reference_count": 5,
     "diff_lambda": {
      "src": "/media/landing/barnard-d4-difflambda-k23.webp",
      "width": 147,
      "height": 147,
-     "bytes": 26278,
+     "bytes": 19978,
      "obs_id": "2026W36_1A_0510_1",
      "date": "2026-09-02T06:11:05.473Z",
      "mjd": 61285.257702231,
@@ -211,7 +211,7 @@
      "src": "/media/landing/barnard-d4-raw-k23-minus-k14.webp",
      "width": 147,
      "height": 147,
-     "bytes": 27676,
+     "bytes": 27526,
      "kind": "raw_subtraction",
      "a": {
       "obs_id": "2026W11_1A_0587_1",

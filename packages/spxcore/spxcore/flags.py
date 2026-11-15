@@ -6,6 +6,8 @@ HARD_ES21 = sum(1 << b for b in (2, 6, 7, 9, 10, 11, 15, 17, 26, 27, 28, 29))
 DISPLAY_BITS = (0, 1, 2, 4, 6, 7, 9, 10, 11, 15, 17, 19, 21)
 NODATA = 1 << 13
 EXTENDED_HARD = sum(1 << b for b in (26, 27, 28, 29))
+# Difference products only: reference was the median of non-bracketing visits.
+DIFF_MEDIAN = 1 << 15
 
 
 def remap_flags(flags, nodata=None):
@@ -16,6 +18,9 @@ def remap_flags(flags, nodata=None):
     if nodata is not None:
         out[nodata] |= NODATA
     return out
+
+
+HARD_DISPLAY = int(remap_flags(np.array([HARD_ES21], np.int64))[0])
 
 
 def restore_display_flags(flags):

@@ -76,6 +76,7 @@
         <p class="mono">{m.comets_detail_diag({ snr: sig(chosen.co2.snr_det, 1), err: sig(chosen.co2.flux_rel_err, 3), core: chosen.co2.n_core, chi2: sig(chosen.co2.chi2_red, 1), t: chosen.co2.t_rot_k ?? "—" })}</p>
         {#if chosen.flags.includes("far_unreliable")}<p class="caveat">{m.comets_honesty_far({ au: cometAtlas.method.far_au })}</p>{/if}
         {#if chosen.co2.status === "with_systematics"}<p class="caveat">{m.comets_honesty_systematics()}</p>{/if}
+        {#if chosen.flags.includes("zero_core")}<p class="caveat">{m.comets_honesty_zero_core()}</p>{/if}
       {:else}<p class="muted">{m.comets_pick()}</p>{/if}
     </div>
   </section>
@@ -101,7 +102,8 @@
             <tr id="comet-{c.slug}" class:chosen={selected === c.slug} data-testid="comet-row" data-slug={c.slug} data-status={c.co2.status}>
               <td><button disabled={!mounted} onclick={() => pick(c.slug)} aria-pressed={selected === c.slug}>{c.name}</button>
                 {#if detailSlugs.includes(c.slug)}<a class="badge" href={localizeHref(`/comets/${c.slug}`)} data-testid="detail-link">{m.comets_open_detail()}</a>{/if}
-                {#if c.flags.includes("far_unreliable")}<span class="badge">{m.comets_flag_far()}</span>{/if}</td>
+                {#if c.flags.includes("far_unreliable")}<span class="badge">{m.comets_flag_far()}</span>{/if}
+                {#if c.flags.includes("zero_core")}<span class="badge" data-testid="zero-core">{m.comets_flag_zero_core()}</span>{/if}</td>
               <td class="r">{sig(c.r_au)}</td><td class="r">{sig(c.delta_au)}</td>
               <td class="r" data-testid="q">{fmtSciUnicode(c.co2.q16)} · <b>{fmtSciUnicode(c.co2.q50)}</b> · {fmtSciUnicode(c.co2.q84)}</td>
               <td class="r">{sig(c.co2.snr_det, 1)}</td><td class="r">{sig(c.co2.flux_rel_err, 3)}</td>

@@ -60,11 +60,11 @@ def main():
         {"label": "Q(CO₂), August 2025", "label_es": "Q(CO₂), agosto de 2025",
          "value": aug["measured"], "lo": aug["measured_lo"], "hi": aug["measured_hi"], "unit": "s⁻¹",
          "caveat": f"Statistical error ±{aug['stat_err']:.1e}; χ²ᵣ {aug['chi2_red']}. The 16–84% range comes from "
-                   "the research notes and Q scales with the assumed outflow speed (about −40% for 0.50 instead of "
-                   "0.85 r_h^−0.5 km/s).",
+                   "the research notes and Q scales with the assumed outflow speed v = v₀ r_h^−0.5 km/s (about −40% for v₀ = 0.50 "
+                   "instead of 0.85, still scaled with r_h^−0.5).",
          "caveat_es": f"Error estadístico ±{aug['stat_err']:.1e}; χ²ᵣ {aug['chi2_red']}. El intervalo 16–84% sale de las "
-                      "notas de investigación y Q es proporcional a la velocidad de salida supuesta (cerca de −40% "
-                      "con 0.50 en lugar de 0.85 r_h^−0.5 km/s).",
+                      "notas de investigación y Q es proporcional a la velocidad de salida supuesta v = v₀ r_h^−0.5 km/s (cerca de −40% "
+                      "con v₀ = 0.50 en lugar de 0.85, también escalada con r_h^−0.5).",
          "source": "Research fit of the CO₂ ν₃ band (research/11_band_physical.py), reproduced 2026-11-14"},
         {"label": "Q(CO₂), December 2025", "label_es": "Q(CO₂), diciembre de 2025",
          "value": dec["co2"]["q50"], "lo": dec["co2"]["q16"], "hi": dec["co2"]["q84"], "unit": "s⁻¹",

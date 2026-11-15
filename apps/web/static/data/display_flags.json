@@ -59,6 +59,10 @@
     {
       "bit": 14,
       "name": "EXTENDED_HARD"
+    },
+    {
+      "bit": 15,
+      "name": "DIFF_MEDIAN_FALLBACK"
     }
   ],
   "hard_mask": 18420

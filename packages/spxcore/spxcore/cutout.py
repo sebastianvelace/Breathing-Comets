@@ -29,6 +29,39 @@ def output_grid(ra, dec, fov=0.25):
                  "cdelt_deg": wcs.wcs.cdelt.tolist(), "nx": n, "ny": n, "north_up": True, "pixel_arcsec": 6.15}
 
 
+def _bilinear_contributors(ys, xs, shape):
+    """Yield (row, column, weight, inside) for the four native pixels of each bilinear sample."""
+    y0, x0 = np.floor(ys), np.floor(xs)
+    fy, fx = ys-y0, xs-x0
+    for dy, dx, weight in ((0, 0, (1-fy)*(1-fx)), (0, 1, (1-fy)*fx), (1, 0, fy*(1-fx)), (1, 1, fy*fx)):
+        row, column = y0+dy, x0+dx
+        inside = np.isfinite(row) & np.isfinite(column) & (row >= 0) & (row < shape[0]) & (column >= 0) & (column < shape[1])
+        yield (np.where(inside, row, 0).astype(np.intp), np.where(inside, column, 0).astype(np.intp),
+               np.where(np.isfinite(weight), weight, 0), inside)
+
+
+def contributor_flags(raw_flags, ys, xs):
+    """OR of the native flags of every pixel with non-zero bilinear weight."""
+    out = np.zeros(np.shape(ys), np.int64)
+    for row, column, weight, inside in _bilinear_contributors(ys, xs, raw_flags.shape):
+        out |= np.where(inside & (weight > 0), raw_flags[row, column].astype(np.int64), 0)
+    return out
+
+
+def interpolate_variance(variance, ys, xs):
+    """Variance of a bilinear sample of independent pixels: sum of w_i^2 Var(x_i).
+
+    Covariance between neighbouring output pixels, which share native pixels, is not represented.
+    Any contributing native pixel with non-finite variance makes the result non-finite.
+    """
+    out = np.zeros(np.shape(ys), float)
+    for row, column, weight, inside in _bilinear_contributors(ys, xs, variance.shape):
+        value = np.where(inside, variance[row, column].astype(float), np.nan)
+        out += np.where(weight > 0, weight*weight*value, 0)
+        out[(weight > 0) & ~inside] = np.nan
+    return out
+
+
 def reproject_array(array, input_wcs, output_wcs, shape, order=1, origin=(0, 0)):
     yy, xx = np.indices(shape)
     ra, dec = output_wcs.pixel_to_world_values(xx, yy)
@@ -55,7 +88,7 @@ async def describe_exposure(exposure, ra, dec):
 
 async def make_frame(exposure, ra, dec, fov=0.25, include_var=False):
     key = s3.s3_key(exposure["obs_id"], exposure["det"])
-    token = hashlib.sha256(f"{key}|{ra:.6f}|{dec:.6f}|{fov:.4f}|{include_var}|{calib.SWCS}".encode()).hexdigest()
+    token = hashlib.sha256(f"{key}|{ra:.6f}|{dec:.6f}|{fov:.4f}|{include_var}|{calib.SWCS}|resample-v2".encode()).hexdigest()
     cache = CACHE_DIR / "cutouts" / f"{token}.npz"
     if cache.exists():
         with np.load(cache, allow_pickle=False) as z:
@@ -110,7 +143,7 @@ async def _make_frame(exposure, ra, dec, fov, include_var, key):
     rows, maps = await asyncio.gather(fitsio.read_rows(key, layout, y0, y1, names), calib.load_maps(exposure["det"]))
     coords = [ys-y0, xs]
     flux = map_coordinates(rows["IMAGE"].astype(float), coords, order=1, cval=np.nan, mode="constant", prefilter=False)
-    raw_flags = map_coordinates(rows["FLAGS"].astype(float), coords, order=0, cval=0, mode="constant", prefilter=False).astype(np.int64)
+    raw_flags = contributor_flags(rows["FLAGS"].astype(np.int64), *coords)
     geometry_missing = (xs < 20) | (xs > 2019) | (ys < 20) | (ys > 2019)
     nodata = geometry_missing | ~np.isfinite(flux)
     flux[nodata] = np.nan
@@ -128,7 +161,7 @@ async def _make_frame(exposure, ra, dec, fov, include_var, key):
                             for name, bit in (("OUTLIER", 19), ("TRANSIENT", 0), ("OVERFLOW", 1))}}
     frame = {"flux": flux.astype(np.float32), "flags": remap_flags(raw_flags, nodata)}
     if include_var:
-        variance = map_coordinates(rows["VARIANCE"].astype(float), coords, order=1, cval=np.nan, mode="constant", prefilter=False)
+        variance = interpolate_variance(rows["VARIANCE"], *coords)
         variance[nodata] = np.nan
         frame["var"] = variance.astype(np.float32)
     return grid, meta, frame

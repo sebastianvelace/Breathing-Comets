@@ -35,6 +35,40 @@ def _shuffle(a: np.ndarray) -> bytes:
 def _pad8(b: bytes) -> bytes:
     return b + b"\0" * ((-len(b)) % 8)
 
+def read_spxf(path):
+    """Read an SPXF v1 file written by write_spxf; returns (header, frames)."""
+    raw = open(path, "rb").read()
+    if raw[:2] == b"\x1f\x8b":
+        raw = gzip.decompress(raw)
+    if raw[:4] != MAGIC:
+        raise ValueError("Not an SPXF file")
+    shuffled = int(np.frombuffer(raw[6:8], "<u2")[0]) & 1
+    length = int(np.frombuffer(raw[8:12], "<u4")[0])
+    header = json.loads(raw[16:16+length])
+    ny, nx = header["grid"]["ny"], header["grid"]["nx"]
+    pixels, offset, frames = nx*ny, 16+length, []
+
+    def take(nbytes):
+        nonlocal offset
+        chunk = raw[offset:offset+nbytes]
+        offset += nbytes + (-nbytes) % 8
+        return chunk
+
+    def plane():
+        a = np.frombuffer(take(pixels*4), np.uint8)
+        if shuffled:
+            a = a.reshape(4, pixels).T.copy().ravel()
+        return a.view("<f4").reshape(ny, nx).copy()
+
+    for _ in header["frames"]:
+        frame = {"flux": plane()}
+        if header.get("has_var"):
+            frame["var"] = plane()
+        frame["flags"] = np.frombuffer(take(pixels*2), "<u2").reshape(ny, nx).copy()
+        frames.append(frame)
+    return header, frames
+
+
 def write_spxf(path, header: dict, frames: list[dict], shuffle=True, gz=True):
     h = json.dumps(header, separators=(",", ":"), allow_nan=False).encode()
     h += b" " * ((-len(h)) % 8)

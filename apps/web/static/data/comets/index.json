@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T01:30Z",
+ "generated": "2026-11-15T13:58Z",
  "generator": "pipelines/export_comets.py",
  "method": {
   "status_rule": "detected: S/N_det >= 5 and chi2_red < 50; with_systematics: S/N_det >= 5 and chi2_red >= 50; marginal: 3 <= S/N_det < 5; not_detected: S/N_det < 3",
@@ -186,7 +186,9 @@
     "n_exposures": 16,
     "status": "detected"
    },
-   "flags": [],
+   "flags": [
+    "zero_core"
+   ],
    "co": {
     "class": "no_coverage",
     "q50": null,
@@ -432,7 +434,9 @@
     "n_exposures": 14,
     "status": "detected"
    },
-   "flags": [],
+   "flags": [
+    "zero_core"
+   ],
    "co": {
     "class": "upper_limit",
     "q50": 6.261098762945383e+24,
@@ -950,7 +954,7 @@
    "published_lo": 9.4e+26,
    "published_hi": 1.6e+27,
    "source": "Lisse et al. 2025, RNAAS, arXiv:2508.15469 (0.94e27, preliminary); Lisse et al. 2026, ApJL 1000, L52, arXiv:2512.07318 (1.6e27 +/- 0.16e27)",
-   "provenance": "python3 research/11_band_physical.py (research repo, read-only; input data/derived/3I_aug2025_D5_skysub.csv, 28 in-band points)",
+   "provenance": "python3 research/11_band_physical.py (research repo, read-only; input data/derived/3I_aug2025_D5_skysub.csv, 26 retained spectrum points)",
    "interval_source": "research notes docs/06 section 5 (Monte Carlo, recipe A); NOT re-run in this build"
   },
   {
