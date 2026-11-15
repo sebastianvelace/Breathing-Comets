@@ -256,3 +256,15 @@ reported two P1 and nine P2 findings. Response:
 
 Not changed: the R Dra D6 baseline assertion still fails; no expected scientific
 threshold or reference value was relaxed.
+
+## Final numerical audit (2026-11-15)
+
+`docs/audits/final-2026-11-15/recompute.py` recomputes every displayed number from
+the shipped files (0 FAIL, 33 PASS, 13 NOTE after corrections). Corrected: the W2
+reference magnitude (13.89, not 13.9, for 0.48 mJy); the 3I/ATLAS comparison now
+states that 1.17×10²⁷ s⁻¹ agrees with the preliminary estimate and lies below the
+updated 1.6×10²⁷ s⁻¹ ± 10%; per-field photometric medians (0.943–1.023) qualify the
+±3% statement; and the R Dra caveat gives the 123 d frequency resolution. The live
+Gaia marker now applies observer parallax (low-precision Earth ephemeris), within
+4.67 mas of an Astropy/DE440 geocentric reference, closing the display part of audit
+finding F9. Forced photometry in the API still uses barycentric space motion.

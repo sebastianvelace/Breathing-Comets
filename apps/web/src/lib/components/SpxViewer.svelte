@@ -76,6 +76,7 @@
       star.pmdec,
       star.ref_epoch,
       time,
+      star.parallax,
     );
     const [x, y] = worldToPixel(ra, dec, stack.header.grid);
     return [

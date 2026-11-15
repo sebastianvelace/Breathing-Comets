@@ -1,0 +1,232 @@
+[
+ {
+  "check": "Barnard PM total",
+  "status": "PASS",
+  "detail": "10.552″/yr from components (shown 10.6)"
+ },
+ {
+  "check": "Barnard PM formal error",
+  "status": "PASS",
+  "detail": "propagated 0.105″/yr (shown ±0.10); stored pm_total_err 0.149 is a quadrature sum of component errors, not a propagation"
+ },
+ {
+  "check": "Barnard Gaia PM",
+  "status": "PASS",
+  "detail": "10.3933″/yr (shown 10.39)"
+ },
+ {
+  "check": "Barnard Gaia parallax",
+  "status": "PASS",
+  "detail": "546.9759 mas (shown 547)"
+ },
+ {
+  "check": "Barnard PM vs Gaia",
+  "status": "PASS",
+  "detail": "difference +0.159″/yr = +0.40 of the quoted ±0.4"
+ },
+ {
+  "check": "Barnard PM direction",
+  "status": "PASS",
+  "detail": "position angle -3.49° vs Gaia -4.42°"
+ },
+ {
+  "check": "ε Indi B PM total (differential)",
+  "status": "PASS",
+  "detail": "4.7538″/yr (shown 4.75)"
+ },
+ {
+  "check": "ε Indi B PM error (visit bootstrap)",
+  "status": "PASS",
+  "detail": "0.0391″/yr (shown ±0.04)"
+ },
+ {
+  "check": "ε Indi B Gaia PM",
+  "status": "PASS",
+  "detail": "4.6842″/yr (shown 4.68)"
+ },
+ {
+  "check": "ε Indi B PM vs Gaia",
+  "status": "NOTE",
+  "detail": "difference +0.070″/yr = +1.8σ (bootstrap); Gaia DR3 B is a resolved binary component, orbital motion not modelled"
+ },
+ {
+  "check": "ε Indi B parallax",
+  "status": "PASS",
+  "detail": "270.74 ± 19.62 mas (shown 271 ± 20); Gaia 270.658"
+ },
+ {
+  "check": "ε Indi B leave-one-out",
+  "status": "NOTE",
+  "detail": "stored [279.8, 293.6, 276.7, 278.2] (shown 277–294 mas)"
+ },
+ {
+  "check": "ε Indi B methane ratio",
+  "status": "PASS",
+  "detail": "median F(3.9–4.1 µm) / median F(3.2–3.4 µm) = 5.43 (shown 5.4×)"
+ },
+ {
+  "check": "R Dra period",
+  "status": "PASS",
+  "detail": "228.6 d (225.0–241.0); catalogue 245.6 d lies at the p84–p97 range (241.0–261.0)"
+ },
+ {
+  "check": "R Dra frequency resolution",
+  "status": "NOTE",
+  "detail": "Rayleigh resolution ΔP ≈ P²/T = 123 d over 425 d (1.86 cycles): the 16–84% interval is statistical precision, much narrower than the resolution"
+ },
+ {
+  "check": "R Dra amplitude",
+  "status": "PASS",
+  "detail": "1.96 mag → 0.7 mag (shown 2.0 → 0.7)"
+ },
+ {
+  "check": "R Dra 1.1–2.4 µm",
+  "status": "PASS",
+  "detail": "236.2 d (230.0–519.0)"
+ },
+ {
+  "check": "R Dra 0.75-1.1 µm period",
+  "status": "NOTE",
+  "detail": "135.4 d (90.0–284.0, power 0.49): not shown; inconsistent with the Mira period"
+ },
+ {
+  "check": "R Dra 2.4-3.8 µm period",
+  "status": "NOTE",
+  "detail": "100.9 d (50.0–150.0, power 0.28): not shown; inconsistent with the Mira period"
+ },
+ {
+  "check": "RW Aur optical ratio",
+  "status": "PASS",
+  "detail": "0.75–1.1 µm last/first epoch = 1.76 (n=18,17; shown ×1.8)"
+ },
+ {
+  "check": "RW Aur 4–5 µm ratio",
+  "status": "PASS",
+  "detail": "3.8–5.0 µm last/first = 0.46 (n=34,35; shown ×0.5)"
+ },
+ {
+  "check": "RW Aur epochs",
+  "status": "NOTE",
+  "detail": "bands [np.str_('0.75-1.1'), np.str_('1.1-2.4'), np.str_('2.4-3.8'), np.str_('3.8-5.0')]; visit groups by 30 d: 4"
+ },
+ {
+  "check": "W2 13.89 mag → mJy",
+  "status": "PASS",
+  "detail": "0.4775 mJy (shown 0.48)"
+ },
+ {
+  "check": "W2 13.82 mag → mJy",
+  "status": "PASS",
+  "detail": "0.5093 mJy (shown 0.51)"
+ },
+ {
+  "check": "W2 13.7 mag → mJy",
+  "status": "PASS",
+  "detail": "0.5688 mJy (shown 0.57)"
+ },
+ {
+  "check": "Comet status rule",
+  "status": "PASS",
+  "detail": "20 comets; mismatches []"
+ },
+ {
+  "check": "Comet counts",
+  "status": "PASS",
+  "detail": "{'detected': 17, 'with_systematics': 2, 'marginal': 1, 'not_detected': 0}"
+ },
+ {
+  "check": "Comet Q percentile order",
+  "status": "PASS",
+  "detail": "violations []"
+ },
+ {
+  "check": "Outflow v₀ 0.50 vs 0.85",
+  "status": "PASS",
+  "detail": "Q(0.50)/Q(0.85) mean 0.598, range 0.592–0.601; 0.50/0.85 = 0.588 (−41.2%)"
+ },
+ {
+  "check": "Comet far flag",
+  "status": "PASS",
+  "detail": "['C/2014 UN271 (Bernardinelli-Bernstein)']"
+ },
+ {
+  "check": "Comet zero-core flag",
+  "status": "PASS",
+  "detail": "['235P/LINEAR', 'C/2025 Q3 (ATLAS)']"
+ },
+ {
+  "check": "Validation 3i-atlas_co2_2025-08",
+  "status": "PASS",
+  "detail": "1.17e+27 in [9.4e+26, 1.6e+27]"
+ },
+ {
+  "check": "Validation 29p_co_2025-12",
+  "status": "PASS",
+  "detail": "4.5e+28 in [2.9e+28, 5.6e+28]"
+ },
+ {
+  "check": "3I vs updated Lisse 2026 alone",
+  "status": "NOTE",
+  "detail": "(1.17−1.60)e27 / sqrt(0.30² + 1.6²)e26 = -2.6σ using the statistical error only; the 16–84% 0.86–1.38e27 does not reach 1.44e27 (1.6 − 10%)"
+ },
+ {
+  "check": "29P CO/CO₂",
+  "status": "NOTE",
+  "detail": "stored ratio 43.81581882798696 [36.63416603760084–51.85440801151953]; Q(CO₂) census 1.03e+27; implied Q(CO) 4.5e+28 vs validation 4.5e28"
+ },
+ {
+  "check": "Q r⁻²Δ⁻² vs S/N",
+  "status": "NOTE",
+  "detail": "Spearman-like correlation 0.33 across 20 comets"
+ },
+ {
+  "check": "NEO tier counts",
+  "status": "PASS",
+  "detail": "{'A': 11, 'B': 17, 'provisional': 6}"
+ },
+ {
+  "check": "NEO PHA in A/B",
+  "status": "PASS",
+  "detail": "7"
+ },
+ {
+  "check": "NEO D–H–pV consistency",
+  "status": "PASS",
+  "detail": "max |1329/√pV·10^(−H/5) / D − 1| = 0.012 (2026 CW4: 1.087 vs 1.1); pV is rounded to 3 decimals"
+ },
+ {
+  "check": "NEO very low albedo",
+  "status": "NOTE",
+  "detail": "6 objects with pV < 0.03 (2026 HB9, 2025 YH5, 2026 CW4, 2025 OD15, 2026 LJ2, 2025 FV2): below the NEO albedo distribution floor; diameters depend on H"
+ },
+ {
+  "check": "NEO CV n",
+  "status": "PASS",
+  "detail": "50"
+ },
+ {
+  "check": "NEO CV percentiles",
+  "status": "PASS",
+  "detail": "recomputed p16 0.672 p50 1.019 p84 1.358 vs stored 0.67 1.02 1.36"
+ },
+ {
+  "check": "NEO CV −33%/+36%",
+  "status": "PASS",
+  "detail": "32.8% / 35.8% recomputed"
+ },
+ {
+  "check": "NEO CV lognormal width",
+  "status": "NOTE",
+  "detail": "stored σ_ln 0.387; recomputed std(ln ratio) 0.357, robust 0.388"
+ },
+ {
+  "check": "Photometric bands file",
+  "status": "NOTE",
+  "detail": "{\"source\": \"2MASS and AllWISE Vega photometric reference\", \"bands\": {\"J\": {\"lo_um\": 1.11, \"hi_um\": 1.36, \"zero_jy\": 1594.0, \"magnitude_column\": \"j_m_2mass\"}, \"H\": {\"lo_um\": 1.5, \"hi_um\": 1.79, \"zero_jy\": 1024.0, \"magnitude_column\": \"h_m_2mass\"}, \"Ks\": {\"lo_um\": 2.0, \"hi_um\": 2.31, \"zero_jy\": 666.7, "
+ },
+ {
+  "check": "Channel file",
+  "status": "NOTE",
+  "detail": "keys ['source', 'note', 'channels']"
+ }
+]
