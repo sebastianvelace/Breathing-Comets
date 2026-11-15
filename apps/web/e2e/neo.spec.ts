@@ -27,3 +27,12 @@ test('NEO Spanish page preserves decimal points and fits a mobile viewport', asy
   await expect(page.locator('[data-slug="2025-yh5"]').getByTestId('interval')).toHaveText('0.610–1.363 km');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test('static catalog stays readable while scripted controls cannot yet respond', async ({browser,baseURL}) => {
+  const context = await browser.newContext({baseURL,javaScriptEnabled:false});
+  const page = await context.newPage();
+  await page.goto('/neo');
+  await expect(page.locator('[data-slug="2025-yh5"]').getByTestId('interval')).toHaveText('0.610–1.363 km');
+  await expect(page.getByRole('button',{name:'2025 YH5',exact:true})).toBeDisabled();
+  await context.close();
+});

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import {onMount} from 'svelte';
   import { neo, neoObjects } from '#lib/data/neo.js';
   import validation from '../../../static/data/neo/validation.json';
   import diameters from '../../../static/data/neo/validation_diameters.json';
@@ -8,6 +9,8 @@
   import { getLocale, localizeHref } from '#lib/paraglide/runtime.js';
   import * as m from '#lib/paraglide/messages.js';
   let filter = $state(''), tier = $state(''), selected = $state('');
+  let hydrated = $state(false);
+  onMount(() => {hydrated = true;});
   let points = $state.raw<(SpectrumPoint & {ra: number; dec: number})[]>([]);
   let loading = $state(false), error = $state(false);
   const rows = $derived(neoObjects.filter(o => (!tier || o.tier === tier) && o.pdes.toLowerCase().includes(filter.toLowerCase())));
@@ -47,11 +50,11 @@
     </div>
   </section>
   <section><h2>{m.neo_catalog()}</h2>
-    <div class="filters"><label>{m.neo_search()}<input type="search" bind:value={filter}/></label><label>{m.neo_tier()}<select bind:value={tier}><option value="">{m.neo_all()}</option><option>A</option><option>B</option><option value="provisional">{m.neo_provisional()}</option></select></label></div>
+    <div class="filters"><label>{m.neo_search()}<input type="search" bind:value={filter} disabled={!hydrated}/></label><label>{m.neo_tier()}<select bind:value={tier} disabled={!hydrated}><option value="">{m.neo_all()}</option><option>A</option><option>B</option><option value="provisional">{m.neo_provisional()}</option></select></label></div>
     <p>{m.neo_floor({percent: percent(neo.method.floor_fraction)})}</p>
     <div class="scroll"><table class="catalog"><thead><tr><th>{m.neo_object()}</th><th>{m.neo_diameter()}</th><th>{m.neo_interval()}</th><th>{m.neo_tier()}</th><th>H / pV</th></tr></thead><tbody>
       {#each rows as o}<tr id={'neo-'+o.slug} class:chosen={selected === o.slug} data-testid="neo-size-row" data-slug={o.slug}>
-        <td><button onclick={() => selected = o.slug} aria-pressed={selected === o.slug}>{o.pdes}</button>{#if o.pha}<span class="badge" title={m.neo_hazard()}>PHA</span>{/if}{#if o.single_visit}<span class="badge" data-testid="single-visit">{m.neo_single()}</span>{/if}</td>
+        <td><button onclick={() => selected = o.slug} aria-pressed={selected === o.slug} disabled={!hydrated}>{o.pdes}</button>{#if o.pha}<span class="badge" title={m.neo_hazard()}>PHA</span>{/if}{#if o.single_visit}<span class="badge" data-testid="single-visit">{m.neo_single()}</span>{/if}</td>
         <td data-testid="diameter">{o.D_km.toFixed(3)} km<span class="floor">±{percent(neo.method.floor_fraction)}%</span></td>
         <td data-testid="interval">{o.D16.toFixed(3)}–{o.D84.toFixed(3)} km</td><td data-testid="tier">{o.tier === 'provisional' ? m.neo_provisional() : o.tier}</td><td>{o.H.toFixed(2)} / {o.pV.toFixed(3)}</td>
       </tr>{/each}
