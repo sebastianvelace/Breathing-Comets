@@ -380,10 +380,10 @@
   "about_d_astropy": "Astropy y reproject",
   "about_u_astropy": "Coordenadas, WCS y reproyección de imágenes (Astropy Collaboration 2022)",
   "about_s5": "Uso de IA",
-  "about_s5_p1": "Usamos Claude Code (Anthropic) como asistente de investigación, código y redacción. Sus resultados se comprobaron con datos independientes, como la fotometría de 2MASS y WISE, valores publicados de cometas y tamaños de NEOWISE, y una auditoría corrigió varias cifras antes de publicar. Las comprobaciones y lo que sigue sin verificar están en la página de método.",
-  "about_s5_p2": "Ninguna imagen de este sitio la genera una IA: cada imagen es un cuadro real de SPHEREx o un gráfico de datos medidos.",
+  "about_s5_p1": "Las herramientas de asistencia por IA apoyaron la investigación, la implementación y la redacción. Las afirmaciones científicas se comprobaron con mediciones conservadas, catálogos independientes o valores publicados. La página de método distingue las comparaciones verificadas, las comprobaciones de consistencia y las limitaciones pendientes.",
+  "about_s5_p2": "Las placas científicas del cielo son observaciones reales de SPHEREx; las superposiciones y los gráficos usan datos de catálogo o mediciones con atribución. El fondo decorativo está separado de estas imágenes científicas.",
   "about_s6": "Software y tipografías",
-  "about_s6_p1": "Geist y Geist Mono se distribuyen con la licencia SIL Open Font License 1.1. Aladin Lite se distribuye con GPL-3. El código fuente de este sitio es público en GitHub.",
+  "about_s6_p1": "El código del proyecto se publica bajo GNU GPL versión 3. Aladin Lite conserva sus avisos de licencia; el paquete distribuido incluye textos LGPL-3.0 y GPL-3.0. Geist y Geist Mono usan la SIL Open Font License 1.1. Los datos del cielo y las mediciones publicadas conservan su atribución de origen; la licencia del código no sustituye sus condiciones.",
   "about_s6_link": "Código fuente",
   "tour_open": "Cómo funciona",
   "tour_nudge_title": "¿Primera vez?",
@@ -408,5 +408,6 @@
   "tour_s5_body": "Valores medidos con su incertidumbre y sus salvedades, más atajos que preparan una comparación por ti.",
   "tour_s6_title": "Story, Lab y compartir",
   "tour_s6_body": "Story es la vista guiada; Lab, en pantallas más anchas, añade capas del cielo y un inspector. Compartir copia un enlace que restaura exactamente esta vista.",
+  "neo_reference_note": "Los diámetros de referencia son medianas por objeto de las entradas publicadas en NEOWISE V2. Los diámetros de comparación de SPHEREx usan los cocientes exportados de validación cruzada, con su redondeo original; aquí no se repite el ajuste térmico.",
   "spectrum_tracks": "Se sigue el movimiento de {source}; posición de referencia de la API: 2026-01-01."
 }

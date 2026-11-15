@@ -42,6 +42,7 @@
     <div><h2>{m.neo_validation_title()}</h2><p>{m.neo_validation_summary({lower: percent(1-neo.method.cv_p16), upper: percent(neo.method.cv_p84-1), n: neo.method.cv_n})}</p>
       {#if diameters.points.length}<NeoPlot objects={neoObjects} validation={diameters.points} kind="validation" {selected} onselect={() => {}}/>{/if}
       {#if diameters.points.length < neo.method.cv_n}<p class="caveat" data-testid="neo-reference-caveat">{m.neo_validation_missing({available: diameters.points.length, total: neo.method.cv_n})}</p>{/if}
+      <p class="muted">{m.neo_reference_note()}</p>
       <details><summary>{m.neo_ratio_table()}</summary><div class="scroll"><table><thead><tr><th>{m.neo_object()}</th><th>{m.neo_ratio()}</th></tr></thead><tbody>{#each validation.cv as row}<tr><td>{row.key}</td><td>{row.D_ratio.toFixed(3)}</td></tr>{/each}</tbody></table></div></details>
     </div>
   </section>
