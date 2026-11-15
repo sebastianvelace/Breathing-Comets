@@ -4,6 +4,7 @@
   import "uplot/dist/uPlot.min.css";
   import type { SpectrumPoint } from "#lib/data/types.js";
   import { fmtSci } from "#lib/data/coordinates.js";
+  import { fmtTicks } from "#lib/data/format.js";
   import * as m from "#lib/paraglide/messages.js";
   import { bands } from "#lib/astro/bands.js";
   let { points, label }: { points: SpectrumPoint[]; label: string } = $props();
@@ -63,7 +64,7 @@
             size: 35,
             stroke: ink,
             grid: { show: false },
-            values: (_u, ticks) => ticks.map((v) => v.toFixed(1)),
+            values: (_u, ticks) => fmtTicks(ticks),
           },
           {
             label: m.flux(),
