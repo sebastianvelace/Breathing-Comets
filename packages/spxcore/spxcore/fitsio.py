@@ -1,13 +1,19 @@
 """FITS physical HDU layout and row reads, including RICE_1 flags."""
 
 import asyncio
+import hashlib
 import io
+import tempfile
+import time
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 import httpx
 import numpy as np
 from astropy.io.fits import Header
 
 from . import s3
+from .config import CACHE_DIR
 
 BLOCK = 2880
 _layouts = {}
@@ -21,13 +27,56 @@ class RangeReader(io.BufferedIOBase):
             raise ValueError("Only the public SPHEREx bucket is supported")
         self.url, self.position = url, 0
         self.client = httpx.Client(timeout=8)
-        response = self.client.get(url, headers={"Range": "bytes=0-65535"})
-        response.raise_for_status()
-        if response.status_code != 206:
+        try:
+            self.cached = self._fetch(0, 65536, initial=True)
+        except BaseException:
             self.client.close()
-            raise ValueError("Range requests are required")
-        self.size = int(response.headers["Content-Range"].rsplit("/", 1)[1])
-        self.cached_start, self.cached = 0, response.content
+            raise
+        self.cached_start = 0
+
+    def _fetch(self, start, length, initial=False):
+        end = start+length-1
+        deadline = time.monotonic()+30
+        with self.client.stream("GET", self.url, headers={"Range": f"bytes={start}-{end}"}) as response:
+            response.raise_for_status()
+            if response.status_code != 206:
+                raise ValueError("Range requests are required")
+            actual = response.headers.get("Content-Range", "")
+            if initial:
+                self.size = int(actual.rsplit("/", 1)[1])
+                self.etag = response.headers.get("ETag")
+            end = min(end, self.size-1)
+            if actual != f"bytes {start}-{end}/{self.size}":
+                raise ValueError("Unexpected FITS byte range")
+            pieces, size = [], 0
+            for piece in response.iter_bytes():
+                if time.monotonic() > deadline:
+                    raise TimeoutError("FITS byte range exceeded its total transfer deadline")
+                size += len(piece)
+                if size > end-start+1:
+                    raise ValueError("Oversized FITS byte range")
+                pieces.append(piece)
+            if size != end-start+1:
+                raise ValueError("Truncated FITS byte range")
+            return b"".join(pieces)
+
+    def _reference_piece(self, start, length):
+        # The first header still comes from S3. Retained table bytes are keyed
+        # by that response's ETag, so a changed object never reuses old bytes.
+        token = hashlib.sha256(f"{self.url}|{self.etag}|{start}|{length}".encode()).hexdigest()
+        path = CACHE_DIR / "reference_ranges" / token
+        if self.etag and path.is_file():
+            data = path.read_bytes()
+            if len(data) == length:
+                return data
+        data = self._fetch(start, length)
+        if self.etag:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as handle:
+                temporary = Path(handle.name)
+                handle.write(data)
+            temporary.replace(path)
+        return data
 
     def readable(self):
         return True
@@ -56,11 +105,16 @@ class RangeReader(io.BufferedIOBase):
             result = self.cached[offset:offset+size]
         else:
             end = min(self.size-1, self.position+max(size, 65536)-1)
-            response = self.client.get(self.url, headers={"Range": f"bytes={self.position}-{end}"})
-            response.raise_for_status()
-            if response.status_code != 206:
-                raise ValueError("Range requests are required")
-            self.cached_start, self.cached = self.position, response.content
+            starts = list(range(self.position, end+1, 64*1024))
+            if len(starts) > 1:
+                # Large independent reference tables use the same bounded range
+                # strategy as calibration downloads. HTTPX Client is thread-safe.
+                with ThreadPoolExecutor(max_workers=8) as pool:
+                    pieces = list(pool.map(lambda start: self._reference_piece(start, min(64*1024, end-start+1)), starts))
+                data = b"".join(pieces)
+            else:
+                data = self._fetch(self.position, end-self.position+1)
+            self.cached_start, self.cached = self.position, data
             result = self.cached[:size]
         self.position += len(result)
         return result
@@ -77,27 +131,35 @@ def open_l2(url):
     return fits.open(RangeReader(url), memmap=False)
 
 
-async def read_hdu_layout(key, max_hdus=12):
-    cache_key = (key, max_hdus)
+async def read_hdu_layout(key, max_hdus=12, required_names=None):
+    required = frozenset(required_names or ())
+    cache_key = (key, max_hdus, tuple(sorted(required)))
     if cache_key in _layouts:
         return _layouts[cache_key]
     # Metadata selection already read PRIMARY/IMAGE. Extend those same physical
     # headers instead of fetching them again for every selected image cutout.
-    prefixes = [value for (file_key, _), value in _layouts.items() if file_key == key]
+    prefixes = [value for entry, value in _layouts.items() if entry[0] == key]
     out = list(max(prefixes, key=len, default=[]))
-    if len(out) >= max_hdus or (out and out[-1]["name"] == "WCS-WAVE"):
+    if (required and required.issubset(h['name'] for h in out)) or len(out) >= max_hdus or (out and out[-1]["name"] == "WCS-WAVE"):
         return out[:max_hdus]
     loc = out[-1]["dat_loc"] + out[-1]["dat_span"] if out else 0
+    fetched, fetched_start = b"", -1
     for _ in range(len(out), max_hdus):
         blocks = 12
         while True:
-            chunk = await s3.get_range(key, loc, BLOCK * blocks)
+            if fetched_start <= loc < fetched_start+len(fetched):
+                chunk = fetched[loc-fetched_start:]
+            else:
+                fetched = chunk = await s3.get_range(key, loc, BLOCK * blocks)
+                fetched_start = loc
             end = next((i for i in range(0, len(chunk), 80) if chunk[i:i + 8] == b"END     "), None)
             if end is not None:
                 break
             if blocks >= 192:
                 raise ValueError("FITS header exceeds supported bounds")
             blocks *= 2
+            # A partial cached tail may not contain this whole header.
+            fetched = b""
         hlen = (end // BLOCK + 1) * BLOCK
         header = Header.fromstring(chunk[:hlen].decode("ascii"), sep="")
         axes = [header[f"NAXIS{i}"] for i in range(1, header.get("NAXIS", 0) + 1)]
@@ -107,7 +169,7 @@ async def read_hdu_layout(key, max_hdus=12):
         out.append({"name": header.get("EXTNAME", "PRIMARY"), "header": header,
                     "hdr_loc": loc, "dat_loc": loc + hlen, "dat_span": span})
         loc += hlen + span
-        if out[-1]["name"] == "WCS-WAVE":
+        if out[-1]["name"] == "WCS-WAVE" or (required and required.issubset(h['name'] for h in out)):
             break
     if len(_layouts) >= 256:
         _layouts.pop(next(iter(_layouts)))

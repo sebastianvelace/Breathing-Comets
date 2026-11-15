@@ -74,7 +74,7 @@ def test_saturated_flux_does_not_invalidate_wavelength_or_edge(monkeypatch):
     header = wcs.to_header()
     header["MJD-AVG"], header["PSF_FWHM"] = 61041.0, 6.0
 
-    async def layout(key):
+    async def layout(key, **options):
         return [{"name": "IMAGE", "header": header}]
 
     async def rows(key, layout, y0, y1, names):

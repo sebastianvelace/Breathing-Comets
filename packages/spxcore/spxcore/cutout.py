@@ -95,7 +95,8 @@ def _cache_frame(cache, grid, meta, frame):
 
 
 async def _make_frame(exposure, ra, dec, fov, include_var, key):
-    layout = await fitsio.read_hdu_layout(key)
+    names = ("IMAGE", "FLAGS", "VARIANCE") if include_var else ("IMAGE", "FLAGS")
+    layout = await fitsio.read_hdu_layout(key, required_names=names)
     header = next(h["header"] for h in layout if h["name"] == "IMAGE")
     win = WCS(header).celestial
     cx, cy = (float(v) for v in win.world_to_pixel_values(ra, dec))
@@ -106,7 +107,6 @@ async def _make_frame(exposure, ra, dec, fov, include_var, key):
     wr, wd = wout.pixel_to_world_values(xx, yy)
     xs, ys = win.world_to_pixel_values(wr, wd)
     y0, y1 = max(0, int(np.floor(np.nanmin(ys)))-3), min(2040, int(np.ceil(np.nanmax(ys)))+4)
-    names = ("IMAGE", "FLAGS", "VARIANCE") if include_var else ("IMAGE", "FLAGS")
     rows, maps = await asyncio.gather(fitsio.read_rows(key, layout, y0, y1, names), calib.load_maps(exposure["det"]))
     coords = [ys-y0, xs]
     flux = map_coordinates(rows["IMAGE"].astype(float), coords, order=1, cval=np.nan, mode="constant", prefilter=False)
