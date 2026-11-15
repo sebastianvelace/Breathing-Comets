@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import build from "../../../static/data/build.json";
   import calibration from "../../../static/data/calibration.json";
   import channelData from "../../../static/data/channels.json";
@@ -48,12 +49,10 @@
   <link rel="alternate" hreflang="es" href="https://breathingcomets.org/es/method" />
 </svelte:head>
 
-<header>
+<header class="product-header">
   <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
+    <div class="product-navigation"><ProductNav /></div>
   <nav>
-    <a href={localizeHref("/")}>{m.method_back()}</a>
-    <a href={localizeHref("/comets")}>{m.comets_title()}</a>
-    <a href={localizeHref("/neo")}>Small-Body Lab</a>
     <a href={localizeHref("/about")}>{m.about_title()}</a>
     <a lang={other} href={localizeHref("/method", { locale: other })} data-sveltekit-reload>{other.toUpperCase()}</a>
   </nav>

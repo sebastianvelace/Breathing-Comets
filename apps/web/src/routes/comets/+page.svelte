@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import {onMount} from 'svelte';
   let mounted = $state(false);
   onMount(() => {mounted = true;});
@@ -34,11 +35,10 @@
   <link rel="alternate" hreflang="es" href="https://breathingcomets.org/es/comets" />
 </svelte:head>
 
-<header>
+<header class="product-header">
   <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
+    <div class="product-navigation"><ProductNav active="comets" /></div>
   <nav>
-    <a href={localizeHref("/explore")}>{m.open_sky()}</a>
-    <a href={localizeHref("/neo")}>Small-Body Lab</a>
     <a lang={other} href={localizeHref("/comets", { locale: other })} data-sveltekit-reload>{other.toUpperCase()}</a>
   </nav>
 </header>
@@ -50,14 +50,18 @@
     {m.comets_counts({ n: cometAtlas.counts.comets, detected: co2Count("detected"), systematics: co2Count("with_systematics"), marginal: co2Count("marginal"), none: co2Count("not_detected") })}
   </p>
 
-  <section class="honesty" aria-labelledby="honesty-title">
-    <h2 id="honesty-title">{m.comets_honesty_title()}</h2>
-    <ul>
-      <li>{m.comets_honesty_census()}</li>
+  <div class="featured-comets">
+    <p>{m.comets_overview()}</p>
+    <a href={localizeHref('/comets/3i-atlas')}>3I/ATLAS →</a>
+    <a href={localizeHref('/comets/29p-schwassmann-wachmann')}>29P →</a>
+  </div>
+  <section class="honesty" aria-label={m.comets_honesty_title()}>
+    <p>{m.comets_honesty_census()}</p>
+    <details><summary>{m.comets_limits_toggle()}</summary><ul>
       <li data-testid="velocity-note">{m.comets_honesty_velocity({ percent: drop })}</li>
       <li>{m.comets_honesty_far({ au: cometAtlas.method.far_au })}</li>
       <li>{m.comets_honesty_systematics()}</li>
-    </ul>
+    </ul></details>
   </section>
 
   <section class="chart">
@@ -65,6 +69,8 @@
     <CometPlot comets={rows} {selected} onselect={pick} />
     <div class="inspection" aria-live="polite">
       {#if chosen}
+        {#if chosen.co2.status === "with_systematics"}<p class="caveat">{m.comets_honesty_systematics()}</p>{/if}
+        {#if chosen.flags.includes("far_unreliable")}<p class="caveat">{m.comets_honesty_far({au:cometAtlas.method.far_au})}</p>{/if}
         <h3>{m.comets_detail({ name: chosen.name, r: sig(chosen.r_au), delta: sig(chosen.delta_au) })}</h3>
         <p class="mono">{m.comets_detail_q({ q50: fmtSciUnicode(chosen.co2.q50), q16: fmtSciUnicode(chosen.co2.q16), q84: fmtSciUnicode(chosen.co2.q84), alt_tau: fmtSciUnicode(chosen.co2.q50_alt_tau_g), alt_v: fmtSciUnicode(chosen.co2.q50_alt_velocity) })}</p>
         <p class="mono">{m.comets_detail_diag({ snr: sig(chosen.co2.snr_det, 1), err: sig(chosen.co2.flux_rel_err, 3), core: chosen.co2.n_core, chi2: sig(chosen.co2.chi2_red, 1), t: chosen.co2.t_rot_k ?? "—" })}</p>
@@ -153,8 +159,8 @@
 <footer>{m.comets_credits()}</footer>
 
 <style>
-  header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}main{max-width:1440px;margin:auto;padding:64px var(--gutter)}.intro{max-width:640px;font-size:20px}section{margin-bottom:56px}h2{font-size:32px}h3{font-size:22px}
-  .honesty{max-width:760px;border-top:1px solid var(--ink);padding-top:12px;margin-top:32px}.honesty h2{font-size:22px}.honesty li{margin-bottom:8px;font-size:15px;color:var(--ink-2)}
+  header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}main{max-width:1440px;margin:auto;padding:40px var(--gutter)}.intro{max-width:640px;font-size:20px}section{margin-bottom:56px}h2{font-size:32px}h3{font-size:22px}
+  .honesty{max-width:760px;border-top:1px solid var(--ink);padding-top:12px;margin-top:32px}.honesty li{margin-bottom:8px;font-size:15px;color:var(--ink-2)}
   .chart{max-width:960px}.inspection{min-height:110px;margin-top:12px}.caveat{border-left:2px solid var(--accent);padding-left:14px;font-size:14px}
   .filters{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}label{display:grid;gap:6px}.scroll{overflow:auto}
   table{width:100%;border-collapse:collapse;text-align:left;font:12px var(--font-data)}th{font-weight:400;color:var(--graphite)}td,th{padding:12px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}.r{text-align:right}
@@ -162,4 +168,6 @@
   .validation{max-width:960px}.validation tr.sub td{white-space:normal;color:var(--ink-2);padding-top:0}.src{color:var(--graphite)}.ok{color:var(--co)}.off{color:var(--signal)}
   .method{max-width:680px;font-size:15px}.method a{color:var(--accent)}
   @media(max-width:850px){main{padding-top:40px}header{flex-wrap:wrap}h1{font-size:44px}}
+
+.featured-comets{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0}.featured-comets p{flex:1 1 400px;max-width:70ch;color:var(--ink-2);margin-bottom:6px}.featured-comets a{display:inline-flex;align-items:center;min-height:42px;border:1px solid var(--rule);border-radius:var(--r-pill);padding:8px 18px;text-decoration:none;color:var(--accent)}.honesty p,.honesty li{font-size:14px}.honesty summary{font-weight:500}.honesty{margin-bottom:28px}
 </style>

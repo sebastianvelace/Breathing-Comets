@@ -2,7 +2,7 @@
   import { tick, untrack } from "svelte";
   import * as m from "#lib/paraglide/messages.js";
 
-  let { open = $bindable(false) }: { open?: boolean } = $props();
+  let { open = $bindable(false), offer = $bindable(false) }: { open?: boolean; offer?: boolean } = $props();
 
   const KEY = "bc.tour.v1";
   type Step = { selector: string; title: () => string; body: () => string };
@@ -12,7 +12,7 @@
     { selector: ".plate", title: () => m.tour_s3_title(), body: () => m.tour_s3_body() },
     { selector: ".timeline", title: () => m.tour_s4_title(), body: () => m.tour_s4_body() },
     { selector: ".field-notes", title: () => m.tour_s5_title(), body: () => m.tour_s5_body() },
-    { selector: ".site-header nav", title: () => m.tour_s6_title(), body: () => m.tour_s6_body() },
+    { selector: ".header-actions", title: () => m.tour_s6_title(), body: () => m.tour_s6_body() },
   ];
 
   const read = () => {
@@ -43,14 +43,13 @@
   let rect = $state<{ top: number; left: number; width: number; height: number } | null>(null);
   let cardEl: HTMLElement | undefined = $state();
   let opener: Element | null = null;
-  let nudge = $state(false);
   let place = $state<{ top?: number; bottom?: number }>({ bottom: 16 });
 
   const step = $derived(list[i]);
   const last = $derived(i === list.length - 1);
 
   function begin() {
-    nudge = false;
+    offer = false;
     list = steps.filter((s) => visible(s.selector));
     if (!list.length) {
       open = false;
@@ -153,33 +152,13 @@
   $effect(() => {
     if (read()) return;
     const id = setTimeout(() => {
-      if (!open) nudge = true;
+      if (!open) offer = true;
     }, 2500);
     return () => clearTimeout(id);
   });
 </script>
 
 <svelte:window onkeydown={onkey} />
-
-{#if nudge && !open}
-  <aside class="nudge" aria-label={m.tour_nudge_title()}>
-    <span class="orb" aria-hidden="true"></span>
-    <div>
-      <p class="t">{m.tour_nudge_title()}</p>
-      <p>{m.tour_nudge_body()}</p>
-      <div class="row">
-        <button class="primary" onclick={() => (open = true)}>{m.tour_start()}</button>
-        <button
-          class="ghost"
-          onclick={() => {
-            remember("dismissed");
-            nudge = false;
-          }}>{m.tour_not_now()}</button
-        >
-      </div>
-    </div>
-  </aside>
-{/if}
 
 {#if open && step}
   <div class="tour" data-testid="tour">
@@ -273,8 +252,7 @@
       transform: scale(1.035);
     }
   }
-  .card,
-  .nudge {
+  .card {
     color: #e8ecf8;
     background: linear-gradient(160deg, rgba(24, 36, 78, 0.92), rgba(9, 14, 34, 0.94));
     backdrop-filter: blur(16px) saturate(1.3);
@@ -366,8 +344,7 @@
   .spacer {
     flex: 1;
   }
-  .card button,
-  .nudge button {
+  .card button {
     min-height: 40px;
     padding: 8px 18px;
     font-size: 14px;
@@ -376,80 +353,29 @@
     border-radius: 999px;
     background: rgba(160, 185, 240, 0.14);
   }
-  .card button:hover,
-  .nudge button:hover {
+  .card button:hover {
     background: rgba(160, 185, 240, 0.24);
   }
   .card button.soft {
     padding-inline: 14px;
   }
-  .card button.primary,
-  .nudge button.primary {
+  .card button.primary {
     background: #7aa7ff;
     color: #061033;
     font-weight: 600;
     box-shadow: 0 8px 24px -8px rgba(122, 167, 255, 0.9);
   }
-  .card button.primary:hover,
-  .nudge button.primary:hover {
+  .card button.primary:hover {
     background: #a6c4ff;
   }
-  .card button.ghost,
-  .nudge button.ghost {
+  .card button.ghost {
     background: transparent;
     color: #9aa7cc;
     padding-inline: 10px;
   }
-  .card button.ghost:hover,
-  .nudge button.ghost:hover {
+  .card button.ghost:hover {
     color: #e8ecf8;
     background: transparent;
-  }
-  .nudge {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    z-index: 90;
-    display: flex;
-    gap: 14px;
-    width: min(360px, calc(100vw - 40px));
-    padding: 18px 20px;
-    border-radius: 26px;
-    animation: nudge-in 600ms var(--ease) both;
-  }
-  .orb {
-    flex: none;
-    width: 14px;
-    height: 14px;
-    margin-top: 6px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 25%, #ffffff, #7aa7ff 70%);
-    box-shadow: 0 0 18px 4px rgba(122, 167, 255, 0.7);
-    animation: pulse 2.6s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    50% {
-      transform: scale(0.75);
-      opacity: 0.7;
-    }
-  }
-  .nudge p {
-    margin: 0 0 12px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #c0cae6;
-  }
-  .nudge .t {
-    margin-bottom: 2px;
-    font: 600 18px var(--font-display);
-    letter-spacing: -0.02em;
-    color: #f2f5ff;
-  }
-  @keyframes nudge-in {
-    from {
-      transform: translateY(16px);
-      opacity: 0;
-    }
   }
   @media (prefers-reduced-motion: reduce) {
     .spot,
@@ -458,9 +384,7 @@
       transition: none;
     }
     .spot::after,
-    .content,
-    .orb,
-    .nudge {
+    .content {
       animation: none;
     }
     .spot::after {

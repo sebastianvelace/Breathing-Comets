@@ -65,14 +65,18 @@
 
 <style>
   .layer-tree {
-    background: var(--lab-panel);
+    background: transparent;
     color: var(--plate-ink);
-    border: 1px solid #34312a;
-    padding: 18px;
-    width: 220px;
+    border: 0;
+    padding: 8px 0 18px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
     box-shadow: none;
   }
   h2 {
+    display: none;
     font: 12px var(--font-data);
     letter-spacing: 0.08em;
     margin: 0 0 22px;
@@ -80,7 +84,8 @@
   .source {
     font-size: 11px;
     color: var(--plate-dim);
-    border-top: 1px solid #34312a;
+    border-top: 1px solid var(--rule);
+    grid-column: 1 / -1;
     padding-top: 14px;
     margin-top: 18px;
   }
@@ -88,7 +93,7 @@
     display: flex;
     gap: 9px;
     align-items: center;
-    font-size: 12px;
+    font-size: 14px;
     margin: 12px 0;
   }
   input[type="checkbox"] {
@@ -106,5 +111,7 @@
   .note {
     line-height: 1.5;
     margin: 12px 0 0;
+    grid-column: 1 / -1;
   }
+  @media (max-width: 480px) { .layer-tree { grid-template-columns: 1fr; } }
 </style>

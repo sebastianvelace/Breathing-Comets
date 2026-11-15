@@ -99,7 +99,7 @@
   "landing_s6_open": "Explore {name}",
   "landing_s6_role_barnard": "The fastest star across our sky.",
   "landing_s6_role_eps": "A brown dwarf pair, with methane in its spectrum.",
-  "landing_s6_role_wise": "The coldest known object outside the Solar System.",
+  "landing_s6_role_wise": "The coldest known brown dwarf.",
   "landing_s6_role_rwaur": "A young star dimmed and brightened by its disk.",
   "landing_s6_role_rdra": "A pulsating red giant.",
   "landing_footer_data": "Data",
@@ -125,7 +125,7 @@
   "landing_close_body": "Every plate on this page is real SPHEREx data. Pick a target, move through the colors and blink the sky yourself.",
   "landing_close_routes": "Four ways in",
   "landing_close_r_barnard": "The fastest star: watch it move between visits.",
-  "landing_close_r_wise": "The coldest known object outside the Solar System.",
+  "landing_close_r_wise": "The coldest known brown dwarf.",
   "landing_close_r_rwaur": "A young star that dims and brightens.",
   "landing_close_r_3i": "An interstellar comet breathing out carbon dioxide.",
   "landing_nav_cta": "Open the sky"

@@ -16,6 +16,7 @@ test('Lab requests the real DR1 HiPS frame 85 and preserves Aladin attribution',
   await expect(iframe.locator('a[href="https://aladin.cds.unistra.fr/"]')).toBeVisible();
   await page.getByRole('button', {name: 'Story', exact: true}).click();
   await expect(page.getByTestId('aladin-frame')).toHaveCount(0);
+  await expect(page.getByRole('radio',{name:'Epoch',exact:true})).toHaveAttribute('data-state','on');
 });
 
 test('a real Lab pixel streams at least fifty measured spectrum points', async ({page}) => {

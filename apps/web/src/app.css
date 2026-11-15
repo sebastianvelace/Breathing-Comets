@@ -152,6 +152,30 @@ h2 {
   letter-spacing: 0.16em;
   text-decoration: none;
 }
+.product-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  padding: 12px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
+  backdrop-filter: blur(12px);
+}
+.product-navigation { margin-inline: auto; }
+.product-header > nav { display: flex; align-items: center; gap: 18px; }
+.product-header > nav > a { min-height: 42px; display: inline-flex; align-items: center; }
+summary { cursor: pointer; }
+details > summary { padding-block: 12px; min-height: 44px; }
+@media (max-width: 700px) {
+  .product-header { gap: 6px 12px; padding: 10px 16px; }
+  .product-header .brand { font-size: 11px; letter-spacing: 0.1em; }
+  .product-header > nav { margin-left: auto; gap: 12px; font-size: 13px; }
+  .product-navigation { order: 3; flex-basis: 100%; width: 100%; }
+}
 .sr-only {
   position: absolute;
   width: 1px;

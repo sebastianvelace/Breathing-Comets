@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import channelData from "../../../static/data/channels.json";
   import atlas from "../../../static/data/comets/index.json";
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
@@ -26,10 +27,10 @@
   <link rel="alternate" hreflang="es" href="https://breathingcomets.org/es/about" />
 </svelte:head>
 
-<header>
+<header class="product-header">
   <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
+    <div class="product-navigation"><ProductNav /></div>
   <nav>
-    <a href={localizeHref("/")}>{m.method_back()}</a>
     <a href={localizeHref("/method")}>{m.method_title()}</a>
     <a lang={other} href={localizeHref("/about", { locale: other })} data-sveltekit-reload>{other.toUpperCase()}</a>
   </nav>

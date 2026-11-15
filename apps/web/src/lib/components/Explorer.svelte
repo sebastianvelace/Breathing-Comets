@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import { onMount } from "svelte";
   import { wrap, proxy } from "comlink";
   import { page } from "$app/state";
@@ -35,6 +36,7 @@
   import Starfield from "./Starfield.svelte";
   import { channels, nearestChannel } from "#lib/astro/hips.js";
   import { spectrumPosition } from "#lib/astro/spectrum-position.js";
+  import { comparisonPair } from "#lib/astro/comparison.js";
 
   let { embed = false }: { embed?: boolean } = $props();
   const targets = [
@@ -62,7 +64,7 @@
     retry = $state(0),
     copied = $state(false),
     search = $state(""),
-    searchError = $state(false);
+    searchError = $state(false), copyFailed = $state(false);
   let shareLink = $state(""),
     selected = $state<[number, number]>(),
     livePoints = $state.raw<SpectrumPoint[]>([]),
@@ -92,7 +94,7 @@
     ),
   );
   let tourOpen = $state(false),
-    wantTour = $state(false);
+    wantTour = $state(false), guideOpen = $state(false), tourOffer = $state(false);
   let urlTimer: ReturnType<typeof setTimeout> | undefined;
   const active = $derived(view.mode === "diff" ? diff : base);
   const shownIndex = $derived(
@@ -130,6 +132,14 @@
   const availableDiff = $derived(
     view.mode !== "diff" || !!diff?.header.frames[shownIndex]?.diff_available,
   );
+  const guide = $derived(({
+    barnard: [m.guide_barnard_title, m.guide_barnard_body],
+    "eps-indi-b": [m.guide_eps_title, m.guide_eps_body],
+    "wise-0855": [m.guide_wise_title, m.guide_wise_body],
+    "rw-aur": [m.guide_rw_title, m.guide_rw_body],
+    "r-dra": [m.guide_r_dra_title, m.guide_r_dra_body],
+  } as Record<string, (() => string)[]>)[manifest?.slug ?? ""] ?? [m.guide_free_title, m.guide_free_body]);
+  const nextDiff = $derived(diff?.header.frames.findIndex((f, i) => i < (diff?.frames.length ?? 0) && f.diff_available) ?? -1);
   const languageHref = $derived.by(() => {
     const locale = getLocale() === "en" ? "es" : "en";
     const state = canShare && manifest && base ? snapshot(view, manifest, base, index, a, b) : view;
@@ -154,16 +164,8 @@
     }
     Object.assign(view, parseView(page.url.searchParams));
     view.lang = getLocale();
+    guideOpen = matchMedia("(min-width:768px)").matches;
     wantTour = page.url.searchParams.get("tour") === "1";
-    const mobile = matchMedia("(max-width:767px)");
-    if (mobile.matches) view.ui = "story";
-    const resized = () => {
-      if (mobile.matches && view.ui === "lab") {
-        view.ui = "story";
-        writeUrl();
-      }
-    };
-    mobile.addEventListener("change", resized);
     hipsFrame = nearestChannel(view.ch);
     if (!page.url.searchParams.has("det"))
       view.det = view.target === "barnard" ? 4 : 6;
@@ -176,7 +178,6 @@
     window.addEventListener("popstate", pop);
     return () => {
       window.removeEventListener("popstate", pop);
-      mobile.removeEventListener("change", resized);
       clearTimeout(urlTimer);
       spectrumAbort?.abort();
       searchAbort?.abort();
@@ -213,6 +214,7 @@
     loadedKey = "";
     shareLink = "";
     copied = false;
+    copyFailed = false;
     base = undefined;
     diff = undefined;
     gaia = [];
@@ -439,6 +441,7 @@
   }
   function switchUi(ui: "story" | "lab") {
     view.ui = ui;
+    if (ui === "story" && view.mode === "cube") view.mode = "epoch";
     if (ui === "lab") hipsFrame = nearestChannel(current?.lam_um);
     writeUrl();
   }
@@ -500,6 +503,10 @@
       });
     return () => controller.abort();
   });
+  function dismissTourOffer() {
+    tourOffer = false;
+    try {localStorage.setItem("bc.tour.v1", "dismissed");} catch { /* Optional preference. */ }
+  }
   function modeChange(value: string) {
     view.mode = value as Mode;
     playing = false;
@@ -570,9 +577,9 @@
     }
   }
   function compare() {
+    if (!base) return;
     view.mode = "blink";
-    a = 0;
-    b = (base?.frames.length ?? 1) - 1;
+    [a, b] = comparisonPair(base.header.frames.slice(0, base.frames.length));
     blend = 0;
     playing = true;
     writeUrl();
@@ -580,12 +587,14 @@
   async function share() {
     if (!canShare) return;
     writeUrl(true);
+    copyFailed = false;
     try {
       await navigator.clipboard.writeText(shareLink);
       copied = true;
       setTimeout(() => (copied = false), 2500);
     } catch {
       copied = false;
+      copyFailed = true;
     }
   }
   async function pick(ra: number, dec: number) {
@@ -669,10 +678,18 @@
 
 <div class="space" class:embed>
 {#if !embed}<Starfield fixed count={90} constellations={false} seed={41} />
-  <header class="site-header">
+  <header class="site-header product-header">
     <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
-    <nav>
-      <div class="ui-switch">
+    <div class="product-navigation"><ProductNav active="explore" /></div>
+    <nav class="header-actions" aria-label={m.share()}>
+      <a href={languageHref} data-sveltekit-reload aria-label={`${getLocale() === "en" ? "ES" : "EN"} · ${m.language()}`}
+        >{getLocale() === "en" ? "ES" : "EN"}</a
+      ><button onclick={share} disabled={!canShare} data-testid="share-view">{copied ? m.copied() : m.share()} ↗</button>
+    </nav>
+  </header>{/if}
+<main class:embedded={embed} class:lab={view.ui === "lab"}>
+  {#if !embed}<div class="workspace-controls">
+      <div class="ui-switch" role="group" aria-label={m.workspace_mode()}>
         <button
           aria-pressed={view.ui === "story"}
           onclick={() => switchUi("story")}>{m.story()}</button
@@ -686,12 +703,13 @@
         onclick={() => (tourOpen = true)}
         data-testid="tour-open"
         ><span class="long">{m.tour_open()}</span><span class="short" aria-hidden="true">?</span></button
-      ><a href={languageHref} data-sveltekit-reload aria-label={`${getLocale() === "en" ? "ES" : "EN"} · ${m.language()}`}
-        >{getLocale() === "en" ? "ES" : "EN"}</a
-      ><button onclick={share} disabled={!canShare} data-testid="share-view">{copied ? m.copied() : m.share()} ↗</button>
-    </nav>
-  </header>{/if}
-<main class:embedded={embed} class:lab={view.ui === "lab"}>
+      >
+      {#if tourOffer && !tourOpen}<aside class="tour-invite" aria-label={m.tour_nudge_title()}>
+          <p>{m.tour_nudge_title()}</p>
+          <button class="primary" onclick={() => {tourOffer = false; tourOpen = true;}}>{m.tour_start()}</button>
+          <button onclick={dismissTourOffer}>{m.tour_not_now()}</button>
+        </aside>{/if}
+    </div>{/if}
   {#if !embed}<section class="search-section">
       <form onsubmit={submitSearch}>
         <label class="sr-only" for="sky-search">{m.search_sky()}</label><input
@@ -719,7 +737,16 @@
     </section>{/if}
   <div class="explorer-grid">
     <section class="observation">
-      {#if view.ui === "lab"}<div class="lab-layers">
+      {#if !embed && manifest && view.ui === "story"}<details class="observation-guide" bind:open={guideOpen} data-testid="observation-guide">
+          <summary><h1><span class="eyebrow mono">{m.guide_label()}</span>{guide[0]()}</h1></summary>
+          <p>{guide[1]()}</p>
+          <div class="guide-actions">
+            <button onclick={compare} disabled={!canShare}>{m.guide_compare()} <span aria-hidden="true">↔</span></button>
+            <button onclick={() => modeChange("diff")} disabled={!canShare}>{m.guide_diff()}</button>
+          </div>
+        </details>{/if}
+      {#if view.ui === "lab"}<details class="lab-layers">
+          <summary>{m.layers()} <span>{m.layers_hint()}</span></summary>
           <LayerTree
             detector={view.det}
             layers={view.layers}
@@ -727,7 +754,7 @@
             onchange={setLayer}
             onopacity={setOpacity}
           />
-        </div>{/if}
+        </details>{/if}
       <div class="toolbar">
         <ModeSwitch
           value={view.mode}
@@ -776,10 +803,14 @@
             >{error
               ? m.load_failed()
               : diffError ||
-                (!availableDiff ? m.diff_unavailable() : m.loading())}</span
+                (view.mode === "diff" && !diff?.frames.length ? m.diff_loading() : !availableDiff ? m.diff_unavailable() : m.loading())}</span
           >{#if error}<button onclick={() => retry++}>{m.retry()}</button><small
               >{error}</small
             >{/if}
+          {#if view.mode === "diff" && !error}<div class="empty-actions">
+              {#if nextDiff >= 0}<button onclick={() => {index = nextDiff; writeUrl();}}>{m.diff_next()}</button>{/if}
+              <button onclick={() => modeChange("epoch")}>{m.return_epoch()}</button>
+            </div>{/if}
         </div>{/if}
       {#if base && base.frames.length}
         <Timeline
@@ -814,7 +845,7 @@
                   >{/each}</select
               ></label
             >
-          </div>{/if}
+          </div><p class="comparison-note">{m.compare_color_note()}</p>{/if}
         <div class="metadata mono" data-testid="frame-metadata">
           <span
             >D{view.det} · {current?.lam_um.toFixed(3)} µm · {current?.date
@@ -824,9 +855,12 @@
             >MJD {current?.mjd.toFixed(3)} · {m.visit()}
             {(current?.visit ?? 0) + 1} · {m.frame()}
             {shownIndex + 1}/{base.header.frames.length}</span
-          ><span>{current?.obs_id}</span>
+          >
         </div>
-        <p class="stretch-note mono">{m.whole_stack()}</p>
+        <details class="observation-details"><summary>{m.science_details()}</summary>
+          <p class="mono">{current?.obs_id} · MJD {current?.mjd.toFixed(6)}</p>
+          <p class="stretch-note mono">{m.whole_stack()}</p>
+        </details>
         <p class="explanation">
           {view.mode === "diff"
             ? m.diff_explain()
@@ -891,6 +925,7 @@
           {manifest}
           {spectrum}
           {playing}
+          ready={canShare}
           oncompare={compare}
           onplay={() => (playing = !playing)}
         />
@@ -901,7 +936,7 @@
       href={localizeHref("/explore") + "?" + serializeView(view)}
       target="_blank"
       rel="noopener">BREATHING COMETS ↗ · {m.embed_full()}</a
-    >{:else}<details class="share-details">
+    >{:else}<details class="share-details" open={copyFailed}>
       <summary>{m.share()}</summary><label class="mono" for="share-link"
         >URL</label
       ><input
@@ -909,10 +944,11 @@
         readonly
         value={canShare ? shareLink : ""}
       /><button onclick={share} disabled={!canShare}>{copied ? m.copied() : m.copy_link()}</button>
+      {#if !canShare}<p role="status">{m.share_wait()}</p>{:else if copyFailed}<p role="status">{m.copy_failed()}</p>{/if}
     </details>{/if}
 </main>
 {#if !embed}<footer class="mono">{m.credits()}</footer>
-  <Onboarding bind:open={tourOpen} />{/if}
+  <Onboarding bind:open={tourOpen} bind:offer={tourOffer} />{/if}
 </div>
 
 <style>
@@ -941,41 +977,39 @@
     padding: 6px 10px;
   }
   .lab-layers {
-    position: absolute;
-    top: 55px;
-    left: 0;
-    z-index: 2;
-    max-width: 24%;
+    margin-bottom: 16px;
+    padding: 0 18px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r-md);
+    background: var(--paper-2);
   }
-  .lab .explorer-grid {
-    gap: 0;
-  }
+  .lab-layers summary { font-size: 15px; font-weight: 500; }
+  .lab-layers summary span { margin-left: 12px; color: var(--ink-2); font-size: 13px; font-weight: 400; }
+  .workspace-controls > .tour-btn { margin-left: auto; }
+  .tour-invite { display: flex; align-items: center; gap: 8px; }
+  .tour-invite p { font-size: 13px; color: var(--ink-2); margin: 0; }
+  .tour-invite button { font-size: 12px; padding: 6px 10px; }
+  .workspace-controls { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .observation-guide { border-left: 2px solid var(--accent); padding: 2px 0 2px 18px; margin-bottom: 22px; max-width: 800px; }
+  .observation-guide .eyebrow { display: block; margin-bottom: 6px; color: var(--accent); }
+  .observation-guide summary { display: list-item; padding-block: 2px; }
+  .observation-guide h1 { font-size: clamp(22px, 2.4vw, 30px); margin-bottom: 8px; }
+  .observation-guide p { font-size: 15px; color: var(--ink-2); margin-bottom: 12px; }
+  .guide-actions, .empty-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .guide-actions button { font-size: 13px; padding: 6px 12px; }
+  .guide-actions button:first-child { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, var(--rule)); }
+  .comparison-note { font-size: 13px; color: var(--ink-2); margin: 10px 0 0; }
+  .observation-details { color: var(--ink-2); font-size: 13px; }
+  .observation-details p { margin: 4px 0 12px; }
   footer {
     border: 0;
   }
-  @media (max-width: 1279px) {
-    .lab-layers {
-      position: static;
-      max-width: none;
-      margin-bottom: 14px;
-    }
-    .lab-layers :global(.layer-tree) {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 18px;
-    }
-    .lab-layers :global(.source),
-    .lab-layers :global(.note),
-    .lab-layers :global(.reference) {
-      display: none;
-    }
-  }
   @media (max-width: 767px) {
+    .tour-invite p { display: none; }
+    .workspace-controls { gap: 6px; }
+    .tour-invite { gap: 4px; }
+    .tour-invite button { font-size: 11px; padding: 6px 8px; }
     .notes-slot.pending {
-      display: none;
-    }
-    .ui-switch {
       display: none;
     }
     /* Hidden visually, still the button's accessible name. */
@@ -1210,7 +1244,7 @@
   }
   .loading-progress {
     color: var(--graphite);
-    font-size: 10px;
+    font-size: 12px;
   }
   .share-details {
     margin-top: 28px;
@@ -1275,19 +1309,26 @@
       font-size: 11px;
       letter-spacing: 0.1em;
     }
-    .site-header nav {
+    .site-header .header-actions {
       gap: 12px;
     }
-    .site-header nav button {
+    .site-header .header-actions button {
       font-size: 11px;
       padding: 6px;
     }
     .explorer-grid {
       display: block;
     }
+    .lab-layers summary span { display: block; margin: 4px 0 0; }
+    .observation-guide { padding-left: 14px; margin-bottom: 18px; }
+    .guide-actions { display: grid; }
     .target-links {
-      gap: 10px 18px;
+      gap: 8px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 6px;
     }
+    .target-links button { flex-shrink: 0; }
     .search-section {
       margin-bottom: 24px;
     }

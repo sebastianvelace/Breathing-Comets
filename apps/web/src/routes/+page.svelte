@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import { page } from "$app/state";
   import * as m from "#lib/paraglide/messages.js";
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
@@ -103,15 +104,10 @@
 <div class="landing">
   <a class="skip" href="#main">{m.landing_skip()}</a>
   <div class="progress" aria-hidden="true"></div>
-  <header class="masthead on-plate">
+  <header class="masthead on-plate product-header">
     <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
-    <nav aria-label={m.landing_nav_label()}>
-      <ul>
-        {#each sections as s (s.id)}
-          <li><a href="#{s.id}" class:active={active === s.id} aria-current={active === s.id ? "location" : undefined}>{s.label()}</a></li>
-        {/each}
-      </ul>
-    </nav>
+    <div class="product-navigation"><ProductNav /></div>
+
     <a class="nav-cta" class:show={pastHero} href={exploreHref} tabindex={pastHero ? 0 : -1} aria-hidden={pastHero ? undefined : "true"} data-testid="nav-cta"
       >{m.landing_nav_cta()}<span aria-hidden="true"> →</span></a
     >
@@ -135,6 +131,13 @@
 
   <main id="main">
     <Hero {comet} />
+    <nav class="section-nav" aria-label={m.landing_nav_label()}>
+      <ul>
+        {#each sections as s (s.id)}
+          <li><a href="#{s.id}" class:active={active === s.id} aria-current={active === s.id ? "location" : undefined}>{s.label()}</a></li>
+        {/each}
+      </ul>
+    </nav>
     <div class="on-plate band-ribbon"><SpectrumRibbon /></div>
     <BlinkSection />
     <div class="on-plate"><DiffSection /></div>
@@ -302,8 +305,8 @@
     text-decoration-thickness: 2px;
   }
   @media (max-width: 1060px) {
-    nav {
-      display: none;
+    .section-nav {
+      overflow-x: auto;
     }
     .masthead {
       justify-content: space-between;
@@ -313,6 +316,15 @@
       margin-left: auto;
     }
   }
+  .section-nav {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 12px var(--gutter);
+    overflow-x: auto;
+    border-block: 1px solid var(--rule);
+  }
+  .section-nav ul { flex-wrap: nowrap; width: max-content; }
+  .section-nav a { white-space: nowrap; }
   @media (max-width: 520px) {
     .nav-cta {
       padding: 6px 10px;

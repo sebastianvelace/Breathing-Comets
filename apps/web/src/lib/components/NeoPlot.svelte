@@ -20,16 +20,16 @@
   const diameterAtH = (H: number, p: number) => 1329 / Math.sqrt(p) * 10 ** (-H / 5);
 </script>
 
-<svg viewBox="0 0 620 350" role="img" aria-label={kind === 'catalog' ? m.neo_dh() : m.neo_validation_plot()}>
+<svg viewBox="0 0 620 350" role={kind === 'catalog' ? 'group' : 'img'} aria-label={kind === 'catalog' ? m.neo_dh() : m.neo_validation_plot()}>
   <defs><clipPath id={'neo-' + kind}><rect x={dims.left} y={dims.top} width={dims.w-dims.left-dims.right} height={dims.h-dims.top-dims.bottom}/></clipPath></defs>
   {#each yTicks as v}<line class="grid" x1={dims.left} x2={dims.w-dims.right} y1={y(v)} y2={y(v)}/><text x={dims.left-10} y={y(v)+4} text-anchor="end">{v.toFixed(v < 1 ? -Math.log10(v) : 0)}</text>{/each}
-  {#each xTicks as v}<text x={x(v)} y={dims.h-dims.bottom+22} text-anchor="middle">{kind === 'catalog' ? v : (10**v).toFixed(v < 0 ? -v : 0)}</text>{/each}
+  {#each xTicks.filter((_,i) => i % Math.max(1,Math.ceil(xTicks.length / 6)) === 0) as v}<text x={x(v)} y={dims.h-dims.bottom+22} text-anchor="middle">{kind === 'catalog' ? v : (10**v).toFixed(v < 0 ? -v : 0)}</text>{/each}
   <g clip-path={'url(#neo-' + kind + ')'}>
   {#if kind === 'catalog'}
     {#each albedos as p, i}<line class="assumption" x1={x(bounds.xmin)} y1={y(diameterAtH(bounds.xmin,p))} x2={x(bounds.xmax)} y2={y(diameterAtH(bounds.xmax,p))} stroke-dasharray={i === 1 ? '4 3' : '2 5'}/>{/each}
     {#each objects as o}
       <line class="interval" x1={x(o.H)} x2={x(o.H)} y1={y(o.D16)} y2={y(o.D84)}/>
-      <a href={'#neo-' + o.slug} onclick={() => onselect(o.slug)} aria-label={`${o.pdes}: ${o.D_km} km, ${o.D16}–${o.D84} km, ${o.tier}`}>
+      <a href={'#neo-' + o.slug} onclick={(event) => {event.preventDefault(); onselect(o.slug);}} aria-label={`${o.pdes}: ${o.D_km} km, ${o.D16}–${o.D84} km, ${o.tier}`}>
         <circle class:selected={selected === o.slug} class:provisional={o.tier === 'provisional'} cx={x(o.H)} cy={y(o.D_km)} r={selected === o.slug ? 6 : 4}><title>{o.pdes} · {o.D_km} [{o.D16}–{o.D84}] km · {o.tier}</title></circle>
       </a>
     {/each}
@@ -46,4 +46,5 @@
 
 <style>
   svg{display:block;width:100%;overflow:visible} text{fill:var(--graphite);font:11px var(--font-data)} .label{fill:var(--ink)} .grid,.axis{stroke:var(--rule);stroke-width:1} .assumption{stroke:var(--graphite);stroke-width:1;opacity:.6} .interval{stroke:var(--accent);stroke-width:1;opacity:.5} circle{fill:var(--accent);stroke:var(--paper);stroke-width:1}.provisional{fill:var(--paper);stroke:var(--accent)}.selected{fill:var(--signal);stroke:var(--ink);stroke-width:1.5}.validation{fill:var(--co)}.unity{stroke:var(--ink);stroke-width:1;stroke-dasharray:5 4} a:focus-visible circle{stroke:var(--ink);stroke-width:3}.legend{font:11px var(--font-data);color:var(--graphite)}
+@media(max-width:700px){text{font-size:24px}.label{font-size:22px}.legend{font-size:12px;line-height:1.6}}
 </style>

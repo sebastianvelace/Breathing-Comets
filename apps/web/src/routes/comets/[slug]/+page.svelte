@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ProductNav from "#lib/components/ProductNav.svelte";
   import {onMount} from 'svelte';
   let mounted = $state(false);
   onMount(() => {mounted = true;});
@@ -65,11 +66,11 @@
   <link rel="alternate" hreflang="es" href={`https://breathingcomets.org/es/comets/${d.slug}`} />
 </svelte:head>
 
-<header>
+<header class="product-header">
   <a class="brand" href={localizeHref("/")}>BREATHING COMETS</a>
+    <div class="product-navigation"><ProductNav active="comets" /></div>
   <nav>
     <a href={localizeHref("/comets")}>{m.cd_back()}</a>
-    <a href={localizeHref("/explore")}>{m.open_sky()}</a>
     <a lang={other} href={localizeHref(`/comets/${d.slug}`, { locale: other })} data-sveltekit-reload>{other.toUpperCase()}</a>
   </nav>
 </header>

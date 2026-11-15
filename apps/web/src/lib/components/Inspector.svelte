@@ -59,143 +59,54 @@
 </script>
 
 <aside class="inspector" aria-label={m.inspector()}>
-  <h2>{m.inspector()}</h2>
-  {#if selected}<p class="mono">
-      ICRS {selected[0].toFixed(6)}, {selected[1].toFixed(6)}
-    </p>{/if}
-  {#if sample}
-    <dl class="mono">
-      <div>
-        <dt>x, y</dt>
-        <dd>{sample.x}, {sample.y}</dd>
-      </div>
-      <div>
-        <dt>λ</dt>
-        <dd>{sample.wavelength?.toFixed(4)} µm</dd>
-      </div>
-      <div>
-        <dt>{m.intensity()}</dt>
-        <dd>{fmtSci(sample.value, 5)} MJy/sr</dd>
-      </div>
-      <div>
-        <dt>σ</dt>
-        <dd>
-          {sample.variance !== undefined
-            ? fmtSci(Math.sqrt(sample.variance), 4)
-            : "—"} MJy/sr
-        </dd>
-      </div>
-      <div>
-        <dt>{m.flags()}</dt>
-        <dd>0x{sample.flags.toString(16)} {sample.names.join(" · ")}</dd>
-      </div>
-    </dl>
-  {:else}<p class="hint">{m.spectrum_pending()}</p>{/if}
-  <h3>{m.live_spectrum()}</h3>
+  <p class="eyebrow mono">{m.inspector()}</p>
+  <h2>{m.live_spectrum()}</h2>
   <p role="status" class="hint">{status || m.spectrum_pending()}</p>
   {#if points.length}<SpectrumPlot {points} label={m.live_spectrum()} />{/if}
-  {#if metadata}<section class="frame-properties">
-      <h3>{m.frame_properties()}</h3>
+  {#if selected}
+    <p class="coordinates mono">ICRS {selected[0].toFixed(6)}, {selected[1].toFixed(6)}</p>
+  {/if}
+  {#if sample}
+    <details>
+      <summary>{m.pixel_details()}</summary>
       <dl class="mono">
-        <div>
-          <dt>MJD</dt>
-          <dd>{metadata.mjd.toFixed(6)}</dd>
-        </div>
-        <div>
-          <dt>UTC</dt>
-          <dd>{metadata.date}</dd>
-        </div>
-        <div>
-          <dt>{m.visit()}</dt>
-          <dd>{metadata.visit + 1}</dd>
-        </div>
-        <div>
-          <dt>λ</dt>
-          <dd>{metadata.lam_um.toFixed(4)} µm</dd>
-        </div>
-        <div>
-          <dt>Δλ</dt>
-          <dd>{metadata.bw_um.toFixed(4)} µm</dd>
-        </div>
-        <div>
-          <dt>{m.collection()}</dt>
-          <dd>{metadata.collection}</dd>
-        </div>
-        <div>
-          <dt>obs_id</dt>
-          <dd>{metadata.obs_id}</dd>
-        </div>
+        <div><dt>x, y</dt><dd>{sample.x}, {sample.y}</dd></div>
+        <div><dt>λ</dt><dd>{sample.wavelength?.toFixed(4)} µm</dd></div>
+        <div><dt>{m.intensity()}</dt><dd>{fmtSci(sample.value, 5)} MJy/sr</dd></div>
+        <div><dt>σ</dt><dd>{sample.variance !== undefined ? fmtSci(Math.sqrt(sample.variance),4) : "—"} MJy/sr</dd></div>
+        <div><dt>{m.flags()}</dt><dd>0x{sample.flags.toString(16)} {sample.names.join(" · ")}</dd></div>
       </dl>
-      <a class="mono" href={fitsLink(metadata)} target="_blank" rel="noopener"
-        >{m.open_fits()} ↗</a
-      >
-    </section>{/if}
+    </details>
+  {/if}
+  {#if metadata}
+    <details class="frame-properties">
+      <summary>{m.frame_properties()}</summary>
+      <dl class="mono">
+        <div><dt>MJD</dt><dd>{metadata.mjd.toFixed(6)}</dd></div>
+        <div><dt>UTC</dt><dd>{metadata.date}</dd></div>
+        <div><dt>{m.visit()}</dt><dd>{metadata.visit+1}</dd></div>
+        <div><dt>λ</dt><dd>{metadata.lam_um.toFixed(4)} µm</dd></div>
+        <div><dt>Δλ</dt><dd>{metadata.bw_um.toFixed(4)} µm</dd></div>
+        <div><dt>{m.collection()}</dt><dd>{metadata.collection}</dd></div>
+        <div><dt>obs_id</dt><dd>{metadata.obs_id}</dd></div>
+      </dl>
+      <a href={fitsLink(metadata)} target="_blank" rel="noopener">{m.open_fits()} ↗</a>
+    </details>
+  {/if}
 </aside>
 
 <style>
-  .inspector {
-    --paper: #1a1916;
-    --ink: #ece7dc;
-    --ink-2: #c9c2b4;
-    --graphite: #9a9488;
-    --rule: #34312a;
-    --co2: #f2d24b;
-    --accent: #7aa7ff;
-    --accent-ink: #061033;
-    --co: #5fbfc7;
-    --h2o: #8fa5ff;
-    background: var(--paper);
-    color: var(--ink);
-    padding: 22px 20px;
-    border: 1px solid var(--rule);
-    min-width: 0;
-    overflow: auto;
-    max-height: calc(100vh - 180px);
-    position: sticky;
-    top: 20px;
-  }
-  h2 {
-    font: 12px var(--font-data);
-    letter-spacing: 0.08em;
-    margin-bottom: 20px;
-  }
-  h3 {
-    font: 20px var(--font-display);
-    margin-top: 22px;
-    margin-bottom: 10px;
-  }
-  dl {
-    font-size: 10px;
-    margin-bottom: 20px;
-  }
-  dl div {
-    display: flex;
-    gap: 12px;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--rule);
-    padding: 7px 0;
-  }
-  dt {
-    color: var(--graphite);
-    flex-shrink: 0;
-  }
-  dd {
-    margin: 0;
-    text-align: right;
-    overflow-wrap: anywhere;
-  }
-  .hint {
-    font-size: 12px;
-    color: var(--graphite);
-  }
-  .frame-properties {
-    border-top: 1px solid var(--rule);
-    margin-top: 20px;
-  }
-  a {
-    font-size: 11px;
-  }
-  .mono {
-    overflow-wrap: anywhere;
-  }
+  .inspector { background: var(--paper-2); color: var(--ink); padding: 24px; border: 1px solid var(--rule); border-radius: var(--r-lg); min-width: 0; align-self: start; }
+  .eyebrow { color: var(--accent); margin-bottom: 10px; }
+  h2 { font-size: 24px; line-height: 1.2; margin-bottom: 12px; }
+  .hint { font-size: 14px; line-height: 1.6; color: var(--ink-2); }
+  .coordinates { overflow-wrap: anywhere; color: var(--ink-2); margin-top: 16px; }
+  details { margin-top: 18px; border-top: 1px solid var(--rule); }
+  summary { font-size: 14px; font-weight: 500; }
+  dl { font-size: 12px; }
+  dl div { display: flex; gap: 12px; justify-content: space-between; border-bottom: 1px solid var(--rule); padding: 9px 0; }
+  dt { color: var(--ink-2); flex-shrink: 0; }
+  dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+  a { font-size: 14px; }
+  @media (max-width: 767px) { .inspector { margin-top: 24px; padding: 20px; } }
 </style>

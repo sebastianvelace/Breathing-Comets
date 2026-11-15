@@ -58,7 +58,7 @@
             {m.landing_range({ lo: fmtSciUnicode(lead.lo), hi: fmtSciUnicode(lead.hi) })}
           </p>
           <p class="caveat">{localized(lead.caveat, lead.caveat_es, locale)}</p>
-          <p class="source mono">{lead.source}</p>
+          <details><summary>{m.cd_provenance()}</summary><p class="source mono">{lead.source}</p></details>
         </div>
       {/if}
       {#if rest.length}
@@ -71,7 +71,7 @@
                 ({m.landing_range({ lo: fmtSciUnicode(item.lo), hi: fmtSciUnicode(item.hi) })})
               </dd>
               <dd class="caveat">{localized(item.caveat, item.caveat_es, locale)}</dd>
-              <dd class="source mono">{item.source}</dd>
+              <dd><details><summary>{m.cd_provenance()}</summary><p class="source mono">{item.source}</p></details></dd>
             </div>
           {/each}
         </dl>

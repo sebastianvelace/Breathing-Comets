@@ -9,12 +9,14 @@
     oncompare,
     onplay,
     playing,
+    ready,
   }: {
     manifest: Manifest;
     spectrum: SpectrumPoint[];
     oncompare: () => void;
     onplay: () => void;
     playing: boolean;
+    ready: boolean;
   } = $props();
   const intro = $derived(
     (
@@ -33,10 +35,10 @@
   <p class="eyebrow mono">{m.field_notes()}</p>
   <h2>{manifest.name}</h2>
   <p class="intro">{intro}</p>
-  <button class="compare" onclick={oncompare}
+  <button class="compare" onclick={oncompare} disabled={!ready}
     >{m.compare()} <span aria-hidden="true">↔</span></button
   >
-  <button class="play-note" onclick={onplay}
+  <button class="play-note" onclick={onplay} disabled={!ready}
     >{playing ? m.pause() : m.play()}
     <span aria-hidden="true">{playing ? "Ⅱ" : "▶"}</span></button
   >

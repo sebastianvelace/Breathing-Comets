@@ -363,3 +363,13 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - Language changes now request the localized document and serialize the live observation state, rather than depending on a stale route URL. NEO uses the same full-navigation locale boundary.
 - Sharing requires the completed acquisition key to match the requested field/detector. Each copy serializes the current observation; pending acquisitions cannot reuse an old link. Superseded name resolution is aborted.
 - Regression browser checks: `4 passed (5.6s)`; type check 0 errors/0 warnings; build passed. No scientific expected values changed.
+
+## Experience revision: guided workspaces
+
+- Shared, sticky Explore/Comets/Asteroids navigation is available across landing, Explorer, atlas, detail, NEO, method and about pages. Landing chapter navigation remains below the hero.
+- Layers now occupy normal flow in a disclosure. Inspector prioritizes the spectrum and folds pixel/frame metadata. Lab is available on phones; leaving Cube for Story returns to Epoch.
+- Prepared fields explain what to observe. Visit comparison prefers the longest baseline within one band width, with an explicit color caveat. Diff λ distinguishes loading from unavailable references and offers recovery actions.
+- NEO selection details sit beside the table on desktop and receive an intentional scroll on mobile. Size, interval, evidence tier, systematic floor and single-visit warnings remain together. Chart links are exposed to keyboard and assistive technology; mobile axis labels are larger.
+- The first-visit tour offer is inline beside help, so it cannot intercept the image controls. Its existing dismissal and keyboard-tour behavior remain covered. WISE uses the approved brown-dwarf description in both locales.
+- Final type check: 0 errors / 0 warnings. Vitest: 50 passed. Data/submission consistency: 101 passed in 0.17s. Initial landing JavaScript: 76,099 gzip bytes in 22 referenced modules, below 90,000 bytes.
+- First complete local run: 62 passed (1.2m). Final local rerun after Cube-to-Story and readiness guards: **62 passed (1.1m)**. Deployment verification will follow publication. See UX_IMPROVEMENTS.md for the behavior changes and tradeoffs.
