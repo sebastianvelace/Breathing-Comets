@@ -69,6 +69,38 @@ test('a delayed name lookup cannot replace a target selected afterwards', async 
   await expect(page.getByRole('button',{name:'WISE 0855−0714',exact:true})).toHaveAttribute('aria-pressed','true');
 });
 
+test('retrying Gaia preserves the loaded images and selected observation', async ({page}) => {
+  let catalogs = 0, stacks = 0, manifests = 0;
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => {release=resolve;});
+  page.on('request', request => {
+    if (request.url().endsWith('/barnard/D4.spxf.gz')) stacks++;
+    if (request.url().endsWith('/barnard/manifest.json')) manifests++;
+  });
+  await page.route('**/data/targets/barnard/gaia.json', async route => {
+    if (++catalogs === 1) return route.fulfill({status:503,json:{error:'test catalog outage'}});
+    await gate;
+    await route.continue();
+  });
+  await page.goto('/explore?target=barnard');
+  await expect(page.getByTestId('share-view')).toBeEnabled();
+  const timeline=page.getByRole('slider',{name:'Observation timeline'});
+  await timeline.press('End');
+  const observation=await timeline.inputValue();
+  await expect(page).toHaveURL(/t=/);
+  const before=new URL(page.url());
+  await page.getByRole('status').filter({hasText:'Gaia DR3 unavailable'}).getByRole('button',{name:'Retry'}).click();
+  await expect(page.getByRole('status').filter({hasText:'Loading Gaia DR3 overlay'})).toBeVisible();
+  await expect(page.getByText('No Gaia counterpart with measured proper motion is available for this target.')).toHaveCount(0);
+  await expect(page.getByTestId('share-view')).toBeEnabled();
+  await expect(timeline).toHaveValue(observation);
+  release();
+  await expect(page.getByTestId('gaia-cross')).toBeVisible();
+  await expect(timeline).toHaveValue(observation);
+  expect(new URL(page.url()).searchParams.get('t')).toBe(before.searchParams.get('t'));
+  expect({catalogs,stacks,manifests}).toEqual({catalogs:2,stacks:1,manifests:1});
+});
+
 for (const width of [390, 1024, 1280, 1440]) {
   test(`Lab controls stay usable with the layers expanded at ${width}px`, async ({page}) => {
     await page.setViewportSize({width,height:900});
@@ -113,6 +145,17 @@ test('mobile navigation connects the three workspaces and exposes a guided compa
   const last=await page.getByRole('combobox',{name:'Date B',exact:true}).locator('option:checked').innerText();
   expect(first.slice(0,10)).not.toBe(last.slice(0,10));
   expect(Math.abs(Number(first.split(' · ')[1].split(' ')[0])-Number(last.split(' · ')[1].split(' ')[0]))).toBeLessThan(0.1);
+  const plate=page.locator('.plate');
+  await expect.poll(async()=>Number(await plate.getAttribute('data-zoom'))).toBeGreaterThan(1);
+  const marker=page.getByTestId('gaia-cross');
+  await expect(marker).toBeVisible();
+  const box=await plate.boundingBox();
+  expect(Number(await marker.getAttribute('data-x'))).toBeGreaterThan(30);
+  expect(Number(await marker.getAttribute('data-x'))).toBeLessThan(box!.width-30);
+  expect(Number(await marker.getAttribute('data-y'))).toBeGreaterThan(30);
+  expect(Number(await marker.getAttribute('data-y'))).toBeLessThan(box!.height-30);
+  await page.getByRole('button',{name:'Reset view',exact:true}).click();
+  await expect(plate).toHaveAttribute('data-zoom','1');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
 });
 
@@ -126,6 +169,14 @@ test('a selected asteroid exposes its size and interval beside the catalog', asy
   await expect(detail).toContainText('0.610–1.363 km');
   await expect(detail).toContainText('A single visit does not measure rotational variability.');
   await expect(detail.getByTestId('spectrum-plot')).toHaveAttribute('data-points',/[1-9]\d*/);
+});
+
+test('guided focus survives the viewer replacement when leaving Diff λ', async ({page}) => {
+  await page.goto('/explore?target=barnard&mode=diff');
+  await expect(page.locator('[data-stack-kind="diff"] canvas')).toBeVisible();
+  await page.getByRole('button',{name:'Start a visit comparison'}).click();
+  await expect(page.getByRole('radio',{name:'Blink',exact:true})).toHaveAttribute('data-state','on');
+  await expect.poll(async()=>Number(await page.locator('.plate').getAttribute('data-zoom'))).toBeGreaterThan(1);
 });
 
 for (const locale of ['en','es']) {

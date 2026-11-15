@@ -1,6 +1,6 @@
 <script lang="ts">
   import ProductNav from "#lib/components/ProductNav.svelte";
-  import { onMount } from "svelte";
+  import { onMount, tick, untrack } from "svelte";
   import { wrap, proxy } from "comlink";
   import { page } from "$app/state";
   import { replaceState } from "$app/navigation";
@@ -60,7 +60,8 @@
     blend = $state(0);
   let error = $state(""),
     diffError = $state(""),
-    gaiaError = $state(false),
+    gaiaState = $state<"loading" | "ready" | "failed">("loading"),
+    gaiaRetry = $state(0),
     retry = $state(0),
     copied = $state(false),
     search = $state(""),
@@ -76,6 +77,7 @@
   let spectrumAbort: AbortController | undefined;
   let searchAbort: AbortController | undefined;
   let resolving = $state(false), loadedKey = $state("");
+  let viewer = $state<SpxViewer>();
   const requestedKey = $derived(acquisitionKey(view));
   const canShare = $derived(ready && !resolving && loadedKey === requestedKey && !!base?.frames.length && !!manifest && !error);
   let hipsFrame = $state(0),
@@ -129,6 +131,9 @@
   const star = $derived(
     gaia.find((s) => s.source_id === manifest?.gaia_target_id),
   );
+  const gaiaUrl = $derived(manifest ? manifest.slug
+    ? `/data/targets/${encodeURIComponent(manifest.slug)}/${manifest.gaia}`
+    : manifest.gaia : "");
   const availableDiff = $derived(
     view.mode !== "diff" || !!diff?.header.frames[shownIndex]?.diff_available,
   );
@@ -217,11 +222,9 @@
     copyFailed = false;
     base = undefined;
     diff = undefined;
-    gaia = [];
     spectrum = [];
     error = "";
     diffError = "";
-    gaiaError = false;
     manifest = undefined;
     playing = false;
     selected = undefined;
@@ -259,47 +262,6 @@
       if (!alive) return;
       manifest = data;
       if (!data.stacks[String(det)]) throw Error("Detector unavailable");
-      fetch(slug ? root + data.gaia : data.gaia, { signal: abort.signal })
-        .then((r) => {
-          if (!r.ok) throw Error();
-          return r.json();
-        })
-        .then((list: GaiaStar[]) => {
-          if (!alive) return;
-          gaia = list;
-          if (!slug) {
-            const candidates = list
-              .filter((s) => s.pmra !== null && s.pmdec !== null)
-              .map((s) => {
-                const [r, d] = propagate(
-                  s.ra,
-                  s.dec,
-                  s.pmra!,
-                  s.pmdec!,
-                  s.ref_epoch,
-                  61041,
-                );
-                return {
-                  star: s,
-                  distance:
-                    Math.hypot(
-                      (((r - ra + 540) % 360) - 180) *
-                        Math.cos((dec * Math.PI) / 180),
-                      d - dec,
-                    ) * 3600,
-                };
-              })
-              .sort((a, b) => a.distance - b.distance);
-            if (candidates[0]?.distance < 2 && manifest)
-              manifest = {
-                ...manifest,
-                gaia_target_id: candidates[0].star.source_id,
-              };
-          }
-        })
-        .catch(() => {
-          if (alive) gaiaError = true;
-        });
       if (slug)
         fetch(`/data/targets/${encodeURIComponent(slug)}.json`, {
           signal: abort.signal,
@@ -364,6 +326,41 @@
       abort.abort();
       worker?.terminate();
     };
+  });
+  // Catalog recovery must not reacquire the image stack or reset the timeline.
+  $effect(() => {
+    const url = gaiaUrl, attempt = gaiaRetry;
+    void attempt;
+    const data = untrack(() => manifest);
+    gaia = [];
+    gaiaState = "loading";
+    if (!url || !data) return;
+    const abort = new AbortController();
+    fetch(url, {signal: abort.signal})
+      .then(r => {
+        if (!r.ok) throw Error(`Gaia HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((list: GaiaStar[]) => {
+        if (abort.signal.aborted) return;
+        if (!Array.isArray(list)) throw Error("Invalid Gaia catalog");
+        gaia = list;
+        gaiaState = "ready";
+        if (!data.slug) {
+          const candidates = list.filter(s => s.pmra !== null && s.pmdec !== null)
+            .map(s => {
+              const [r, d] = propagate(s.ra, s.dec, s.pmra!, s.pmdec!, s.ref_epoch, 61041);
+              return {star: s, distance: Math.hypot(
+                (((r - data.ra + 540) % 360) - 180) * Math.cos(data.dec * Math.PI / 180),
+                d - data.dec) * 3600};
+            }).sort((a, b) => a.distance - b.distance);
+          if (manifest) manifest = {...manifest, gaia_target_id:
+            candidates[0]?.distance < 2 ? candidates[0].star.source_id : undefined};
+        }
+      }).catch(() => {
+        if (!abort.signal.aborted) gaiaState = "failed";
+      });
+    return () => abort.abort();
   });
   $effect(() => {
     if (view.mode !== "diff" || !manifest) return;
@@ -576,13 +573,15 @@
       if (!abort.signal.aborted) resolving = false;
     }
   }
-  function compare() {
+  async function compare() {
     if (!base) return;
     view.mode = "blink";
     [a, b] = comparisonPair(base.header.frames.slice(0, base.frames.length));
     blend = 0;
     playing = true;
     writeUrl();
+    await tick();
+    viewer?.focusComparison(a, b);
   }
   async function share() {
     if (!canShare) return;
@@ -784,6 +783,7 @@
       </div>
       {#if active && manifest && active.frames.length && availableDiff}
         {#key `${manifest.slug}/${view.det}/${view.mode === "diff"}`}<SpxViewer
+            bind:this={viewer}
             stack={active}
             {index}
             {a}
@@ -868,9 +868,10 @@
               ? m.blink_explain()
               : m.same_stretch()}
         </p>
-        {#if gaiaError}<p class="mono" role="status">
+        {#if gaiaState === "loading"}<p class="mono muted" role="status">{m.gaia_pending()}</p>
+        {:else if gaiaState === "failed"}<p class="mono" role="status">
             {m.loading_gaia()}
-            <button onclick={() => retry++}>{m.retry()}</button>
+            <button onclick={() => gaiaRetry++}>{m.retry()}</button>
           </p>{:else if !star}<p class="mono muted">
             {m.no_gaia_target()}
           </p>{/if}

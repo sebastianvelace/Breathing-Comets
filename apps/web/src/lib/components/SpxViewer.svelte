@@ -7,6 +7,7 @@
     propagate,
   } from "#lib/data/coordinates.js";
   import type { Stack, Manifest, GaiaStar } from "#lib/data/types.js";
+  import { comparisonViewport } from "#lib/astro/comparison.js";
   import * as m from "#lib/paraglide/messages.js";
   import flagDefinitions from "../../../static/data/display_flags.json";
   let {
@@ -51,6 +52,7 @@
     cy = $state(0),
     error = $state("");
   let renderer = $state.raw<PlateRenderer>();
+  let pendingFocus = $state<[number, number]>();
   let uploaded = 0;
   const scale = $derived(
     Math.min(width / stack.header.grid.nx, height / stack.header.grid.ny) *
@@ -81,6 +83,26 @@
       height / 2 - (y + 0.5 - cy) * scale,
     ];
   }
+  export function focusComparison(first: number, last: number) {
+    pendingFocus = [first, last];
+  }
+  $effect(() => {
+    if (!pendingFocus || !width || !height) return;
+    const [first, last] = pendingFocus;
+    pendingFocus = undefined;
+    const pm = manifest.pm;
+    const source = star && star.pmra !== null && star.pmdec !== null
+      ? {ra: star.ra, dec: star.dec, pmra: star.pmra, pmdec: star.pmdec, epoch: star.ref_epoch}
+      : pm ? {ra: pm.ra0, dec: pm.dec0, pmra: pm.pmra_masyr, pmdec: pm.pmdec_masyr, epoch: pm.ref_epoch_jyear} : undefined;
+    if (!source) return;
+    const pixels: [number, number][] = [first, last].map(i => {
+      const frame = stack.header.frames[i];
+      return frame ? worldToPixel(...propagate(source.ra, source.dec, source.pmra,
+        source.pmdec, source.epoch, frame.mjd), stack.header.grid) : [NaN, NaN];
+    });
+    const viewport = comparisonViewport(stack.header.grid, pixels, width, height);
+    if (viewport) ({cx, cy, zoom} = viewport);
+  });
   const knownMarkers = $derived(
     knownObjects.map((object) => {
       const [x, y] = worldToPixel(object.ra, object.dec, stack.header.grid);
@@ -172,7 +194,7 @@
   }
 </script>
 
-<div class="plate" data-stack-kind={stack.header.kind} bind:this={box}>
+<div class="plate" data-stack-kind={stack.header.kind} data-zoom={zoom} bind:this={box}>
   <canvas
     bind:this={canvas}
     aria-label={m.sky_plate()}
@@ -264,7 +286,7 @@
       aria-label={m.reset_view()}>↺</button
     >
   </div>
-  <span class="plate-label">SPHEREx · D{stack.header.det}</span>
+  <span class="plate-label">SPHEREx · D{stack.header.det} · {zoom.toFixed(1)}×</span>
 </div>
 
 <style>

@@ -399,7 +399,7 @@
   "tour_s1_title": "Start with a target",
   "tour_s1_body": "Type a star, a comet or coordinates, or pick one of the five prepared targets underneath.",
   "tour_s2_title": "Three ways to look",
-  "tour_s2_body": "Epoch shows a single frame. Blink flips between two dates so anything that moved jumps out. Diff λ subtracts what the neighbouring colors predict, so only real change stays.",
+  "tour_s2_body": "Epoch shows one observation. Blink compares two dates. Diff λ subtracts a reference built from nearby wavelengths; residuals can include real change, color differences or artifacts.",
   "tour_s3_title": "A real SPHEREx plate",
   "tour_s3_body": "Every pixel is measured data. Scroll to zoom, drag to pan and click a pixel to read its spectrum. The blue cross is the position Gaia predicts for the star.",
   "tour_s4_title": "Move through time and color",
@@ -445,5 +445,6 @@
   "neo_size_summary": "Estimated diameter",
   "no_results_reset": "Clear filters",
   "comets_overview": "Choose a comet in the plot to inspect its measurement, or open the real plates for 3I/ATLAS and 29P.",
-  "comets_limits_toggle": "How to interpret these measurements"
+  "comets_limits_toggle": "How to interpret these measurements",
+  "gaia_pending": "Loading Gaia DR3 overlay… Sky images remain usable."
 }

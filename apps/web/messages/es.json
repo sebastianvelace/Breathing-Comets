@@ -399,7 +399,7 @@
   "tour_s1_title": "Empieza por un objetivo",
   "tour_s1_body": "Escribe una estrella, un cometa o coordenadas, o elige uno de los cinco objetivos preparados debajo.",
   "tour_s2_title": "Tres maneras de mirar",
-  "tour_s2_body": "Epoch muestra un solo cuadro. Blink alterna entre dos fechas para que lo que se movió salte a la vista. Diff λ resta lo que predicen los colores vecinos, y solo queda el cambio real.",
+  "tour_s2_body": "Época muestra una observación. Parpadeo compara dos fechas. Diff λ resta una referencia construida con longitudes de onda cercanas; los residuos pueden incluir cambios reales, diferencias de color o artefactos.",
   "tour_s3_title": "Una placa real de SPHEREx",
   "tour_s3_body": "Cada píxel es un dato medido. Usa la rueda para acercar, arrastra para moverte y haz clic en un píxel para leer su espectro. La cruz azul es la posición que predice Gaia para la estrella.",
   "tour_s4_title": "Recorre el tiempo y el color",
@@ -445,5 +445,6 @@
   "neo_size_summary": "Diámetro estimado",
   "no_results_reset": "Limpiar filtros",
   "comets_overview": "Selecciona un cometa en el gráfico para ver su medición, o abre las imágenes reales de 3I/ATLAS y 29P.",
-  "comets_limits_toggle": "Cómo interpretar estas mediciones"
+  "comets_limits_toggle": "Cómo interpretar estas mediciones",
+  "gaia_pending": "Cargando la capa Gaia DR3… Las imágenes siguen disponibles."
 }
