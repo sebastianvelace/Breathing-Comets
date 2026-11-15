@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import ProductNav from "#lib/components/ProductNav.svelte";
   import { onMount, tick } from "svelte";
   import { wrap, proxy } from "comlink";
@@ -964,7 +965,7 @@
       {#if !canShare}<p role="status">{m.share_wait()}</p>{:else if copyFailed}<p role="status">{m.copy_failed()}</p>{/if}
     </details>{/if}
 </main>
-{#if !embed}<footer class="mono">{m.credits()}</footer>
+{#if !embed}<footer class="mono">{m.credits()}<LegalLinks /></footer>
   <Onboarding bind:open={tourOpen} bind:offer={tourOffer} />{/if}
 </div>
 

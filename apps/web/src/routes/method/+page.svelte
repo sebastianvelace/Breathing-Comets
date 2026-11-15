@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import ProductNav from "#lib/components/ProductNav.svelte";
   import build from "../../../static/data/build.json";
   import calibration from "../../../static/data/calibration.json";
@@ -191,7 +192,7 @@
     </section>
   </main>
 </div>
-<footer>{m.method_credits()}</footer>
+<footer>{m.method_credits()}<LegalLinks /></footer>
 
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}

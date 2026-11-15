@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import ProductNav from "#lib/components/ProductNav.svelte";
   import {onMount} from 'svelte';
   let mounted = $state(false);
@@ -186,7 +187,7 @@
     </p>
   </section>
 </main>
-<footer>{m.comets_credits()}</footer>
+<footer>{m.comets_credits()}<LegalLinks /></footer>
 
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}main{max-width:1280px;margin:auto;padding:56px var(--gutter)}.intro{max-width:640px;font-size:20px}section{margin:56px 0}h2{font-size:30px}

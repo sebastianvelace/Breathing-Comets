@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import { page } from "$app/state";
   import * as m from "#lib/paraglide/messages.js";
   import { getLocale, localizeHref } from "#lib/paraglide/runtime.js";
@@ -42,6 +43,7 @@
       </ul>
     </div>
   </div>
+  <LegalLinks />
   <p class="brand-line">BREATHING COMETS · NASA SPACE APPS 2026</p>
 </footer>
 

@@ -452,5 +452,11 @@
   "moving_named": "{name} se mueve en el cielo, así que un campo fijo no puede seguirlo.",
   "moving_open_detail": "Abrir {name} seguido con las efemérides de SPHEREx",
   "moving_open_atlas": "Ver los cometas seguidos en el atlas",
-  "moving_open_neo": "Ver tamaños de asteroides en el Small-Body Lab"
+  "moving_open_neo": "Ver tamaños de asteroides en el Small-Body Lab",
+  "legal_terms": "Términos de uso",
+  "legal_privacy": "Privacidad",
+  "legal_updated": "Última actualización: {date}",
+  "legal_contact": "Abrir una incidencia en GitHub",
+  "nav_github": "Código fuente en GitHub",
+  "legal_not_nasa": "Proyecto independiente · sin afiliación ni respaldo de la NASA ni de ninguna agencia"
 }

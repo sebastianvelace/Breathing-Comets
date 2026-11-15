@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import ProductNav from "#lib/components/ProductNav.svelte";
   import {onMount, tick} from 'svelte';
   import { neo, neoObjects } from '#lib/data/neo.js';
@@ -81,7 +82,7 @@
   </div>
   <section class="method"><h2>{m.neo_method()}</h2><p>{m.neo_method_text({model: neo.method.model, eta: neo.method.eta, sigma: neo.method.eta_sigma, trail: neo.method.trail_max_px})}</p><p>{neo.method.photometry}</p><a href={diameters.source}>{m.neo_source()}</a> · <a href="/data/neo/index.json" download>{m.neo_download()}</a></section>
 </main>
-<footer>SPHEREx: NASA/JPL-Caltech/IRSA · NEOWISE: NASA/JPL-Caltech/IPAC</footer>
+<footer>SPHEREx: NASA/JPL-Caltech/IRSA · NEOWISE: NASA/JPL-Caltech/IPAC<LegalLinks /></footer>
 
 <style>
 header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px}main{max-width:1440px;margin:auto;padding:64px var(--gutter)}.intro{max-width:640px;font-size:20px}.plots{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:56px}.plots>div{min-width:0}section{margin-bottom:56px}h2{font-size:32px}.caveat{border-left:2px solid var(--accent);padding-left:14px;font-size:14px}.filters{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}label{display:grid;gap:6px}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;text-align:left;font:13px/1.6 var(--font-data)}th{font-weight:400;color:var(--graphite)}td,th{padding:12px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}.catalog button{padding:3px 0;min-height:40px;border:0;text-align:left;color:var(--accent);text-decoration:underline;text-underline-offset:4px}.catalog button[aria-pressed=true]{background:transparent;color:var(--signal)}.chosen{background:var(--paper-2)}.badge,.floor{display:block;color:var(--graphite);font-size:12px}.inspection{max-width:800px}.method{max-width:680px;font-size:15px}details .scroll{max-height:250px}@media(max-width:850px){.plots{grid-template-columns:1fr;gap:28px}main{padding-top:40px}header{flex-wrap:wrap}.brand{font-size:12px}nav{font-size:14px}h1{font-size:44px}}

@@ -452,5 +452,11 @@
   "moving_named": "{name} moves across the sky, so a fixed field cannot follow it.",
   "moving_open_detail": "Open {name} tracked with the SPHEREx ephemeris",
   "moving_open_atlas": "Browse the tracked comets in the atlas",
-  "moving_open_neo": "See asteroid sizes in the Small-Body Lab"
+  "moving_open_neo": "See asteroid sizes in the Small-Body Lab",
+  "legal_terms": "Terms of use",
+  "legal_privacy": "Privacy",
+  "legal_updated": "Last updated: {date}",
+  "legal_contact": "Open an issue on GitHub",
+  "nav_github": "Source code on GitHub",
+  "legal_not_nasa": "Independent project · not affiliated with or endorsed by NASA or any agency"
 }

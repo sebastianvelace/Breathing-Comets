@@ -54,3 +54,38 @@ test("an unknown address returns a real 404 page", async ({ request }) => {
   expect(response.status()).toBe(404);
   expect(await response.text()).toContain("This part of the sky is empty.");
 });
+
+test("every product header links to the repository with an accessible GitHub icon", async ({ page }) => {
+  for (const path of ["/", "/explore?target=barnard", "/comets", "/neo", "/method", "/about", "/terms", "/es/privacy"]) {
+    await page.goto(path);
+    const link = page.getByTestId("github-link").first();
+    await expect(link, path).toBeVisible();
+    await expect(link).toHaveAttribute("href", "https://github.com/sebastianvelace/Breathing-Comets");
+    await expect(link).toHaveAccessibleName(/GitHub/);
+  }
+});
+
+test("terms and privacy exist in both languages and are linked from every footer", async ({ page }) => {
+  for (const [path, heading] of [["/terms", "Terms of use"], ["/privacy", "Privacy notice"], ["/es/terms", "Términos de uso"], ["/es/privacy", "Aviso de privacidad"]]) {
+    await page.goto(path);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+  }
+  await page.goto("/terms");
+  await expect(page.getByTestId("legal-page")).toContainText("not operated, endorsed, sponsored or reviewed by NASA");
+  for (const path of ["/", "/explore?target=barnard", "/comets", "/comets/3i-atlas", "/neo", "/method", "/about"]) {
+    await page.goto(path);
+    const links = page.getByTestId("legal-links").first();
+    await expect(links.getByRole("link", { name: "Terms of use" }), path).toHaveAttribute("href", "/terms");
+    await expect(links.getByRole("link", { name: "Privacy" })).toHaveAttribute("href", "/privacy");
+  }
+});
+
+test("no NASA logo or insignia image is served on the product pages", async ({ page }) => {
+  for (const path of ["/", "/explore?target=barnard", "/comets", "/neo", "/about", "/terms"]) {
+    await page.goto(path);
+    const sources = await page.locator("img, image, use").evaluateAll((els) =>
+      els.map((e) => (e.getAttribute("src") ?? e.getAttribute("href") ?? e.getAttribute("xlink:href") ?? "") + " " + (e.getAttribute("alt") ?? "")),
+    );
+    for (const s of sources) expect(s.toLowerCase(), path).not.toMatch(/nasa[-_ ]?(logo|meatball|insignia|worm)|meatball/);
+  }
+});

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import LegalLinks from "#lib/components/LegalLinks.svelte";
   import ProductNav from "#lib/components/ProductNav.svelte";
   import channelData from "../../../static/data/channels.json";
   import atlas from "../../../static/data/comets/index.json";
@@ -89,7 +90,7 @@
     <p><a href="https://github.com/sebastianvelace/Breathing-Comets" rel="external">{m.about_s6_link()}</a></p>
   </section>
 </main>
-<footer>{m.method_credits()}</footer>
+<footer>{m.method_credits()}<LegalLinks /></footer>
 
 <style>
   header{display:flex;justify-content:space-between;gap:24px;padding:24px var(--gutter);border-bottom:1px solid var(--rule)}nav{display:flex;gap:24px;flex-wrap:wrap}
