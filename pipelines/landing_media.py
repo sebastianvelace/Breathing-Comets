@@ -33,7 +33,7 @@ OVERFLOW, NODATA = 1 << 1, 1 << 13
 PLATE = np.array([11, 11, 10], float)
 PLATE_INK = np.array([236, 231, 220], float)
 CYAN = np.array([127, 212, 230], float)
-OCHRE = np.array([242, 160, 61], float)
+GOLD = np.array([245, 213, 74], float)  # positive Diff lambda; matches --co2-on-plate
 CREDITS = [
     "SPHEREx: NASA/JPL-Caltech/IRSA (DR1 + QR3, L2 l2b-v27)",
     "Gaia DR3: ESA/Gaia/DPAC",
@@ -90,7 +90,7 @@ def stretch_rgb(flux, flags, lo, hi):
 def diverging_rgb(value, flags, sigma):
     t = np.clip(0.5 + 0.5 * np.nan_to_num(value) / (5 * max(sigma, 1e-10)), 0, 1)
     low = np.where(t[..., None] < 0.5, CYAN, PLATE)
-    high = np.where(t[..., None] < 0.5, PLATE, OCHRE)
+    high = np.where(t[..., None] < 0.5, PLATE, GOLD)
     u = np.where(t < 0.5, t * 2, (t - 0.5) * 2)
     rgb = low + (high - low) * u[..., None]
     empty = ~np.isfinite(value) | ((flags & NODATA) != 0)

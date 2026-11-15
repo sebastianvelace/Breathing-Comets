@@ -335,7 +335,7 @@
     --accent: #7aa7ff;
     --accent-strong: #a6c4ff;
     --accent-ink: #061033;
-    --co2: #f2a03d;
+    --co2: #f5d54a;
     --co: #7fd4e6;
     --h2o: #8fa5ff;
     --signal: #ff6b57;

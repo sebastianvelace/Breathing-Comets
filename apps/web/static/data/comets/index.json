@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-14T19:20Z",
+ "generated": "2026-11-15T00:35Z",
  "generator": "pipelines/export_comets.py",
  "method": {
   "status_rule": "detected: S/N_det >= 5 and chi2_red < 50; with_systematics: S/N_det >= 5 and chi2_red >= 50; marginal: 3 <= S/N_det < 5; not_detected: S/N_det < 3",

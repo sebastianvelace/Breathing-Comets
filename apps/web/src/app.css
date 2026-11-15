@@ -16,8 +16,9 @@
   --accent-strong: #1d45b8;
   --accent-ink: #ffffff;
   --accent-on-plate: #7aa7ff;
-  --co2: #a85a14;
-  --co2-on-plate: #f2a03d;
+  /* CO2 band and positive Diff lambda: star yellow. With cyan it is a colour-blind-safe diverging pair. */
+  --co2: #a88700;
+  --co2-on-plate: #f5d54a;
   --co: #1c6e73;
   --co-on-plate: #7fd4e6;
   --h2o: #3550c4;
@@ -45,7 +46,7 @@
     --accent: #7aa7ff;
     --accent-strong: #a6c4ff;
     --accent-ink: #061033;
-    --co2: #e39a45;
+    --co2: #f2d24b;
     --co: #5fbfc7;
     --h2o: #8fa5ff;
     --signal: #ff6b57;

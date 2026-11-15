@@ -125,7 +125,7 @@ export class PlateRenderer {
         t = i / 255;
       if (difference) {
         a = t < 0.5 ? [127, 212, 230] : dark;
-        b = t < 0.5 ? dark : [242, 160, 61];
+        b = t < 0.5 ? dark : [245, 213, 74];
         t = t < 0.5 ? t * 2 : (t - 0.5) * 2;
       }
       for (let c = 0; c < 3; c++)

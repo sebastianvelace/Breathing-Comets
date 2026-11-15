@@ -209,7 +209,7 @@
     stroke: var(--plate-ink);
   }
   .arrow {
-    stroke: var(--co2-on-plate);
+    stroke: var(--accent-on-plate);
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
   }

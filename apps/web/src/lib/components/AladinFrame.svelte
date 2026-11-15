@@ -57,7 +57,7 @@
       gaia = factory.catalog({
         name: "Gaia DR3",
         sourceSize: 6,
-        color: "#F2A03D",
+        color: "#7AA7FF",
       });
       viewer.addCatalog(gaia);
     }
@@ -150,7 +150,7 @@
         showCooLocation: false,
         showStatusBar: false,
         showReticle: true,
-        reticleColor: "#F2A03D",
+        reticleColor: "#7AA7FF",
         survey: hips.url,
       });
       survey = viewer.newImageSurvey(hips.url, {

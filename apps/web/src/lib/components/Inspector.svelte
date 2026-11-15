@@ -139,7 +139,7 @@
     --ink-2: #c9c2b4;
     --graphite: #9a9488;
     --rule: #34312a;
-    --co2: #e39a45;
+    --co2: #f2d24b;
     --accent: #7aa7ff;
     --accent-ink: #061033;
     --co: #5fbfc7;
