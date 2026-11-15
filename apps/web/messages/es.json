@@ -407,5 +407,6 @@
   "tour_s5_title": "Lee las notas de campo",
   "tour_s5_body": "Valores medidos con su incertidumbre y sus salvedades, más atajos que preparan una comparación por ti.",
   "tour_s6_title": "Story, Lab y compartir",
-  "tour_s6_body": "Story es la vista guiada; Lab, en pantallas más anchas, añade capas del cielo y un inspector. Compartir copia un enlace que restaura exactamente esta vista."
+  "tour_s6_body": "Story es la vista guiada; Lab, en pantallas más anchas, añade capas del cielo y un inspector. Compartir copia un enlace que restaura exactamente esta vista.",
+  "spectrum_tracks": "Se sigue el movimiento de {source}; posición de referencia de la API: 2026-01-01."
 }

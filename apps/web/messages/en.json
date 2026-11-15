@@ -407,5 +407,6 @@
   "tour_s5_title": "Read the field notes",
   "tour_s5_body": "Measured values with their uncertainty and caveats, plus shortcuts that set up a comparison for you.",
   "tour_s6_title": "Story, Lab and sharing",
-  "tour_s6_body": "Story is the guided view; Lab, on wider screens, adds sky layers and an inspector. Share copies a link that restores exactly this view."
+  "tour_s6_body": "Story is the guided view; Lab, on wider screens, adds sky layers and an inspector. Share copies a link that restores exactly this view.",
+  "spectrum_tracks": "Motion tracked for {source}; API reference position: 2026-01-01."
 }

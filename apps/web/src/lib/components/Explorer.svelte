@@ -33,6 +33,7 @@
   import Onboarding from "./Onboarding.svelte";
   import Starfield from "./Starfield.svelte";
   import { channels, nearestChannel } from "#lib/astro/hips.js";
+  import { spectrumPosition } from "#lib/astro/spectrum-position.js";
 
   let { embed = false }: { embed?: boolean } = $props();
   const targets = [
@@ -574,14 +575,17 @@
     const abort = new AbortController();
     spectrumAbort = abort;
     selected = [ra, dec];
+    const position = spectrumPosition(ra, dec, current?.mjd ?? 61041, gaia, manifest);
+    const note = position.source ? m.spectrum_tracks({source: position.source}) : '';
+    const status = (text: string) => { spectrumStatus = note ? text + ' · ' + note : text; };
     livePoints = [];
-    spectrumStatus = m.getting_spectrum();
+    status(m.getting_spectrum());
     const points: SpectrumPoint[] = [];
     let rejected = 0,
       lastUpdate = 0;
     try {
       const response = await fetch(
-        `${apiBase}/v1/spectrum?${new URLSearchParams({ ra: ra.toFixed(6), dec: dec.toFixed(6) })}`,
+        `${apiBase}/v1/spectrum?${new URLSearchParams({ ra: position.ra.toFixed(6), dec: position.dec.toFixed(6) })}`,
         { signal: abort.signal },
       );
       if (!response.ok || !response.body) throw Error();
@@ -609,10 +613,10 @@
         }
         if (performance.now() - lastUpdate > 100 || item.type === "complete") {
           livePoints = [...points];
-          spectrumStatus = m.spectrum_count({
+          status(m.spectrum_count({
             count: String(points.length),
             rejected: String(rejected),
-          });
+          }));
           lastUpdate = performance.now();
         }
       }
@@ -626,14 +630,14 @@
       }
       if (pending.trim()) accept(pending);
       livePoints = [...points];
-      spectrumStatus = points.length
+      status(points.length
         ? m.spectrum_count({
             count: String(points.length),
             rejected: String(rejected),
           })
-        : m.spectrum_unavailable();
+        : m.spectrum_unavailable());
     } catch {
-      if (!abort.signal.aborted) spectrumStatus = m.spectrum_unavailable();
+      if (!abort.signal.aborted) status(m.spectrum_unavailable());
     }
   }
 </script>
