@@ -1,8 +1,10 @@
 """Coordinate parsing, audited target aliases and bounded catalog queries."""
 
+import asyncio
 import csv
 import io
 import json
+import logging
 import re
 import xml.etree.ElementTree as ET
 from functools import lru_cache
@@ -192,13 +194,40 @@ async def gaia(ra, dec, radius=0.25, gmax=19):
     adql = ("SELECT source_id,ra,dec,pmra,pmdec,parallax,phot_g_mean_mag FROM gaiadr3.gaia_source "
             f"WHERE 1=CONTAINS(POINT('ICRS',ra,dec),CIRCLE('ICRS',{ra},{dec},{radius})) "
             f"AND phot_g_mean_mag<{float(gmax)}")
-    async with httpx.AsyncClient(timeout=8) as client:
-        response = await client.get("https://gea.esac.esa.int/tap-server/tap/sync", params={
-            "REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv", "QUERY": adql})
-        response.raise_for_status()
+    # Both services expose the same DR3 table. Never substitute another release
+    # or mistake an HTTP-200 TAP error document for a successful empty cone.
+    providers = (("https://gea.esac.esa.int/tap-server/tap/sync", 4),
+                 ("https://gaia.ari.uni-heidelberg.de/tap/sync", 8))
+    failure = None
+    async with httpx.AsyncClient(timeout=8, follow_redirects=True) as client:
+        for endpoint, budget in providers:
+            try:
+                async with asyncio.timeout(budget):
+                    response = await client.get(endpoint, params={
+                        "REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "csv",
+                        "MAXREC": "100001", "QUERY": adql})
+                    response.raise_for_status()
+                    return _gaia_catalog(response.text, endpoint)
+            except (httpx.HTTPError, ValueError, TypeError, csv.Error, TimeoutError) as exc:
+                failure = exc
+                logging.getLogger(__name__).warning("Gaia DR3 provider %s failed: %s", endpoint, type(exc).__name__)
+    raise httpx.RequestError("Gaia DR3 providers unavailable or returned an invalid catalog") from failure
+
+
+def _gaia_catalog(text, endpoint):
+    rows = csv.DictReader(io.StringIO(text))
+    required = {"source_id", "ra", "dec", "pmra", "pmdec", "parallax", "phot_g_mean_mag"}
+    if not required.issubset(rows.fieldnames or []):
+        raise ValueError("Gaia DR3 response is not the requested CSV schema")
     stars = []
-    for row in csv.DictReader(io.StringIO(response.text)):
-        stars.append({"source_id": row["source_id"], "ra": float(row["ra"]), "dec": float(row["dec"]),
+    for row in rows:
+        ra, dec, g = float(row["ra"]), float(row["dec"]), float(row["phot_g_mean_mag"])
+        if not (row["source_id"] and row["source_id"].isdigit()) or not (0 <= ra < 360 and -90 <= dec <= 90 and np.isfinite(g)):
+            raise ValueError("Invalid Gaia DR3 source")
+        stars.append({"source_id": row["source_id"], "ra": ra, "dec": dec,
                       "pmra": _nullable_number(row.get("pmra")), "pmdec": _nullable_number(row.get("pmdec")),
-                      "parallax": _nullable_number(row.get("parallax")), "g": float(row["phot_g_mean_mag"]), "ref_epoch": 2016.0})
+                      "parallax": _nullable_number(row.get("parallax")), "g": g, "ref_epoch": 2016.0,
+                      "catalog_url": endpoint})
+        if len(stars) >= 100000:
+            raise ValueError("Gaia cone exceeds the complete-catalog limit")
     return stars

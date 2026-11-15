@@ -55,7 +55,7 @@ def local_field(ra, dec, radius=.01):
 
 
 async def catalog(ra, dec, radius, gmax=19):
-    path = cache_path("gaia", [ra, dec, radius, gmax, 2])
+    path = cache_path("gaia", [ra, dec, radius, gmax, 3])
     if path.is_file():
         return json.loads(path.read_text())
     target = local_field(ra, dec, max(.01, .24-radius)) if radius < .24 else None
