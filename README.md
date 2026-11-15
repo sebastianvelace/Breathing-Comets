@@ -1,31 +1,40 @@
-# Breathing Comets
+<h1 align="center">Breathing Comets</h1>
 
-**A public time machine for the SPHEREx infrared sky.** Play real exposures,
-blink two dates, subtract the sky at matched wavelengths and click any position
-for a measured spectrum. Then follow the same data to comets that exhale CO₂ and
-to near-Earth asteroids sized after NEOWISE. English and Spanish throughout.
+<p align="center"><b>A public time machine for the SPHEREx infrared sky.</b><br/>
+Play real exposures, blink two dates, subtract the sky at matched wavelengths and click any
+position for a measured spectrum. Then follow the same data to comets that exhale CO₂ and to
+near-Earth asteroids sized after NEOWISE. English and Spanish throughout.</p>
 
-NASA Space Apps Challenge 2026 · Challenge **“Planet X and SPHEREx”** (advanced) ·
-Team **Breathing Comets**, Duitama virtual site.
+<p align="center">
+  <a href="https://breathingcomets.org"><b>Open the live app →</b></a> ·
+  <a href="https://breathingcomets.org/es">Español</a> ·
+  <a href="https://youtu.be/HesQRt7UJUs">Demo video</a> ·
+  <a href="https://breathingcomets.org/method">Method</a>
+</p>
+
+<p align="center">NASA Space Apps Challenge 2026 · Challenge <b>“Planet X and SPHEREx”</b> (advanced) ·
+Team <b>Breathing Comets</b>, Duitama virtual site</p>
+
+<p align="center"><img src="docs/media/landing.jpg" alt="Landing page with real 3I/ATLAS SPHEREx frames in the hero" width="100%"/></p>
 
 | | |
 |---|---|
 | **Live application** | https://breathingcomets.org ([Español](https://breathingcomets.org/es)) |
+| **Demo video** | https://youtu.be/HesQRt7UJUs |
 | **Sky Explorer** | https://breathingcomets.org/explore?target=barnard |
 | **Comet atlas** | https://breathingcomets.org/comets |
 | **Small-Body Lab** | https://breathingcomets.org/neo |
 | **Method and limitations** | https://breathingcomets.org/method |
 | **Credits and sources** | https://breathingcomets.org/about |
+| **Terms of use · Privacy** | https://breathingcomets.org/terms · https://breathingcomets.org/privacy |
 | **Public API** | https://api.breathingcomets.org/v1/health |
-
-![Landing page: real 3I/ATLAS SPHEREx frames in the hero](docs/media/landing.jpg)
 
 ---
 
 ## Contents
 
 1. [The challenge and how we answer it](#1-the-challenge-and-how-we-answer-it)
-2. [What you can do](#2-what-you-can-do)
+2. [Tour of the app](#2-tour-of-the-app)
 3. [Results on the five challenge targets](#3-results-on-the-five-challenge-targets)
 4. [Comets and asteroids: the science extensions](#4-comets-and-asteroids-the-science-extensions)
 5. [How it works](#5-how-it-works)
@@ -49,7 +58,7 @@ something anyone can blink, compare and measure.
 
 | Requirement or optional goal | Where it lives in the product |
 |---|---|
-| Enter RA/Dec | Search bar accepts coordinates, star names (SIMBAD) and comet/asteroid designations (JPL) |
+| Enter RA/Dec | Search bar accepts decimal or sexagesimal coordinates and star names (SIMBAD); comet and asteroid designations (JPL) link to their tracked pages |
 | Show a region as a short video | Timeline with play/pause, visits grouped by date, north-up frames |
 | Spot moving objects | **Blink** A↔B, **Diff λ** matched-wavelength subtraction, Gaia DR3 marker propagated to each frame's epoch (proper motion + observer parallax) |
 | Five test targets | Barnard's Star, ε Indi B, WISE 0855−0714, RW Aurigae and R Draconis are precomputed for six detectors each, with guided field notes |
@@ -63,51 +72,86 @@ something anyone can blink, compare and measure.
 | C8 – Astropy and Aladin | Backend on Astropy + reproject; Aladin Lite 3.8.2 |
 | Molecules named in the challenge | Comet atlas measures CO₂ and CO band emission with full diagnostics |
 
-## 2. What you can do
+## 2. Tour of the app
 
-### Sky Explorer (`/explore`)
+All screenshots are of the deployed site and show real SPHEREx data.
 
-![Sky Explorer on Barnard's Star with the epoch-aware Gaia marker](docs/media/explorer.jpg)
+### Sky Explorer: see the sky change
 
-- **Story mode.** Pick a prepared target or search the sky. Each field explains
-  *what to look for* and offers a one-tap visit comparison or Diff λ.
-- **Epoch / Blink / Diff λ.** Play every exposure on a time ruler; blink the
-  longest baseline within one band width; subtract other visits at compatible
-  wavelengths. Every frame keeps its detector, wavelength, date, observation ID and
-  source.
-- **Lab mode.** Pixel and quality-flag inspector, link to the original FITS,
-  one-click forced-ePSF spectrum (≥ 50 points streamed as NDJSON) and a lazy-loaded
-  Aladin Lite viewer with the real DR1 spectral cube, Gaia and 2MASS layers.
-- **Share and embed.** “Share this view” serializes the exact observation; a fresh
-  browser restores it. Sharing is enabled only when the acquisition that matches
-  the requested field is complete.
-- **Works offline from the API.** The five prepared targets and the tracked comet
-  plates ship as static SPXF packages and keep working if the live API is down
-  (covered by an E2E test that blocks the API).
+<table>
+<tr>
+<td width="50%"><img src="docs/media/explorer.jpg" alt="Sky Explorer on Barnard's Star with field notes and the epoch-aware Gaia marker"/><br/>
+<b>Story mode.</b> Pick a challenge target or search any star, name or RA/Dec. Each field says
+<i>what to look for</i>; the Gaia DR3 cross follows the star at every frame's date (proper motion
++ observer parallax).</td>
+<td width="50%"><img src="docs/media/blink.jpg" alt="Blink comparison of Barnard's Star between 2025-08-27 and 2026-09-02, magnified"/><br/>
+<b>Blink two dates.</b> One tap compares the longest baseline within one band width
+(here 2025-08-27 ↔ 2026-09-02, magnified 7×). Barnard's Star visibly leaves its Gaia
+position.</td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/media/diff.jpg" alt="Diff lambda: wavelength-matched difference image of Barnard's Star"/><br/>
+<b>Diff λ.</b> Each frame minus a static-sky reference built from other visits at the same
+wavelength: what moved shows up yellow where it is and blue where it was.</td>
+<td width="50%"><img src="docs/media/spectrum.jpg" alt="Live forced-ePSF spectrum streamed after a click, next to the deblended reference spectrum"/><br/>
+<b>Click for a spectrum.</b> A forced-ePSF spectrum streams point by point from every
+covering exposure (0.75–5.0 µm), beside the deblended reference spectrum of the target.</td>
+</tr>
+</table>
+
+- **Epoch / Blink / Diff λ / Cube.** Play every exposure on a time ruler; every frame keeps its
+  detector, wavelength, date, observation ID and source.
+- **Lab mode.** Pixel and quality-flag inspector, link to the original FITS file and a
+  lazy-loaded Aladin Lite viewer with the real DR1 spectral cube, Gaia and 2MASS layers.
+- **Share and embed.** “Share this view” copies the exact observation; `/embed` serves it.
+- **Moving objects.** Searching a comet or asteroid explains why a fixed field cannot follow it
+  and links to its tracked comet page, the atlas or the Small-Body Lab.
+- **Works when the API is down.** The five targets and the tracked comet plates ship as static
+  SPXF packages (covered by an E2E test that blocks the API).
 - **Guided tour** offered, never forced; keyboard-operable; English and Spanish.
 
-### Comet atlas (`/comets`) and detail pages
+### Comets that breathe CO₂
 
-![3I/ATLAS detail page with real tracked SPHEREx frames](docs/media/comet-3i.jpg)
+<table>
+<tr>
+<td width="50%"><img src="docs/media/comets.jpg" alt="Comet atlas: Q(CO2) against heliocentric distance for 20 comets"/><br/>
+<b>Comet atlas.</b> Q(CO₂) for 20 comets with 16–84 % intervals; detections, measurements
+with systematics, marginal and unreliable cases are drawn differently.</td>
+<td width="50%"><img src="docs/media/comet-spectrum.jpg" alt="3I/ATLAS spectrum around the CO2 band, compared with published values"/><br/>
+<b>3I/ATLAS.</b> Sky-subtracted spectrum around the 4.26 µm CO₂ band, compared with the
+published values and with full provenance.</td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/media/comet-3i.jpg" alt="3I/ATLAS detail page with real tracked SPHEREx frames"/><br/>
+<b>Tracked plates.</b> Real SPHEREx frames centred on the comet with the JPL Horizons
+ephemeris for SPHEREx as observer; a band image is never called a gas map.</td>
+<td width="50%"><img src="docs/media/neo.jpg" alt="Small-Body Lab: diameter versus absolute magnitude and the NEOWISE cross-validation plot"/><br/>
+<b>Small-Body Lab.</b> 34 thermal sizes for near-Earth asteroids after NEOWISE, each with
+its interval, evidence tier and ±35 % systematic floor, checked against 50 NEOWISE objects.</td>
+</tr>
+</table>
 
-20 comets with CO₂/CO band measurements, each with its status (detection,
-measurement with systematics, marginal), 16–84 % interval, S/N, fractional flux
-error, number of band-core channels and reduced χ². Detail pages for **3I/ATLAS**
-and **29P/Schwassmann–Wachmann** show real Horizons-tracked plates ordered by
-wavelength, measured spectra, diagnostics and provenance.
+### On a phone, in two languages
 
-### Small-Body Lab (`/neo`)
+<table>
+<tr>
+<td width="25%"><img src="docs/media/mobile-explorer.jpg" alt="Explorer on a phone"/></td>
+<td width="25%"><img src="docs/media/mobile-comet.jpg" alt="3I/ATLAS page on a phone"/></td>
+<td width="25%"><img src="docs/media/mobile-neo.jpg" alt="Small-Body Lab on a phone"/></td>
+<td width="25%"><img src="docs/media/landing-es.jpg" alt="Spanish landing page"/></td>
+</tr>
+<tr>
+<td align="center">Explorer</td><td align="center">3I/ATLAS</td><td align="center">Small-Body Lab</td><td align="center">Español</td>
+</tr>
+</table>
 
-![Small-Body Lab: D versus H and the NEOWISE cross-validation plot](docs/media/neo.jpg)
+### Method, credits and legal pages
 
-Thermal-size estimates for near-Earth asteroids discovered after NEOWISE ended,
-each with its interval, evidence tier, ±35 % systematic floor and single-visit
-warning, plus a D-versus-H chart and the full NEOWISE cross-validation plot.
-
-### Method (`/method`) and About (`/about`)
-
-Ten data-driven method sections (every table is read from the shipped JSON),
-explicit limitations, full source credits, and a statement on AI use.
+Ten data-driven method sections (every table is read from the shipped JSON), explicit
+limitations, full source credits, a statement on AI use, and plain-language
+[Terms of use](https://breathingcomets.org/terms) and
+[Privacy notice](https://breathingcomets.org/privacy) in English and Spanish: no
+accounts, no cookies, no analytics; independent project, not endorsed by NASA or any agency.
 
 ## 3. Results on the five challenge targets
 
@@ -191,7 +235,7 @@ Nothing is counted as passing unless it was observed. Raw outputs are retained i
 
 | Check | Result | When |
 |---|---|---|
-| Production browser suite (Playwright, Chromium, 14 spec files) | **70 / 70 passed** (2.7 min) against https://breathingcomets.org | Re-run 2026-11-15 |
+| Production browser suite (Playwright, Chromium, 14 spec files) | **73 / 73 passed** against https://breathingcomets.org | Re-run 2026-11-15 |
 | Python acceptance (offline) | **202 passed, 1 known failure** (R Dra D6 baseline, see §7), 9 network tests deselected | Re-run 2026-11-15 |
 | Python real-network suite (S3, IRSA, Horizons) | 9 / 9 passed | Recorded in STATUS.md |
 | Frontend unit tests (Vitest) | **58 / 58 passed** (incl. parallax vs Astropy/DE440, ≤ 4.67 mas) | Re-run 2026-11-15 |
@@ -289,7 +333,9 @@ docs/                BUILD guide, STATUS log, FINDINGS, audits, verification out
 
 Sky plates are real mission data; the interface's decorative starfield is separate
 and never presented as an observation. This is an independent Space Apps project,
-not a NASA product, and uses no NASA logo.
+not a NASA product, and uses no NASA or agency logo anywhere. See the
+[Terms of use](https://breathingcomets.org/terms) and
+[Privacy notice](https://breathingcomets.org/privacy).
 
 **Use of AI.** AI-assisted tools were used for software implementation, debugging,
 documentation and test preparation. Scientific statements are tied to retained

@@ -438,3 +438,17 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - New `e2e/polish.spec.ts` (5 tests). Local: 69 passed, 1 skipped (404 needs Pages).
   **Production: 70 passed (2.7m)**, raw output `docs/verification/polish-production-e2e.txt`.
   Type check 0/0, Vitest 58 passed, build passed. No scientific values changed.
+
+## Legal pages, GitHub link and README gallery (2026-11-15)
+
+- Added `/terms` and `/privacy` (EN/ES, prerendered) from `src/lib/data/legal.ts`: independence
+  and no endorsement, no agency logos, no safety-critical use, no warranty, data licences and
+  credits, acceptable use, limitation of liability; privacy states no accounts, cookies or
+  analytics, the single `bc.tour.v1` local-storage key, hosting logs (Cloudflare, Fly.io) and the
+  services contacted. Every footer links both pages with an independence line.
+- Added an accessible GitHub icon link to the shared product navigation (every page header).
+- E2E tests added for the legal pages, footer links, GitHub link and absence of NASA logo images.
+  Commit 40a34c4. **Production: 73 passed (2.8m)**, raw output
+  `docs/verification/legal-production-e2e.txt`. These pages are general information written for
+  the project, not legal advice.
+- README now has a screenshot gallery from production (`docs/media/`).
