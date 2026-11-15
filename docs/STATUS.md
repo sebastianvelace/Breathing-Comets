@@ -1,6 +1,6 @@
 # Build status
 
-All results below describe observed verification. No research scripts have been executed.
+All results below describe observed verification. The user confirmed that the recorded research-script execution was authorized. The current step table supersedes historical progress estimates below.
 
 ## Preflight
 
@@ -17,16 +17,16 @@ All results below describe observed verification. No research scripts have been 
 | 1 | Repository and templates | Done | d2faac2 | Push succeeded; identity exact; prohibited messages 0; only main; hooks .githooks | Approved bootstrap exception: retain baa2d91. |
 | 2 | Deployed skeletons | Done | 7d7f4d9 | Static build passed; local and public Fly health HTTP 200 with ok true; single machine | Node types approved and installed; type check passes with 0 errors and 0 warnings. Pages build passed; apex active with SSL; API custom domain HTTP 200. www redirect enabled; HTTP 301 preserves path and query. |
 | 3 | Static data | Done | 3d98b0a | 100 passed in 0.31s; du 364K; copied files byte-identical | No scientific results recalculated. |
-| 4 | Scientific core | Partial | d707949 + subsequent fixes | Fast suite 133 passed; all 7 current network tests passed; Ruff passed | Legacy QR2 layout independently verified; golden 3I physical-model acceptance remains pending. |
+| 4 | Scientific core | Done | 8f9b92b + c0b908b | Golden model passes; all 25 original assertions retained; full network suite 9 passed | Slow independent table acquisition is bounded and ETag-validated. |
 | 5 | Five target precomputation | Partial | cfe29d7 | All five targets, six detectors each, plus five Diff λ stacks; real TypeScript parser passed | R Dra D6 baseline acceptance remains failing; source coverage ends June 2026. |
 | 6 | Story Explorer | Done | 21ca8f1 + a2c5bb4 | 28 Vitest; check 0 errors/warnings; build; 3 local and 3 public E2E passed | Arbitrary pixel spectrum belongs to step 7. |
-| 7 | Live API | Partial | 2f79833 | Three local stellar comparisons pass; real click >50 points; network suite passes | Cold stack 4.398 s; JPL identification unavailable; Fly verification pending. |
-| 8 | Lab and Aladin | Done (local) | Integration commit | check 0/0; `lab.spec.ts` 2 passed locally (Aladin requests real DR1 frame 85 tiles, keeps logo/link; Lab pixel click streams ≥ 50 points) | Public deployment of the Lab pending push; E2E against the public API needs its CORS allowlist (see integration note). |
-| 9 | Small-Body Lab | Partial | Integration commit | check 0/0; `neo.spec.ts` passed in the full local run | Absolute NEOWISE references retained for only 5/50 (IRSA TAP failed twice); all 50 ratios shown, page states 5/50. |
-| 10 | Landing | Partial (3I packet delivered) | Integration commit + 3I commit | Landing agent report in docs/landing-handoff.md; 10 Vitest + 11 E2E passed; 70.4 KB gz initial JS | Gas-map/ink-in animation not built (no continuum-subtracted maps exist); Lighthouse LCP not measured (proxy 0.8–0.9 s before the 3I packet was bundled). |
-| 11 | Comets, method, about and Spanish | Done (EN/ES); prior-work declaration is the user's | Atlas commit | `/comets` atlas (EN/ES) from the retained census CSVs; 7 pytest + 7 E2E; check 0/0 | 3I landing packet, 3I/29P detail pages, `/method`, about page still pending. 3I H2O validation row withheld (no reproducible source). |
-| 12 | Final tests | Pending | — | Not run | — |
-| 13 | Submission | Pending | — | Not run | — |
+| 7 | Live API | Partial | 0cb0cc3 + bf9e845 | Deployed 29P resolve 200; real API stellar ratios and live-click checks pass | General cold acquisition >4 s; JPL asteroid identification unavailable. |
+| 8 | Lab and Aladin | Done | 2c8ccc3 | Real frame-85 tiles, visible attribution and live pixel spectra verified | No current feature blocker. |
+| 9 | Small-Body Lab | Done | 8f9b92b | All 50 absolute validation pairs; integrity and interval/tier E2E pass | Ratios retain original export rounding, stated in UI. |
+| 10 | Landing | Partial | fdee401 + 8c78225 | Actual 3I plates; EN/ES and accessibility; deployed mobile LCP 1.410 s, performance 98 | No continuum-subtracted gas map; no invented substitute. |
+| 11 | Comets, method, about and Spanish | Done | d7fe353 + follow-up | Atlas, 3I/29P details, method and about pages verified EN/ES | Unsupported 3I August H2O remains withheld. |
+| 12 | Final tests | Partial | 56512f8 | 50 production browser checks; 9 network checks; 47 frontend unit checks pass | Known R Dra failure and cold-acquisition budget remain explicit. |
+| 13 | Written submission | Prepared | a4526b6 | Generated from product JSON; one user-disclosure marker | Video is user-owned; user writes prior-work disclosure and supplies video URL. |
 | 14 | Freeze | Pending | — | Not run | — |
 
 ## Step 1 verification and blocker
@@ -67,7 +67,7 @@ The user explicitly approved retaining published bootstrap commit `baa2d91` and 
 - Step 2 push checks: exact identity, prohibited messages 0, sole remote branch main.
 - Exact custom-domain probes failed: `curl: (6) Could not resolve host: breathingcomets.org` and `curl: (6) Could not resolve host: api.breathingcomets.org`. The working Fly hostname is distinct from the pending custom domain.
 
-## Latest repository verification
+## Step 3 repository verification (historical)
 
 After push `3d98b0a`:
 
@@ -240,7 +240,7 @@ The user approved `@types/node@24.19.2` as an additional development dependency.
 - Verification: `npm run check` 0/0; Vitest 43 passed; full local E2E (built against the local API) 31 passed; initial JS 88.5 KB gz.
 - All findings, deviations from BUILD 10.4 and their justifications: `docs/FINDINGS.md`.
 
-### Estimated completion (judgement, weights by effort)
+### Historical completion estimate (superseded; use the current step table)
 
 | Step | Weight | Done | Note |
 |---|---|---|---|
@@ -289,3 +289,70 @@ Weighted total **75%** of the planned build (72.2 / 96); **83%** counting only t
 - Public deployment confirmed: /v1/resolve?q=29P HTTP 200 (track DES=29P; CAP); health HTTP 200 with 809,593 rows and v5 maps; Access-Control-Allow-Origin matches http://127.0.0.1:4183. Post-push 0cb0cc3 checks passed: sole exact identity, 0 prohibited messages, sole remote main.
 - Recovered the complete NEOWISE reference table through documented Gator after TAP timed out. 1,523 catalog rows, all 50 CV designations matched; the five previously retained medians agree exactly. Export now contains all 50 absolute diameter pairs, retains the original rounded CV ratios, and records source query and SHA-256. New reference integrity test passes.
 - R Dra diagnostic: D4 index ends 2026-09-25 (starts June in the retained stack), D6 ends 2026-06-12 (starts April). Attempting a September D6 file at the corresponding D4 observation raises `ValueError: Source outside the reliable detector interior`. The D6 September acceptance remains unchanged and failing; no detector or date is relabelled.
+
+- New resilience tests first failed on incorrect test locators (ModeSwitch uses radio semantics; two mobile Play controls) and a wrong expected 3I media path. Corrected selectors from the captured accessibility snapshot; iPhone playback/share check then passed. Tightened the offline Diff check to require an actually rendered Diff stack. Direct target URLs defaulted to D4 even for targets whose prepared Diff is D6; the parser now matches the existing target-picker defaults while respecting an explicit det parameter.
+
+- Added GPL v3 project licence, retained both Aladin licence texts (the package has LGPL in LICENSE and GPL in COPYING/metadata) plus Geist OFL notices, an operational README and data-driven written submission. Video remains user-owned and untouched; the submission keeps only the user disclosure marker.
+- JPL documentation now explicitly rejects MPC 500 for a geocentric observer. Switched directly to xobs=0,0,0,0,0,0; live comet-only query returned HTTP 200 in 8.11 s with the documented explicit no-matching-records warning but no result count. Parser now accepts only that explicit empty case; two schema/observer tests pass. Asteroid query still hit ReadTimeout at 32.86 s, so general availability is not claimed.
+- FITS reader now extends a cached PRIMARY/IMAGE prefix rather than re-reading it for selected cutouts. A physical in-memory FITS test verifies all offsets and that only the third header is fetched during extension. Numerical values and row decoding are unchanged.
+
+- Offline prepared-target and iPhone tests now pass, including actual Diff-stack rendering for every target: combined with Story regressions, `5 passed (13.7s)`. Frontend unit tests: `45 passed`; type check 0 errors/0 warnings.
+- Full Python run initially gave 186 passed and two failures: known R Dra plus the comet-export provenance list, which changed when the new retained August CSV was added. Regenerated the manifest; targeted export/submission suite now passes 8 tests. No scientific values or assertions were changed.
+- Network run 1 was interrupted after 309.30 s blocked in SSL: `5 passed, 186 deselected`; it is not reported as a full pass. A verbose run is locating the upstream stall.
+
+- API after bf9e845 (Fly image deployment-01M7EC711QWV25MCJ5A08RPN3R): response/cutout-cold stack at fov 0.06 gave first_byte=1.330658, total=2.035162; default fov 0.25/max_frames 80 at the same field gave first_byte=2.847200, total=4.146271 with warm metadata. A distinct epsilon Indi field with cold metadata gave first_byte=8.115480, total=16.904957. The general cold-acquisition budget remains unmet; the warm-metadata result is not substituted for it.
+- Full browser run passed all 49 tests in 53.0 s; Python fast suite 187 passed, known R Dra 1 failed, 9 network deselected.
+- Standalone Lighthouse 13.6.0 installed in a temporary audit cache (no application dependency change). Production mobile landing: performance 94, accessibility/best-practices/SEO 100, LCP 1549.672 ms, TBT 201 ms, CLS 0. Explorer: same category scores, LCP 1060.3695 ms, TBT 230 ms, CLS 0.03994.
+- Reducing render-blocking requests using the installed Kit inlineStyleThreshold option. First check rejected an obsolete kit namespace (`config_kit_namespace`); corrected to the documented direct plugin option. This trades some cross-page CSS caching for earlier first paint; browser and deployed measurements must verify it.
+
+- Independent reference-table transfer stalled twice because the HTTPX read timeout bounded idle reads, not the entire streamed body. Added validated 512 KiB parallel ranges for large reference tables and a total transfer deadline, plus transport tests. A standalone unchanged D5 EPSF/full-table comparison now passes in 67.63 s; the complete network run has acquisition failures still under investigation.
+- Updated About wording to distinguish real scientific plates from the decorative SVG background and to remove vendor names from product copy. Two browser text assertions initially failed because they expected the old blanket wording; updated them to assert the precise scientific-data statement.
+- Added client-side motion matching at the displayed epoch before asking the spectrum API for its 2026-01-01 reference position. The actual clicked pixel stays in the inspector; matched-source tracking is explicitly stated with the streamed spectrum. Unknown motion remains unknown.
+
+- Running Vitest concurrently with Svelte checking caused Paraglide to replace generated files while the checker enumerated them: 0 errors but 1,076 missing-generated-file warnings. Do not run web build/check/Vitest concurrently in this shared checkout; rerun sequentially. No generated-file exclusions or warning suppressions were added.
+
+- Complete network run with bounded reference transport finished: `2 failed, 7 passed, 190 deselected, 1 warning in 451.24s`. Both independent EPSF/full-table comparisons exceeded the 30-second total transfer deadline on 512 KiB table pieces. A standalone unchanged D5 comparison passed in 67.63 s. This points to variable acquisition throughput, not permission to change EPSF assertions.
+
+- Reference assertion audit: all 25 original assertions remain present and unchanged; the file additionally has five stricter legacy-QR2 layout assertions from earlier work. Direct list equality is therefore not the right preservation check; comparing original assertion multiplicities confirms none were removed or altered.
+- Reference-table acquisition now uses smaller 64 KiB pieces and retains successful pieces keyed by the ETag obtained from a fresh real S3 header. Object changes invalidate those bytes. This addresses observed slow continuous transfers without increasing the deadline or changing an assertion; API user-path timeouts remain unchanged.
+
+- Published 1f0a783 (motion-aware clicked spectra), a4526b6 (written submission and licences), and 8c78225 (inlined route styles); post-push checks passed: sole exact identity, zero prohibited commit messages, sole remote main. Public Pages now serves the new inline styles and all 50 NEOWISE pairs. Manual browser inspection verified the published catalog, filtered 2025 YH5 with its interval/tier/single-visit caveat, and recorded /tmp/breathing-comets-neo-verified.png.
+- Latest full network attempt with retained small-range transport ended with exit 143 after partial pass/failure output; no final test summary was emitted. Do not count it as a full pass. Earlier complete acquisition failures and the standalone successful D5 comparison remain the recorded evidence.
+
+- Latest minimal-extension reader deployed as Fly image deployment-01M7EDNA1A37H0PQEGEQKMM91C, then warm single-machine configuration as deployment-01M7EDX1KCR4H0YRRXX9RP1CP7. Exactly one existing machine remains; min_machines_running=1 removes suspend/start delay at the cost of continuous running usage.
+- Distinct RW Aur D6/fov 0.25/max_frames 80 cold-field acquisition returned HTTP 200: first_byte=19.939791, total=22.316882. General cold acquisition remains an explicit release limitation despite faster warm-metadata construction.
+- Post-inline deployed mobile Lighthouse: performance 98, accessibility/best-practices/SEO 100, LCP 1410.203 ms, TBT 137 ms, CLS 0. Raw-derived metrics and hashes are retained in docs/verification/performance.json.
+- Full production browser run: 48 passed, 1 failed (NEO photometry selection). Snapshot showed the SSR catalog still unselected after an early click. Fixed the product by disabling scripted NEO controls until mount; added a script-disabled readability/disabled-control regression instead of increasing the assertion timeout. Verification in progress.
+
+## Closure verification history
+
+- Fast Python acceptance: 191 passed, sole unchanged R Dra failure, 9 network deselected. Frontend: 47 unit tests; type check 0 errors/0 warnings; production build passes. Ruff passes outside the deliberately untouched reference-test file.
+- Full local browser coverage: 49 passed before the final NEO readiness correction. Deployed run: 48 passed, 1 early-click failure now fixed in product; a script-disabled catalog regression was added. Final deployed rerun is pending publication.
+- API warm configuration is deployed; written submission and complete NEOWISE validation are published. Cold arbitrary-field acquisition remains variable and above the four-second budget in distinct-field probes.
+- The user produces the video and writes the prior-work disclosure. Video files remain untouched. The Sunday 2026-11-15 21:00 COT freeze has not been executed early.
+
+- Final complete network run: `9 passed, 192 deselected, 1 warning in 457.50s`. All real-data assertions were executed; successful independent table pieces were retained only with the freshly obtained source ETag. No assertion was skipped, removed or relaxed.
+- NEO readiness correction: `3 passed (2.4s)` locally, including unchanged per-object diameter/interval/tier checks and script-disabled catalog readability. Type check 0/0 and build pass.
+- Commits c0b908b and 2147f95 are pushed; mandatory checks: sole exact identity, 0 prohibited messages, sole remote main. Exactly one API machine is kept running; its continuing resource usage is an explicit availability tradeoff.
+
+- Static NEO readiness guard is now confirmed in the deployed HTML; the full production suite is being rerun with 50 cases. Fly status confirms one started iad machine, 2 shared CPUs, 2 GiB RAM, encrypted 5 GiB cache and passing health check.
+
+- Production rerun after the NEO fix: 49 passed, 1 landing keyboard failure; the captured Blink state stayed at A after Enter before hydration. Extended the existing hero readiness pattern to the Blink, Diff slider and band controls; the keyboard test now waits for the visible enabled state before focusing, with the original B-epoch assertion unchanged. This fixes the product readiness state rather than retrying the keypress.
+
+- Applied the same mounted-control guard to the comet atlas and detail controls, which had previously needed interaction retries. The 3I detail SSR fallback now selects the intended August epoch instead of flashing December before mount. Removed the old repeated-keypress workaround from the detail test: it waits for the actual enabled state and sends one Home/End sequence with the same wavelength assertion.
+
+- Readiness patch 56512f8: local landing/comet browser suite `25 passed (17.7s)`; build passes. Exact Git identity, zero prohibited message matches, sole remote main verified after push. Final production run waits for the new Pages build.
+- Final local frontend verification after readiness patch: Vitest `47 passed (47)`; `npm run check` reports `0 errors and 0 warnings`; production build passes. Data and submission checks: `101 passed in 0.10s`. Independent AST comparison: 25 original assertions, 30 current, zero missing or altered.
+- Latest landing build references 21 initial JavaScript modules, totalling 75,398 bytes with gzip level 9, below the 90,000-byte budget; lazy Lab imports remain separate.
+
+## Final observed checkpoint
+
+- Application commit: `56512f8`, confirmed published on https://breathingcomets.org before the run.
+- Full deployed Chromium suite: **`50 passed (2.9m)`**. Includes real API clicks, Aladin frame 85, five prepared targets with the API blocked, mobile EN/ES, restored URLs, NEO intervals and scripted-control readiness. Retained output: `docs/verification/production-e2e.txt`.
+- Python fast acceptance: **191 passed, 1 failed, 9 deselected**; the unchanged failure is `test_r_dra_samples_full_baseline` (latest available D6 frame `2026-06-12`, required `>= 2026-09-01`). Full real-network suite: **9 passed, 192 deselected**. Original 25 reference assertions remain unchanged; five additional checks are retained.
+- Frontend unit tests: **47 passed**; `svelte-check`: **0 errors / 0 warnings**; production build passed. Static data/submission consistency: **101 passed**.
+- Public API health: HTTP 200, `ok: true`, 809,593 exposure rows, DR1/QR3, spectral maps v5. The single existing Fly machine stays running; no replica was added.
+- Mobile Lighthouse landing: performance 98; accessibility/best-practices/SEO 100; LCP 1.410 s. Initial referenced JavaScript: 75,398 gzip bytes. Full measurements and raw-report hashes: `docs/verification/performance.json`.
+- The general four-second cold-field budget, R Dra D6 September coverage, intermittent JPL identification, continuum-subtracted gas maps and fully supported August H2O validation remain open. None is counted as passed.
+- Written deliverable: `docs/SUBMISSION.md`; freeze instructions: `docs/RELEASE.md`. User owns the video and prior-work declaration. The future Sunday freeze is pending.
+- Git publication of the application passed all three checks: exact required author/committer, zero prohibited commit-message matches, only remote `main`. This record and regenerated provenance are committed in the following documentation checkpoint.

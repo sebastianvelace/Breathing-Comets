@@ -25,7 +25,7 @@ Everything found while integrating steps 8–11, with evidence and what was done
 | S7 | **"29P in outburst" (BUILD 10.6) was not published.** Nothing retained verifies the outburst state. | — | Omitted. |
 | S8 | **29P and 3I comparisons are consistency checks, not independent confirmations** (PENDIENTES P3): 29P Q(CO) 4.504e28 inside 2.9–5.6e28; 3I Aug inside 0.94–1.6e27. | `published_reference.json` with citations. | Wording on the pages says "inside the published range". |
 | S9 | **R Dra baseline acceptance still fails**: last sampled date 2026-06-12 against required 2026-09-01 (source D6 coverage ends in June). | `test_r_dra_samples_full_baseline`, unchanged assertion. | Left failing, documented since step 5. |
-| S10 | **NEOWISE absolute references available for 5 of 50 validation pairs** (IRSA TAP failed twice: 502 and read timeout). | STATUS step 9. | Page states 5/50. |
+| S10 | **NEOWISE absolute references recovered for all 50 validation pairs** through documented Gator after TAP failed. | STATUS step 9. | All 50 pairs now exported with retained catalog rows and SHA-256 provenance; the previous five reference medians match exactly. |
 | S11 | Many real 3I frames show only a faint diffuse glow; the coma is clear at the CO₂ band. | `3i-sheet` contact sheet of the 12 August frames. | Shown as is, caption says "no continuum subtracted". No gas map exists, so none is shown. |
 
 ## 3. Process and environment findings
@@ -137,3 +137,17 @@ Lighthouse 13.6 (installed outside the repo, Playwright's Chromium), against pro
 - The explorer keeps a night-sky theme in both colour schemes (it displays dark plates). `/comets`, `/method`, `/about` and `/neo` inherit the new tokens and font but were **not** restyled panel by panel.
 - Tests: `tour.spec.ts` (5 E2E). Local: svelte-check 0/0, Vitest 44, E2E 45 passed + the 2 live-API tests that only pass against production.
 - **After the redesign, production Lighthouse (two runs each):** landing mobile LCP 1.5–1.6 s, perf 94–95; desktop 0.6–1.2 s; explorer mobile CLS 0.04, TBT 0.73–0.86 s (still open). Accessibility 100 on all. One audit flagged `label-content-name-mismatch` on the explorer language link (`aria-label="Language"`, visible text "ES"), which predates this work; the label now starts with the visible text. The "?" tour button keeps its full name through visually hidden text instead of an `aria-label`.
+
+## Closure updates (2026-11-14)
+
+- User confirmed the recorded research-script run was authorized and requested justified flexibility; video remains the user task.
+- All 50 NEOWISE reference diameters recovered via documented Gator; the original five medians match exactly. Query, raw table and SHA-256 are retained, with no asteroid refit.
+- Independent CO2 P/R plus Haser regression now executes the physical calculation on retained August photometry and passes the published range.
+- Periodic-comet resolver deployed; public 29P returns 200. Explicit local integration-test CORS origin deployed.
+- All original 25 reference assertions remain, plus five legacy-layout assertions. The final network suite passed 9/9 after bounded transfers and ETag-validated retained table pieces; slow acquisition failures remain in the history.
+- Landing mobile after inline CSS: Lighthouse performance 98, accessibility/best-practices/SEO 100, LCP 1.410 s, TBT 137 ms, CLS 0. Full raw-derived metrics: docs/verification/performance.json.
+- Clicked moving stars are matched at the displayed epoch before requesting the API reference coordinates, with explicit tracking text.
+- A production NEO early-click failure exposed an enabled SSR control before its handler was ready. Controls now stay disabled until mount, while the static catalog remains readable without scripts; regression passes locally. The same readiness guard now covers landing and comet controls, with 25 local browser checks passing and no repeated-key workaround.
+- Project GPL v3 licence, exact Aladin notices and Geist OFL notices retained. The installed Aladin package has LGPL in LICENSE and GPL in COPYING/metadata; both are disclosed without guessing away the discrepancy.
+- Remaining actual limits: R Dra D6 September coverage, cold arbitrary acquisition latency, JPL identification availability, and absent continuum-subtracted gas maps/fully supported August H2O validation. None is hidden by a changed assertion or fabricated data.
+- Final published application 56512f8 passes the complete production browser suite: `50 passed (2.9m)`, including the previously early-clicking NEO and Blink controls. Frontend check remains 0/0 and all 47 unit tests pass.

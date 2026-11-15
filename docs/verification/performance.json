@@ -1,0 +1,93 @@
+{
+  "landing_before_inline": {
+    "url": "https://breathingcomets.org/",
+    "fetch_time": "2026-11-15T01:15:53.831Z",
+    "lighthouse": "13.6.0",
+    "form_factor": "mobile",
+    "scores": {
+      "performance": 0.94,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "metrics": {
+      "largest-contentful-paint": {
+        "value": 1549.672,
+        "unit": "millisecond"
+      },
+      "total-blocking-time": {
+        "value": 201,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      }
+    },
+    "raw_report": "breathing-comets-landing-audit.json",
+    "raw_sha256": "a6f4bc0981d8c6a063baa8591a2dce24b71d0ca44081ef934035f611d60dc77e"
+  },
+  "landing_after_inline": {
+    "url": "https://breathingcomets.org/",
+    "fetch_time": "2026-11-15T01:39:04.918Z",
+    "lighthouse": "13.6.0",
+    "form_factor": "mobile",
+    "scores": {
+      "performance": 0.98,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "metrics": {
+      "largest-contentful-paint": {
+        "value": 1410.203,
+        "unit": "millisecond"
+      },
+      "total-blocking-time": {
+        "value": 137,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0,
+        "unit": "unitless"
+      }
+    },
+    "raw_report": "breathing-comets-landing-inline-audit.json",
+    "raw_sha256": "1aecb2de9520c68028719b546e036b365836ae1317b3a2e692735b9082ca1606"
+  },
+  "explorer_mobile": {
+    "url": "https://breathingcomets.org/explore?target=barnard&ra=269.446268&dec=4.768204&fov=0.25&det=4&ch=2.441&t=60914.213&a=60914.213&b=61285.258&mode=epoch&layers=gaia&stretch=asinh%3A0.5%3A99.5&lut=plate&ui=story&lang=en",
+    "fetch_time": "2026-11-15T01:19:01.059Z",
+    "lighthouse": "13.6.0",
+    "form_factor": "mobile",
+    "scores": {
+      "performance": 0.94,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    },
+    "metrics": {
+      "largest-contentful-paint": {
+        "value": 1060.3694999999998,
+        "unit": "millisecond"
+      },
+      "total-blocking-time": {
+        "value": 229.99999999999977,
+        "unit": "millisecond"
+      },
+      "cumulative-layout-shift": {
+        "value": 0.03993914589154283,
+        "unit": "unitless"
+      }
+    },
+    "raw_report": "breathing-comets-explorer-audit.json",
+    "raw_sha256": "a520ea0adf77457d9979bb4554c2ef124014bfb26187f7a3fc7953c39de17ab6"
+  },
+  "landing_initial_js": {
+    "source_commit": "56512f86d5d339075db65ace426b0a9482c04f3f",
+    "html_js_references": 21,
+    "gzip_bytes": 75398,
+    "budget_bytes": 90000,
+    "measurement": "Sum of gzip level 9 sizes of distinct JavaScript files referenced by the generated index.html; excludes lazy Lab imports."
+  }
+}

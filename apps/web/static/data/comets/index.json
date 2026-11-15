@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-15T00:35Z",
+ "generated": "2026-11-15T01:30Z",
  "generator": "pipelines/export_comets.py",
  "method": {
   "status_rule": "detected: S/N_det >= 5 and chi2_red < 50; with_systematics: S/N_det >= 5 and chi2_red >= 50; marginal: 3 <= S/N_det < 5; not_detected: S/N_det < 3",
@@ -7,6 +7,7 @@
   "baseline": "recipe A: g=2.86e-3 s-1 at 1 au, tau=5e5 s, v=0.85 r^-0.5 km/s",
   "far_au": 10.0,
   "sources": [
+   "3I_aug2025_D5_skysub.csv",
    "3I_aug2025_bandfits.csv",
    "3I_aug2025_spectrum.csv",
    "co2_census_physical.csv",
